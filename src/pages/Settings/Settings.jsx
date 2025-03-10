@@ -1,27 +1,22 @@
 import {useState, useRef, useContext, useEffect} from 'react';
 import * as S from './Settings.style';
-import {Button, TextInput, Text, Avatar} from '../../ds';
+import {Button, Text, Avatar} from '../../ds';
 import {AccountContext} from '../../contexts';
 import {useUpdateUserMutation} from '../../api/mutations/users.mutation';
 import {handleError} from '../../utils/functions';
 import Loader from '../../components/Loader/Loader';
 import { toast } from 'react-toastify';
 import { getImagesUrl } from '../../api';
+import PasswordField from '../../components/PasswordField/PasswordField';
 
 const Settings = () => {
   const [fieldValues, setFieldValues] = useState({
-    firstname: '',
-    lastname: '',
-    username: '',
     old_password: '',
     password: '',
     password_confirmation: '',
   });
 
   const [fieldErrors, setFieldErrors] = useState({
-    firstname: [],
-    lastname: [],
-    username: [],
     old_password: [],
     password: [],
     password_confirmation: [],
@@ -31,6 +26,7 @@ const Settings = () => {
   const [isMobile, setIsMobile] = useState(false);
 
   const fileInputRef = useRef(null);
+  const formRef = useRef(null);
 
   const {account, setAccount} = useContext(AccountContext);
 
@@ -53,13 +49,7 @@ const Settings = () => {
   }, []);
 
   useEffect(() => {
-    setFieldValues((prev) => ({
-      ...prev,
-      firstname: account?.user.first_name || '',
-      lastname: account?.user.last_name || '',
-      username: account?.user.username || '',
-    }));
-    setPreviewImage(getImagesUrl(account.user.avatar));
+    setPreviewImage(account.user.avatar ? getImagesUrl(account.user.avatar) : null);
   }, [account]);
 
   const handleInputChange = (e, field) => {
@@ -95,9 +85,58 @@ const Settings = () => {
     );
   };
 
-  const handleSubmit = () => {
+  const isPayloadEmpty = (data) => {
+    // Check if the payload is empty or only contains empty values
+    return Object.keys(data).length === 0;
+  };
+
+  const validatePasswordChange = () => {
+    let isValid = true;
+    const errors = { ...fieldErrors };
+    
+    // If any password field is filled, all password fields must be filled
+    const hasAnyPasswordField = fieldValues.old_password || fieldValues.password || fieldValues.password_confirmation;
+    
+    if (hasAnyPasswordField) {
+      if (!fieldValues.old_password) {
+        errors.old_password = ['Current password is required'];
+        isValid = false;
+      }
+      
+      if (!fieldValues.password) {
+        errors.password = ['New password is required'];
+        isValid = false;
+      }
+      
+      if (!fieldValues.password_confirmation) {
+        errors.password_confirmation = ['Password confirmation is required'];
+        isValid = false;
+      } else if (fieldValues.password !== fieldValues.password_confirmation) {
+        errors.password_confirmation = ['Passwords do not match'];
+        isValid = false;
+      }
+    }
+    
+    setFieldErrors(errors);
+    return isValid;
+  };
+
+  const handleSubmit = (e) => {
+    if (e) e.preventDefault();
+    
+    // Validate password fields if any are filled
+    if (!validatePasswordChange()) {
+      return;
+    }
+    
     const payload = {...fieldValues, image: profileImage};
     const data = cleanPayload(payload);
+    
+    // Check if the payload is empty
+    if (isPayloadEmpty(data)) {
+      toast.error('Please make at least one change before submitting');
+      return;
+    }
 
     mutate(data, {
       onSuccess: (res) => {
@@ -131,7 +170,7 @@ const Settings = () => {
               value={
                 previewImage
                   ? previewImage
-                  : account.user.name ?? account.user.email
+                  : account.user.email
               }
             />
             <S.FileInput
@@ -147,93 +186,69 @@ const Settings = () => {
               Choose Image
             </Button>
           </S.ImageSection>
-          {/* Form Fields */}
-          <S.SettingsSection>
-            <S.SectionTitle>
-              <S.SectionIcon>
-                <i className="fas fa-user"></i>
-              </S.SectionIcon>
-              <Text weight={600} size="md">
-                Personal Information
-              </Text>
-            </S.SectionTitle>
-            <TextInput
-              type="text"
-              label="First Name"
-              placeholder="Enter your first name"
-              value={fieldValues.firstname}
-              onChange={(e) => handleInputChange(e, 'firstname')}
-              error={fieldErrors?.firstname}
-              onKeyDown={() => resetErrors('firstname')}
-            />
-            <TextInput
-              type="text"
-              label="Last Name"
-              placeholder="Enter your last name"
-              value={fieldValues.lastname}
-              onChange={(e) => handleInputChange(e, 'lastname')}
-              error={fieldErrors?.lastname}
-              onKeyDown={() => resetErrors('lastname')}
-            />
-            <TextInput
-              type="text"
-              label="Username"
-              placeholder="Enter your username"
-              value={fieldValues.username}
-              onChange={(e) => handleInputChange(e, 'username')}
-              error={fieldErrors?.username}
-              onKeyDown={() => resetErrors('username')}
-            />
-          </S.SettingsSection>
           
-          <S.SettingsSection>
-            <S.SectionTitle>
-              <S.SectionIcon>
-                <i className="fas fa-lock"></i>
-              </S.SectionIcon>
-              <Text weight={600} size="md">
-                Change Password
-              </Text>
-            </S.SectionTitle>
-            <TextInput
-              type="password"
-              label="Current Password"
-              placeholder="Enter your current password"
-              value={fieldValues.old_password}
-              onChange={(e) => handleInputChange(e, 'old_password')}
-              error={fieldErrors?.old_password}
-              onKeyDown={() => resetErrors('old_password')}
-            />
-            <TextInput
-              type="password"
-              label="New Password"
-              placeholder="Enter a new password"
-              value={fieldValues.password}
-              onChange={(e) => handleInputChange(e, 'password')}
-              error={fieldErrors?.password}
-              onKeyDown={() => resetErrors('password')}
-            />
-            <TextInput
-              type="password"
-              label="Confirm New Password"
-              placeholder="Re-enter your new password"
-              value={fieldValues.password_confirmation}
-              onChange={(e) => handleInputChange(e, 'password_confirmation')}
-              error={fieldErrors?.password_confirmation}
-              onKeyDown={() => resetErrors('password_confirmation')}
-            />
-          </S.SettingsSection>
-          
-          <S.SaveButton
-            radius={8}
-            size="md"
-            variant="primary"
-            width={isMobile ? '100%' : 'fit-content'}
-            onClick={handleSubmit}
-            disabled={isPending}
+          {/* Password Form */}
+          <form 
+            ref={formRef}
+            onSubmit={handleSubmit}
+            method="post"
+            autoComplete="off"
           >
-            {isPending ? <Loader /> : 'Update Information'}
-          </S.SaveButton>
+            <S.SettingsSection>
+              <S.SectionTitle>
+                <S.SectionIcon>
+                  <i className="fas fa-lock"></i>
+                </S.SectionIcon>
+                <Text weight={600} size="md">
+                  Change Password
+                </Text>
+              </S.SectionTitle>
+              
+              <PasswordField
+                label="Current Password"
+                placeholder="Enter your current password"
+                value={fieldValues.old_password}
+                onChange={(e) => handleInputChange(e, 'old_password')}
+                error={fieldErrors?.old_password}
+                onKeyDown={() => resetErrors('old_password')}
+                autoComplete="current-password"
+                name="old_password"
+              />
+              
+              <PasswordField
+                label="New Password"
+                placeholder="Enter a new password"
+                value={fieldValues.password}
+                onChange={(e) => handleInputChange(e, 'password')}
+                error={fieldErrors?.password}
+                onKeyDown={() => resetErrors('password')}
+                autoComplete="new-password"
+                name="password"
+              />
+              
+              <PasswordField
+                label="Confirm New Password"
+                placeholder="Re-enter your new password"
+                value={fieldValues.password_confirmation}
+                onChange={(e) => handleInputChange(e, 'password_confirmation')}
+                error={fieldErrors?.password_confirmation}
+                onKeyDown={() => resetErrors('password_confirmation')}
+                autoComplete="new-password"
+                name="password_confirmation"
+              />
+              
+              <S.SaveButton
+                type="submit"
+                radius={8}
+                size="md"
+                variant="primary"
+                width={isMobile ? '100%' : 'fit-content'}
+                disabled={isPending}
+              >
+                {isPending ? <Loader /> : 'Update Information'}
+              </S.SaveButton>
+            </S.SettingsSection>
+          </form>
         </S.ContentInner>
       </S.Content>
     </S.Container>

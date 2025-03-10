@@ -7,7 +7,7 @@ import * as S from './Login.style';
 import {Button, Text, TextInput, Icon} from '../../../ds/components';
 import Loader from '../../../components/Loader/Loader';
 import PropTypes from 'prop-types';
-
+import PasswordField from '../../../components/PasswordField/PasswordField';
 
 const Login = ({ isSignUp = false }) => {
   const navigate = useNavigate();
@@ -16,18 +16,12 @@ const Login = ({ isSignUp = false }) => {
   const [fieldErrors, setFieldErrors] = useState({
     email: [], 
     password: [],
-    firstname: [],
-    lastname: [],
-    username: [],
     password_confirmation: []
   });
   
   const [fieldValues, setFieldValues] = useState({
     email: '', 
     password: '',
-    firstname: '',
-    lastname: '',
-    username: '',
     password_confirmation: ''
   });
 
@@ -62,21 +56,6 @@ const Login = ({ isSignUp = false }) => {
       errors.password = ['Password must be at least 8 characters'];
       isValid = false;
     }
-
-    if (!fieldValues.firstname.trim()) {
-      errors.firstname = ['First name is required'];
-      isValid = false;
-    }
-
-    if (!fieldValues.lastname.trim()) {
-      errors.lastname = ['Last name is required'];
-      isValid = false;
-    }
-
-    if (!fieldValues.username.trim()) {
-      errors.username = ['Username is required'];
-      isValid = false;
-    }
     
     setFieldErrors(errors);
     return isValid;
@@ -90,9 +69,6 @@ const Login = ({ isSignUp = false }) => {
       if (!validateSignUpForm()) return;
       
       const registerData = {
-        firstname: fieldValues.firstname,
-        lastname: fieldValues.lastname,
-        username: fieldValues.username,
         email: fieldValues.email,
         password: fieldValues.password,
         password_confirmation: fieldValues.password_confirmation
@@ -153,50 +129,7 @@ const Login = ({ isSignUp = false }) => {
               : 'Welcome! Proceed with your credentials'}
           </Text>
         </S.Header>
-        <S.LoginForm onSubmit={handleSubmit}>
-          {isSignUp && (
-            <>
-              <TextInput
-                type="text"
-                placeholder="Enter your first name"
-                label="First Name"
-                size="sm"
-                autoComplete="given-name"
-                required
-                value={fieldValues.firstname}
-                error={fieldErrors.firstname}
-                onChange={(e) => setValue(e, 'firstname')}
-                onKeyDown={() => resetErrors('firstname')}
-              />
-              
-              <TextInput
-                type="text"
-                placeholder="Enter your last name"
-                label="Last Name"
-                size="sm"
-                autoComplete="family-name"
-                required
-                value={fieldValues.lastname}
-                error={fieldErrors.lastname}
-                onChange={(e) => setValue(e, 'lastname')}
-                onKeyDown={() => resetErrors('lastname')}
-              />
-              
-              <TextInput
-                type="text"
-                placeholder="Choose a username"
-                label="Username"
-                size="sm"
-                autoComplete="username"
-                required
-                value={fieldValues.username}
-                error={fieldErrors.username}
-                onChange={(e) => setValue(e, 'username')}
-                onKeyDown={() => resetErrors('username')}
-              />
-            </>
-          )}
-
+        <S.LoginForm onSubmit={handleSubmit} method="post" autoComplete="off">
           <TextInput
             type="email"
             placeholder="Enter your email"
@@ -208,12 +141,12 @@ const Login = ({ isSignUp = false }) => {
             error={fieldErrors.email}
             onChange={(e) => setValue(e, 'email')}
             onKeyDown={() => resetErrors('email')}
+            name="email"
           />
 
-          <TextInput
-            type="password"
-            placeholder="••••••••"
+          <PasswordField
             label="Password (8+ Characters)"
+            placeholder="••••••••"
             size="sm"
             autoComplete={isSignUp ? 'new-password' : 'current-password'}
             required
@@ -221,13 +154,13 @@ const Login = ({ isSignUp = false }) => {
             error={fieldErrors.password}
             onChange={(e) => setValue(e, 'password')}
             onKeyDown={() => resetErrors('password')}
+            name="password"
           />
           
           {isSignUp && (
-            <TextInput
-              type="password"
-              placeholder="••••••••"
+            <PasswordField
               label="Confirm Password"
+              placeholder="••••••••"
               size="sm"
               autoComplete="new-password"
               required
@@ -235,12 +168,41 @@ const Login = ({ isSignUp = false }) => {
               error={fieldErrors.password_confirmation}
               onChange={(e) => setValue(e, 'password_confirmation')}
               onKeyDown={() => resetErrors('password_confirmation')}
+              name="password_confirmation"
             />
           )}
 
           <Button type="submit" width="100%" disabled={isPending}>
             {isPending ? <Loader /> : (isSignUp ? 'Sign Up' : 'Sign In')}
           </Button>
+          
+          <S.SocialLoginSection>
+            <S.SocialDivider>
+              <S.DividerLine />
+              <Text size="sm" color="neutral.600">or continue with</Text>
+              <S.DividerLine />
+            </S.SocialDivider>
+            
+            <S.SocialButtonsContainer>
+              <S.SocialButton
+                type="button"
+                onClick={() => {/* TODO: Implement Google login */}}
+                aria-label="Sign in with Google"
+              >
+                <Icon name="google" size={20} />
+                <Text>Continue with Google</Text>
+              </S.SocialButton>
+              
+              <S.SocialButton
+                type="button"
+                onClick={() => {/* TODO: Implement Apple login */}}
+                aria-label="Sign in with Apple"
+              >
+                <Icon name="apple" size={20} />
+                <Text>Continue with Apple</Text>
+              </S.SocialButton>
+            </S.SocialButtonsContainer>
+          </S.SocialLoginSection>
           
           <S.SwitchAuthMode>
             <Text size="sm" color="neutral.600">

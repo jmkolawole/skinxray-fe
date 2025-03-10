@@ -2,6 +2,30 @@ import axios from 'axios';
 
 const apiUrl = import.meta.env.VITE_APP_API_URL;
 
+// Create axios instance with default config
+const axiosInstance = axios.create({
+  baseURL: apiUrl,
+});
+
+// Response interceptor for handling token expiration
+axiosInstance.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    // Check if error is due to authentication (401)
+    if (error.response && error.response.status === 401) {
+      // Clear account data from localStorage
+      localStorage.removeItem('account');
+      
+      // Redirect to login page if not already there
+      if (window.location.pathname !== '/login') {
+        window.location.replace('/login');
+      }
+    }
+    
+    return Promise.reject(error);
+  }
+);
+
 const reqConfig = {
   headers: {},
 };
@@ -23,8 +47,8 @@ export const request = async (
   params = {},
   headers = {}
 ) => {
-  const account = JSON.parse(localStorage.getItem('account'));
-  if (auth && account) {
+  const account = JSON.parse(localStorage.getItem('account') || '{}');
+  if (auth && account && account.token) {
     reqConfig.headers['Authorization'] = `Bearer ${account.token}`;
   }
 
@@ -32,33 +56,38 @@ export const request = async (
   reqConfig.headers = {...reqConfig.headers, ...headers};
 
   if (['get', 'delete'].includes(method)) {
-    return axios[method](`${apiUrl}${path}`, reqConfig)
+    return axiosInstance[method](`${path}`, reqConfig)
       .then((res) => {
         return res.data;
       })
       .catch((err) => {
-        const unauthenticated = auth
+        const unauthenticated = auth && err.response
           ? {unauthenticated: err.response.status === 401}
           : {};
 
         throw {
-          ...err.response.data,
+          ...(err.response?.data || {}),
           ...unauthenticated,
+          status: err.response?.status === 401 ? false : err.response?.data?.status,
         };
       });
   } else {
-    return axios[method](`${apiUrl}${path}`, data, reqConfig)
+    return axiosInstance[method](`${path}`, data, reqConfig)
       .then((res) => {
         return res.data;
       })
       .catch((err) => {
-        const unauthenticated = auth
+        const unauthenticated = auth && err.response
           ? {unauthenticated: err.response.status === 401}
           : {};
 
         throw {
-          ...err.response.data,
+          ...(err.response?.data || {}),
           ...unauthenticated,
+          status: err.response?.status === 401 ? false : err.response?.data?.status,
+          error: err.response?.status === 401 
+            ? "You're not authenticated, please login" 
+            : err.response?.data?.error,
         };
       });
   }
@@ -66,4 +95,4 @@ export const request = async (
 
 export const getImagesUrl = (filename) => {
   return `${apiUrl}/image${filename}`;
-};
+}; 

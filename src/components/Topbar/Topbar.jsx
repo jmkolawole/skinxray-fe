@@ -50,7 +50,7 @@ const Topbar = () => {
           value={
             account.user.avatar
               ? getImagesUrl(account.user.avatar)
-              : account.user.name ?? account.user.email
+              : account.user.email
           }
         />
         {openMenu && (

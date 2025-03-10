@@ -1,4 +1,4 @@
-import {Outlet, useNavigate} from 'react-router-dom';
+import {Outlet, useNavigate, useLocation} from 'react-router-dom';
 import {useState} from 'react';
 import {useContext} from 'react';
 import {AccountContext} from '../../contexts';
@@ -11,26 +11,21 @@ const pageTitleMap = {
   '/auth/google': 'Login',
   '/forgot-password': 'Forgot Password',
   '/reset-password': 'Reset Password',
+  '/signup': 'Sign Up',
 };
 
 const AuthLayout = () => {
   const navigate = useNavigate();
-  const {account} = useContext(AccountContext);
+  const location = useLocation();
+  const {isAuthenticated} = useContext(AccountContext);
   // eslint-disable-next-line no-unused-vars
   const [renderOutlet, setRenderOutlet] = useState(false);
 
   // Redirect if logged in
   useEffect(() => {
-    const accountArr = Object.keys(account);
-
-    if (
-      accountArr.length > 0 &&
-      accountArr.includes('user') &&
-      accountArr.includes('token')
-    ) {
+    if (isAuthenticated()) {
       navigate('/');
     } else {
-      //localStorage.removeItem('account');
       setRenderOutlet(true);
 
       if (has(pageTitleMap, location.pathname)) {
@@ -40,7 +35,7 @@ const AuthLayout = () => {
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [account, navigate, setRenderOutlet, location.pathname]);
+  }, [navigate, isAuthenticated, location.pathname]);
 
   return (
     <S.Container>

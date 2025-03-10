@@ -10,10 +10,10 @@ dayjs.extend(utc);
  *
  */
 export const getDateFormat = () => {
-  const userAccount = JSON.parse(localStorage.getItem('account'));
-  const dateFormat = userAccount.user.date_format;
+  const userAccount = JSON.parse(localStorage.getItem('account') || '{}');
+  const dateFormat = userAccount?.user?.date_format || 'american';
 
-  return dateFormat == 'british'
+  return dateFormat === 'british'
     ? ['dd/MM/yyyy', 'DD/MM/YYYY']
     : ['MM/dd/yyyy', 'MM/DD/YYYY'];
 };
@@ -33,20 +33,20 @@ export const getDate = (datetime, verbose = false, hyphen = true) => {
   datetime = dayjs(new Date(datetime)).format('D MMMM YYYY');
 
   // Get the users date format
-  const userAccount = JSON.parse(localStorage.getItem('account'));
-  const dateFormat = userAccount?.user?.date_format;
+  const userAccount = JSON.parse(localStorage.getItem('account') || '{}');
+  const dateFormat = userAccount?.user?.date_format || 'american';
 
   const date = dayjs(datetime).utc();
 
   if (verbose) {
     const dateText = datetime.split(' ');
 
-    if (dateFormat == 'british') {
+    if (dateFormat === 'british') {
       return datetime;
     }
     return `${dateText[1]} ${dateText[0]}, ${dateText[2]}`;
   } else {
-    if (dateFormat == 'british') {
+    if (dateFormat === 'british') {
       return hyphen ? date.format('DD-MM-YY') : date.format('DD/MM/YY');
     }
     return hyphen ? date.format('MM-DD-YY') : date.format('MM/DD/YY');

@@ -6,23 +6,17 @@ import Topbar from '../../components/Topbar/Topbar';
 
 export const Layout = () => {
   const navigate = useNavigate();
-  const {account} = useContext(AccountContext);
-
+  const {account, isAuthenticated} = useContext(AccountContext);
   const [renderOutlet, setRenderOutlet] = useState(false);
 
   useEffect(() => {
-    const accountArr = Object.keys(account);
-    if (
-      accountArr.length > 0 &&
-      accountArr.includes('user') &&
-      accountArr.includes('token')
-    ) {
+    if (isAuthenticated()) {
       setRenderOutlet(true);
     } else {
-      //localStorage.removeItem('account');
-      //navigate('/login');
+      // If not authenticated, redirect to login
+      navigate('/login');
     }
-  }, [account, navigate]);
+  }, [account, navigate, isAuthenticated]);
 
   return (
     <div>

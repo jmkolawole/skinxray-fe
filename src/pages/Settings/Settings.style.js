@@ -39,6 +39,11 @@ export const ContentInner = styled.div`
     padding: 16px;
     gap: 8px;
   }
+  
+  .password-field-wrapper {
+    width: 100%;
+    margin-bottom: 16px;
+  }
 `;
 
 export const Header = styled.div`

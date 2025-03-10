@@ -36,11 +36,56 @@ export const LoginForm = styled.form`
 `;
 
 export const SwitchAuthMode = styled.div`
+  margin-top: 1rem;
+  text-align: center;
+`;
+
+export const SocialLoginSection = styled.div`
+  margin-top: 1.5rem;
+  width: 100%;
+`;
+
+export const SocialDivider = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  width: 100%;
+`;
+
+export const DividerLine = styled.div`
+  flex: 1;
+  height: 1px;
+  background-color: ${colors.neutral[200]};
+`;
+
+export const SocialButtonsContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+`;
+
+export const SocialButton = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  margin-top: 16px;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid ${colors.neutral[200]};
+  border-radius: 8px;
+  background-color: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: ${colors.neutral[50]};
+  }
+
+  &:active {
+    background-color: ${colors.neutral[100]};
+  }
 `;
 
 export const AuthLink = styled.span`

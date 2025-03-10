@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import {useEffect, useState, useCallback} from 'react';
 import {AccountContext} from '..';
 import PropTypes from 'prop-types';
 
@@ -15,6 +15,22 @@ const AccountProvider = ({children}) => {
    */
   const [account, setAccount] = useState(JSON.parse(localAccountData));
 
+  // Clear account data and localStorage
+  const clearAccount = useCallback(() => {
+    setAccount({});
+    localStorage.removeItem('account');
+  }, []);
+
+  // Check if token exists and is valid
+  const isAuthenticated = useCallback(() => {
+    return (
+      Object.keys(account).length > 0 &&
+      account.user &&
+      account.token
+    );
+  }, [account]);
+
+  // Update localStorage when account changes
   useEffect(() => {
     if (Object.keys(account).length > 0) {
       localStorage.setItem('account', JSON.stringify(account));
@@ -22,7 +38,7 @@ const AccountProvider = ({children}) => {
   }, [account]);
 
   return (
-    <AccountContext.Provider value={{account, setAccount}}>
+    <AccountContext.Provider value={{account, setAccount, clearAccount, isAuthenticated}}>
       {children}
     </AccountContext.Provider>
   );
