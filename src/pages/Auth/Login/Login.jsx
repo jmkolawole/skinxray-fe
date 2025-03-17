@@ -78,15 +78,12 @@ const Login = ({ isSignUp = false }) => {
       try {
         const user = JSON.parse(userData);
         const socialAvatar = user.social_accounts?.[0]?.avatar;
-        
-        // If we have a social avatar (from Google), use it directly
-        // Otherwise, use the local avatar which will be processed by getImagesUrl
-        const avatarUrl = socialAvatar || user.avatar;
 
         setAccount({
           user: {
             ...user,
-            avatar: avatarUrl
+            socialAvatar: socialAvatar, // Store social avatar separately
+            avatar: user.avatar        // Keep local avatar if any
           },
           token
         });

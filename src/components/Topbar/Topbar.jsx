@@ -3,7 +3,6 @@ import * as S from './Topbar.style';
 import {useNavigate} from 'react-router-dom';
 import {Avatar, Icon, Menu} from '../../ds';
 import {AccountContext} from '../../contexts';
-import { getImagesUrl } from '../../api';
 
 const Topbar = () => {
   const {account} = useContext(AccountContext);
@@ -34,10 +33,39 @@ const Topbar = () => {
     },
   ];
 
+  // Determine avatar type and value
+  const getAvatarProps = () => {
+    const user = account.user;
+    
+    // If user has a social avatar (e.g., from Google)
+    if (user.socialAvatar) {
+      return {
+        type: 'image',
+        value: user.socialAvatar
+      };
+    }
+    
+    // If user has a local avatar
+    if (user.avatar) {
+      return {
+        type: 'image',
+        value: user.avatar
+      };
+    }
+    
+    // Fallback to text avatar using email
+    return {
+      type: 'text',
+      value: user.email
+    };
+  };
+
+  const avatarProps = getAvatarProps();
+
   return (
     <S.Container>
-      <div style={{cursor:'pointer'}} onClick={() => navigate('/')}>
-        <Icon name={'home'} color='primary.1000'/>
+      <div style={{cursor: 'pointer'}} onClick={() => navigate('/')}>
+        <Icon name={'home'} color="primary.1000" />
       </div>
       <div
         onClick={() => setOpenMenu(!openMenu)}
@@ -46,12 +74,8 @@ const Topbar = () => {
       >
         <Avatar
           size={48}
-          type={account.user.avatar ? 'image' : 'text'}
-          value={
-            account.user.avatar
-              ? getImagesUrl(account.user.avatar)
-              : account.user.email
-          }
+          type={avatarProps.type}
+          value={avatarProps.value}
         />
         {openMenu && (
           <div
