@@ -1,1 +1,1 @@
-export {AccountContext} from './Account/AccountContext';
+export {AccountContext, AccountProvider} from './Account/AccountContext.jsx';

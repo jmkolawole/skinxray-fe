@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
 import {camelCase} from 'lodash';
 import {toast} from 'react-toastify';
+import { getImagesUrl } from '../api';
 
 /**
  * Error handler
@@ -105,4 +106,13 @@ export const truncateText = (text, n) => {
 
   // Truncate the text to `n` words and add an ellipsis
   return words?.slice(0, n).join(' ') + '...';
+};
+
+export const getAvatarUrl = (url) => {
+  // Check if the URL is already absolute (like Google avatar URLs)
+  if (url?.startsWith('http://') || url?.startsWith('https://')) {
+    return url;
+  }
+  // Otherwise, use getImagesUrl for local avatars
+  return url ? getImagesUrl(url) : null;
 };

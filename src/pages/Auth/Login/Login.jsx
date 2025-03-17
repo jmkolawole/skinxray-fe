@@ -1,7 +1,11 @@
-import {useContext, useState} from 'react';
-import {useNavigate} from 'react-router-dom';
+import {useContext, useState, useEffect} from 'react';
+import {useNavigate, useSearchParams} from 'react-router-dom';
 import {AccountContext} from '../../../contexts';
-import {useLogin, useRegister} from '../../../api/mutations/auth.mutation';
+import {
+  useLogin,
+  useRegister,
+  useGoogleRedirect,
+} from '../../../api/mutations/auth.mutation';
 import {handleError} from '../../../utils/functions';
 import * as S from './Login.style';
 import {Button, Text, TextInput, Icon} from '../../../ds/components';
@@ -11,6 +15,12 @@ import PasswordField from '../../../components/PasswordField/PasswordField';
 
 const Login = ({ isSignUp = false }) => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  
+  // Get params from URL
+  const token = searchParams.get('token');
+  const userData = searchParams.get('user');
+  const error = searchParams.get('error');
 
   // Form states
   const [fieldErrors, setFieldErrors] = useState({
@@ -31,8 +41,9 @@ const Login = ({ isSignUp = false }) => {
   // Login and Register mutations
   const {mutate: loginMutate, isPending: isLoginPending} = useLogin();
   const {mutate: registerMutate, isPending: isRegisterPending} = useRegister();
+  const {mutate: googleRedirect, isPending: isRedirectPending} = useGoogleRedirect();
 
-  const isPending = isSignUp ? isRegisterPending : isLoginPending;
+  const isPending = isSignUp ? isRegisterPending : (isLoginPending || isRedirectPending);
 
   // Set form field value
   const setValue = (e, field) => {
@@ -59,6 +70,51 @@ const Login = ({ isSignUp = false }) => {
     
     setFieldErrors(errors);
     return isValid;
+  };
+
+  // Handle redirect with token and user data
+  useEffect(() => {
+    if (token && userData) {
+      try {
+        const user = JSON.parse(userData);
+        const socialAvatar = user.social_accounts?.[0]?.avatar;
+        
+        // If we have a social avatar (from Google), use it directly
+        // Otherwise, use the local avatar which will be processed by getImagesUrl
+        const avatarUrl = socialAvatar || user.avatar;
+
+        setAccount({
+          user: {
+            ...user,
+            avatar: avatarUrl
+          },
+          token
+        });
+        navigate('/home');
+      } catch (err) {
+        console.error('Error processing login data:', err);
+      }
+    } else if (error) {
+      console.error('Login error:', error);
+      // Optionally show error to user
+    }
+  }, [token, userData, error, setAccount, navigate]);
+
+  // Handle Google login click
+  const handleGoogleLogin = () => {
+    googleRedirect(null, {
+      onSuccess: (response) => {
+        console.log('Redirect success:', response);
+      },
+      onError: (error) => {
+        console.error('Failed to get Google redirect URL:', error);
+        // Optionally show error to user
+        setFieldErrors(prev => ({
+          ...prev,
+          email: ['Failed to connect to Google. Please try again.']
+        }));
+      }
+    });
   };
 
   // Handle form submission
@@ -186,7 +242,7 @@ const Login = ({ isSignUp = false }) => {
             <S.SocialButtonsContainer>
               <S.SocialButton
                 type="button"
-                onClick={() => {/* TODO: Implement Google login */}}
+                onClick={handleGoogleLogin}
                 aria-label="Sign in with Google"
               >
                 <Icon name="google" size={20} />
