@@ -53,7 +53,6 @@ const Topbar = () => {
         value: user.socialAvatar
       };
     }
-
     
     // Fallback to text avatar using email
     return {

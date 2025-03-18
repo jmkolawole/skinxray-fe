@@ -72,18 +72,23 @@ const Login = ({ isSignUp = false }) => {
     return isValid;
   };
 
-  // Handle redirect with token and user data
+  // Handle redirect with token and user data (for social login)
   useEffect(() => {
     if (token && userData) {
       try {
         const user = JSON.parse(userData);
+        // Get social avatar from social accounts if available
         const socialAvatar = user.social_accounts?.[0]?.avatar;
+
+        // Create new user object without the avatar property
+        const userWithoutAvatar = { ...user };
+        delete userWithoutAvatar.avatar;
 
         setAccount({
           user: {
-            ...user,
-            socialAvatar: socialAvatar, // Store social avatar separately
-            avatar: user.avatar        // Keep local avatar if any
+            ...userWithoutAvatar,
+            avatar: null,                    // Ensure local avatar starts as null
+            socialAvatar: socialAvatar       // Set social avatar from Google
           },
           token
         });
