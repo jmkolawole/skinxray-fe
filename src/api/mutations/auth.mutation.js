@@ -63,3 +63,17 @@ export const useGoogleCallback = () =>
     mutationFn: ({ code }) => request('/auth/google/callback', 'get', {}, false, { code }),
     retry: false,
   });
+
+// Forgot Password Mutation
+export const useForgotPassword = () =>
+  useMutation({
+    mutationFn: (data) => request('/auth/forgot-password', 'post', data, false),
+    retry: false,
+  });
+
+// Reset Password Mutation
+export const useResetPassword = () =>
+  useMutation({
+    mutationFn: (data) => request('/auth/reset-password', 'post', data, false),
+    retry: false,
+  });

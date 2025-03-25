@@ -8,6 +8,8 @@ import Analysis from './pages/Analysis/Analysis';
 import Settings from './pages/Settings/Settings';
 import Landing from './pages/Landing/Landing';
 import NotFound from './pages/NotFound/NotFound';
+import ResetPassword from './pages/ResetPassword';
+import ForgotPassword from './pages/Auth/ForgotPassword/ForgotPassword';
 
 export const router = createBrowserRouter([
   // UNPROTECTED PAGES
@@ -26,6 +28,14 @@ export const router = createBrowserRouter([
       {
         path: '/signup',
         element: <Login isSignUp={true} />,
+      },
+      {
+        path: '/forgot-password',
+        element: <ForgotPassword />,
+      },
+      {
+        path: '/reset',
+        element: <ResetPassword />,
       },
     ],
   },
