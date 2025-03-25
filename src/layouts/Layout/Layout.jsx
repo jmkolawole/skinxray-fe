@@ -13,8 +13,8 @@ export const Layout = () => {
     if (isAuthenticated()) {
       setRenderOutlet(true);
     } else {
-      // If not authenticated, redirect to login
-      navigate('/login');
+      // If not authenticated, redirect to landing page
+      navigate('/');
     }
   }, [account, navigate, isAuthenticated]);
 

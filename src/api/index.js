@@ -16,9 +16,9 @@ axiosInstance.interceptors.response.use(
       // Clear account data from localStorage
       localStorage.removeItem('account');
       
-      // Redirect to login page if not already there
-      if (window.location.pathname !== '/login') {
-        window.location.replace('/login');
+      // Redirect to landing page if not already there
+      if (window.location.pathname !== '/') {
+        window.location.replace('/');
       }
     }
     

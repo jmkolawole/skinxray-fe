@@ -30,7 +30,7 @@ Tab.propTypes = {
   items: PropTypes.arrayOf(PropTypes.string),
   activeTab: PropTypes.string,
   onChange: PropTypes.func,
-  width: PropTypes.number,
+  width: PropTypes.any,
   height: PropTypes.number,
 };
 

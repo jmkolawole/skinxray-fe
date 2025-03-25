@@ -88,12 +88,14 @@ export const DescriptionWrapper = styled.div`
 export const ImageContainer = styled.div`
   background-color: ${colors.shades[0]};
   border: 1px solid #e5e7eb;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Adds a soft shadow */
-  height: 220px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  height: ${props => props.$showCamera ? '400px' : '220px'};
   padding: 33px;
+  position: relative;
+  transition: height 0.3s ease;
   
   @media (max-width: 768px) {
-    height: 180px;
+    height: ${props => props.$showCamera ? '350px' : '180px'};
     padding: 16px;
   }
 `;
@@ -156,8 +158,19 @@ export const OrText = styled.p`
   }
 `;
 
-export const BrowseButton = styled.button`
-  background-color: #4fd1c5;
+export const ButtonsContainer = styled.div`
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  margin-top: 8px;
+  
+  @media (max-width: 768px) {
+    gap: 12px;
+  }
+`;
+
+export const ActionButton = styled.button`
+  background-color: ${props => props.$variant === 'primary' ? '#4fd1c5' : '#2AB3B5'};
   color: white;
   padding: 8px 24px;
   border: none;
@@ -165,7 +178,7 @@ export const BrowseButton = styled.button`
   font-size: 16px;
   cursor: pointer;
   &:hover {
-    background-color: #4ba8a8;
+    background-color: ${props => props.$variant === 'primary' ? '#4ba8a8' : '#228D8F'};
   }
   
   @media (max-width: 768px) {
@@ -371,5 +384,44 @@ export const DisclaimerContent = styled.div`
   flex-direction: column;
   gap: 4px;
   flex: 1;
+`;
+
+export const CameraContainer = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  position: relative;
+`;
+
+export const VideoPreview = styled.div`
+  width: 100%;
+  height: calc(100% - 70px);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  video {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+`;
+
+export const CameraControls = styled.div`
+  display: flex;
+  gap: 12px;
+  padding: 8px;
+  width: 100%;
+  justify-content: center;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  background-color: ${colors.shades[0]};
 `;
 

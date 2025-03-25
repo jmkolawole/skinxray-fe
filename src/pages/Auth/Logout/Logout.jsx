@@ -35,6 +35,7 @@ const Logout = () => {
         }
       },
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [logout, setAccount, navigate]);
 
   // Handle successful logout (both server and local)

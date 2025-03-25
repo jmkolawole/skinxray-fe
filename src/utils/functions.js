@@ -12,7 +12,7 @@ import { getImagesUrl } from '../api';
 export const handleError = (err, setter = () => {}, inCamelCase = true) => {
   if (err?.unauthenticated) {
     localStorage.removeItem('account');
-    location.replace('/login');
+    location.replace('/');
   }
 
   if (err?.status === false && err?.error) {
