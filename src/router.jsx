@@ -7,6 +7,7 @@ import Logout from './pages/Auth/Logout/Logout';
 import Analysis from './pages/Analysis/Analysis';
 import Settings from './pages/Settings/Settings';
 import Landing from './pages/Landing/Landing';
+import NotFound from './pages/NotFound/NotFound';
 
 export const router = createBrowserRouter([
   // UNPROTECTED PAGES
@@ -49,5 +50,10 @@ export const router = createBrowserRouter([
         element: <Settings />,
       }
     ],
+  },
+  // 404 PAGE
+  {
+    path: '*',
+    element: <NotFound />,
   },
 ]);
