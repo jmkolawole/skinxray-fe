@@ -1,11 +1,12 @@
-import { useContext, useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { AccountContext } from '../../contexts';
+import {useContext, useEffect} from 'react';
+import {useLocation, useNavigate} from 'react-router-dom';
+import {AccountContext} from '../../contexts';
 import PricingComponent from '../../components/Pricing/Pricing';
 import * as S from './Pricing.style';
+import {Icon} from '../../ds';
 
 const PricingPage = () => {
-  const { account } = useContext(AccountContext);
+  const {account} = useContext(AccountContext);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -31,7 +32,15 @@ const PricingPage = () => {
     <S.Container>
       <S.Header>
         <S.BackButton onClick={() => navigate(-1)}>
-          <i className="fas fa-arrow-left" />
+          <Icon
+            bg="success.700"
+            color="shades.0"
+            name="chevronLeft"
+            padding={7}
+            radius={100}
+            size={30}
+            weight={0}
+          />
         </S.BackButton>
         <S.Title>Subscription Plans</S.Title>
       </S.Header>
@@ -47,4 +56,4 @@ const PricingPage = () => {
   );
 };
 
-export default PricingPage; 
+export default PricingPage;
