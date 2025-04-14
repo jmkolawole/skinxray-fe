@@ -19,12 +19,22 @@ const Topbar = () => {
     navigate('/logout');
   };
 
+  const handlePricing = () => {
+    navigate('/pricing');
+  };
+
   const menuItems = [
     {
       text: 'Settings',
       icon: 'cog',
       color: 'neutral.700',
       action: handleSettings,
+    },
+    {
+      text: 'Subscription',
+      icon: 'dollar',
+      color: 'neutral.700',
+      action: handlePricing,
     },
     {
       text: 'Logout',

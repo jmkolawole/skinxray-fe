@@ -2,15 +2,72 @@ import { Text, Button } from '../../ds';
 import PropTypes from 'prop-types';
 import * as S from './Pricing.style';
 
-const Pricing = ({ onSignUp }) => {
+const Pricing = ({ onSignUp, currentPlan, isLoggedIn, onPlanSelect, selectedPlan }) => {
+  const handlePlanAction = (plan) => {
+    if (!isLoggedIn) {
+      onSignUp(plan);
+      return;
+    }
+    onPlanSelect(plan);
+  };
+
+  const getButtonProps = (plan) => {
+    if (!isLoggedIn) {
+      const isSelected = selectedPlan === plan;
+      return {
+        onClick: () => handlePlanAction(plan),
+        children: plan === 'basic' ? 'Get Started Free' : 'Get Started',
+        variant: plan === 'basic' ? 'secondary' : 'primary',
+        style: {
+          width: '100%',
+          ...(isSelected && {
+            borderColor: 'var(--color-primary-500)',
+            boxShadow: '0 0 0 2px var(--color-primary-100)'
+          })
+        }
+      };
+    }
+
+    if (currentPlan === plan) {
+      return {
+        disabled: true,
+        children: 'Current Plan',
+        variant: 'secondary',
+        style: { width: '100%' }
+      };
+    }
+
+    if (plan === 'basic') {
+      return {
+        onClick: () => handlePlanAction(plan),
+        children: 'Switch to Basic',
+        variant: 'secondary',
+        style: { width: '100%' }
+      };
+    }
+
+    return {
+      onClick: () => handlePlanAction(plan),
+      children: 'Upgrade Now',
+      variant: 'primary',
+      style: { width: '100%' }
+    };
+  };
+
   return (
     <S.PricingSection>
       <Text weight={700} type="h3" align="center">
         Choose Your Plan
       </Text>
       
+      {!isLoggedIn && (
+        <Text align="center" color="neutral.600" style={{ marginTop: '16px' }}>
+          Create an account to get started with your selected plan
+        </Text>
+      )}
+      
       <S.PricingCards>
-        <S.PricingCard>
+        <S.PricingCard selected={!isLoggedIn && selectedPlan === 'basic'}>
           <S.FeatureIcon>
             <i className="fas fa-search"></i>
           </S.FeatureIcon>
@@ -39,17 +96,10 @@ const Pricing = ({ onSignUp }) => {
               <Text>Access to symptom checker</Text>
             </S.PriceFeature>
           </S.PriceFeatures>
-          <Button 
-            onClick={onSignUp}
-            size="lg"
-            variant="secondary"
-            style={{ width: '100%' }}
-          >
-            Get Started Free
-          </Button>
+          <Button {...getButtonProps('basic')} />
         </S.PricingCard>
 
-        <S.PricingCard>
+        <S.PricingCard selected={!isLoggedIn && selectedPlan === 'premium'}>
           <S.FeatureIcon>
             <i className="fas fa-star"></i>
           </S.FeatureIcon>
@@ -86,14 +136,7 @@ const Pricing = ({ onSignUp }) => {
               <Text>Detailed health insights</Text>
             </S.PriceFeature>
           </S.PriceFeatures>
-          <Button 
-            onClick={onSignUp}
-            size="lg"
-            variant="primary"
-            style={{ width: '100%' }}
-          >
-            Get Started
-          </Button>
+          <Button {...getButtonProps('premium')} />
         </S.PricingCard>
       </S.PricingCards>
     </S.PricingSection>
@@ -102,6 +145,17 @@ const Pricing = ({ onSignUp }) => {
 
 Pricing.propTypes = {
   onSignUp: PropTypes.func.isRequired,
+  onPlanSelect: PropTypes.func,
+  currentPlan: PropTypes.oneOf(['basic', 'premium']),
+  isLoggedIn: PropTypes.bool,
+  selectedPlan: PropTypes.oneOf(['basic', 'premium'])
+};
+
+Pricing.defaultProps = {
+  onPlanSelect: () => {},
+  currentPlan: null,
+  isLoggedIn: false,
+  selectedPlan: null
 };
 
 export default Pricing; 

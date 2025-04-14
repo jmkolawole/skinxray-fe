@@ -10,6 +10,7 @@ import Landing from './pages/Landing/Landing';
 import NotFound from './pages/NotFound/NotFound';
 import ResetPassword from './pages/ResetPassword';
 import ForgotPassword from './pages/Auth/ForgotPassword/ForgotPassword';
+import PricingPage from './pages/Pricing/Pricing';
 
 export const router = createBrowserRouter([
   // UNPROTECTED PAGES
@@ -58,6 +59,10 @@ export const router = createBrowserRouter([
       {
         path: '/settings',
         element: <Settings />,
+      },
+      {
+        path: '/pricing',
+        element: <PricingPage />,
       }
     ],
   },
