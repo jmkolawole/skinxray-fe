@@ -21,6 +21,7 @@ const Login = ({isSignUp = false}) => {
   const token = searchParams.get('token');
   const userData = searchParams.get('user');
   const error = searchParams.get('error');
+  const selectedPlan = searchParams.get('plan');
 
   // Form states
   const [fieldErrors, setFieldErrors] = useState({
@@ -95,7 +96,13 @@ const Login = ({isSignUp = false}) => {
           },
           token,
         });
-        navigate('/home');
+        
+        // If coming from premium plan selection, redirect to pricing
+        if (selectedPlan === 'premium') {
+          navigate('/pricing?from=signup&plan=premium');
+        } else {
+          navigate('/home');
+        }
       } catch (err) {
         console.error('Error processing login data:', err);
       }
@@ -103,7 +110,7 @@ const Login = ({isSignUp = false}) => {
       console.error('Login error:', error);
       // Optionally show error to user
     }
-  }, [token, userData, error, setAccount, navigate]);
+  }, [token, userData, error, setAccount, navigate, selectedPlan]);
 
   // Handle Google login click
   const handleGoogleLogin = () => {
@@ -141,7 +148,12 @@ const Login = ({isSignUp = false}) => {
             user: res.data.user,
             token: res.data.token,
           });
-          navigate('/home');
+          // If signing up with premium plan selected, redirect to pricing
+          if (selectedPlan === 'premium') {
+            navigate('/pricing?from=signup&plan=premium');
+          } else {
+            navigate('/home');
+          }
         },
         onError: (err) => handleError(err, setFieldErrors),
       });

@@ -21,8 +21,13 @@ const Landing = () => {
     navigate('/login');
   };
 
-  const handleSignUp = () => {
-    navigate('/signup');
+  const handleSignUp = (plan) => {
+    // If plan is premium, include it in the URL
+    if (plan === 'premium') {
+      navigate('/signup?plan=premium');
+    } else {
+      navigate('/signup');
+    }
   };
 
   return (
@@ -53,7 +58,7 @@ const Landing = () => {
           
           <S.ButtonGroup>
             <Button 
-              onClick={handleSignUp}
+              onClick={() => handleSignUp('basic')}
               size="lg"
               variant="primary"
             >
