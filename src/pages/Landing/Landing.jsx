@@ -2,6 +2,7 @@ import { useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, Text } from '../../ds';
 import { AccountContext } from '../../contexts';
+import Pricing from '../../components/Pricing/Pricing';
 import * as S from './Landing.style';
 import heroImage from '../../assets/images/hero.jpg';
 
@@ -137,6 +138,8 @@ const Landing = () => {
           </S.FeatureCard>
         </S.FeatureCards>
       </S.FeaturesSection>
+      
+      <Pricing onSignUp={handleSignUp} />
       
       <S.DisclaimerSection>
         <S.DisclaimerIcon>
