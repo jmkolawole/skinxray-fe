@@ -11,6 +11,7 @@ import NotFound from './pages/NotFound/NotFound';
 import ResetPassword from './pages/ResetPassword';
 import ForgotPassword from './pages/Auth/ForgotPassword/ForgotPassword';
 import PricingPage from './pages/Pricing/Pricing';
+import PaymentSuccess from './pages/PaymentSuccess/PaymentSuccess';
 
 export const router = createBrowserRouter([
   // UNPROTECTED PAGES
@@ -63,6 +64,10 @@ export const router = createBrowserRouter([
       {
         path: '/pricing',
         element: <PricingPage />,
+      },
+      {
+        path: '/payment/success',
+        element: <PaymentSuccess />,
       }
     ],
   },

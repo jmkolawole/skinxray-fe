@@ -1,14 +1,16 @@
-import {useContext, useEffect} from 'react';
+import {useContext, useEffect, useState} from 'react';
 import {useLocation, useNavigate} from 'react-router-dom';
 import {AccountContext} from '../../contexts';
 import PricingComponent from '../../components/Pricing/Pricing';
 import * as S from './Pricing.style';
-import {Icon} from '../../ds';
+import {toast} from 'react-toastify';
+import { Icon } from '../../ds';
 
 const PricingPage = () => {
   const {account} = useContext(AccountContext);
   const navigate = useNavigate();
   const location = useLocation();
+  const [isLoading, setIsLoading] = useState(false);
 
   // Get the selected plan from URL if it exists
   const searchParams = new URLSearchParams(location.search);
@@ -22,10 +24,32 @@ const PricingPage = () => {
     }
   }, [account, navigate, searchParams]);
 
-  const handlePlanSelect = (plan) => {
-    // For now, just console.log the selection
-    // This will be replaced with payment flow later
-    console.log(`Selected plan: ${plan}`);
+  const handlePlanSelect = async (plan) => {
+    if (plan === account?.user?.plan) {
+      return; // Don't do anything if selecting current plan
+    }
+
+    try {
+      setIsLoading(true);
+
+      // TODO: When backend is ready
+      // const response = await createCheckoutSession({
+      //   plan,
+      //   successUrl: `${window.location.origin}/payment/success`,
+      //   cancelUrl: `${window.location.origin}/pricing`,
+      // });
+      // window.location.href = response.data.url;
+
+      // For now, just simulate loading
+      toast.info('Payment processing will be available soon!');
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 2000);
+    } catch (error) {
+      console.error('Failed to initiate checkout:', error);
+      toast.error('Failed to start checkout process. Please try again.');
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -33,12 +57,12 @@ const PricingPage = () => {
       <S.Header>
         <S.BackButton onClick={() => navigate(-1)}>
           <Icon
-            bg="success.700"
+            bg="standalone.2"
             color="shades.0"
             name="chevronLeft"
             padding={7}
             radius={100}
-            size={30}
+            size={25}
             weight={0}
           />
         </S.BackButton>
@@ -51,6 +75,7 @@ const PricingPage = () => {
         selectedPlan={selectedPlan}
         onPlanSelect={handlePlanSelect}
         onSignUp={() => {}} // Not needed here as we're already in pricing page
+        isLoading={isLoading}
       />
     </S.Container>
   );

@@ -82,5 +82,6 @@ export const colors = {
   standalone: {
     0: '#396CE8',
     1: '#07A74F',
+    2: '#2AB3B5',
   },
 };
