@@ -1,8 +1,14 @@
-import { Text, Button } from '../../ds';
+import {Text, Button} from '../../ds';
 import PropTypes from 'prop-types';
 import * as S from './Pricing.style';
 
-const Pricing = ({ onSignUp, currentPlan, isLoggedIn, onPlanSelect, selectedPlan }) => {
+const Pricing = ({
+  onSignUp,
+  currentPlan,
+  isLoggedIn,
+  onPlanSelect,
+  selectedPlan,
+}) => { 
   const handlePlanAction = (plan) => {
     if (!isLoggedIn) {
       onSignUp(plan);
@@ -22,9 +28,9 @@ const Pricing = ({ onSignUp, currentPlan, isLoggedIn, onPlanSelect, selectedPlan
           width: '100%',
           ...(isSelected && {
             borderColor: 'var(--color-primary-500)',
-            boxShadow: '0 0 0 2px var(--color-primary-100)'
-          })
-        }
+            boxShadow: '0 0 0 2px var(--color-primary-100)',
+          }),
+        },
       };
     }
 
@@ -33,7 +39,7 @@ const Pricing = ({ onSignUp, currentPlan, isLoggedIn, onPlanSelect, selectedPlan
         disabled: true,
         children: 'Current Plan',
         variant: 'secondary',
-        style: { width: '100%' }
+        style: {width: '100%'},
       };
     }
 
@@ -42,7 +48,16 @@ const Pricing = ({ onSignUp, currentPlan, isLoggedIn, onPlanSelect, selectedPlan
         onClick: () => handlePlanAction(plan),
         children: 'Switch to Basic Scan',
         variant: 'secondary',
-        style: { width: '100%' }
+        style: {width: '100%'},
+      };
+    }
+
+    if (currentPlan === 'expert-care') {
+      return {
+        onClick: () => handlePlanAction(plan),
+        children: 'Switch to Basic Scan',
+        variant: 'secondary',
+        style: {width: '100%'},
       };
     }
 
@@ -50,7 +65,7 @@ const Pricing = ({ onSignUp, currentPlan, isLoggedIn, onPlanSelect, selectedPlan
       onClick: () => handlePlanAction(plan),
       children: 'Upgrade Now',
       variant: 'primary',
-      style: { width: '100%' }
+      style: {width: '100%'},
     };
   };
 
@@ -59,13 +74,13 @@ const Pricing = ({ onSignUp, currentPlan, isLoggedIn, onPlanSelect, selectedPlan
       <Text weight={700} type="h3" align="center">
         Choose Your Plan
       </Text>
-      
+
       {!isLoggedIn && (
-        <Text align="center" color="neutral.600" style={{ marginTop: '16px' }}>
+        <Text align="center" color="neutral.600" style={{marginTop: '16px'}}>
           Create an account to get started with your selected plan
         </Text>
       )}
-      
+
       <S.PricingCards>
         <S.PricingCard selected={!isLoggedIn && selectedPlan === 'basic-scan'}>
           <S.FeatureIcon>
@@ -78,7 +93,7 @@ const Pricing = ({ onSignUp, currentPlan, isLoggedIn, onPlanSelect, selectedPlan
             <Text weight={700} type="h2" color="primary.1000">
               $0
             </Text>
-            <Text size="lg" color="neutral.600" style={{ marginLeft: '8px' }}>
+            <Text size="lg" color="neutral.600" style={{marginLeft: '8px'}}>
               /month
             </Text>
           </S.PriceTag>
@@ -110,7 +125,7 @@ const Pricing = ({ onSignUp, currentPlan, isLoggedIn, onPlanSelect, selectedPlan
             <Text weight={700} type="h2" color="primary.1000">
               $3.9
             </Text>
-            <Text size="lg" color="neutral.600" style={{ marginLeft: '8px' }}>
+            <Text size="lg" color="neutral.600" style={{marginLeft: '8px'}}>
               /month
             </Text>
           </S.PriceTag>
@@ -148,14 +163,14 @@ Pricing.propTypes = {
   onPlanSelect: PropTypes.func,
   currentPlan: PropTypes.oneOf(['basic-scan', 'expert-care']),
   isLoggedIn: PropTypes.bool,
-  selectedPlan: PropTypes.oneOf(['basic-scan', 'expert-care'])
+  selectedPlan: PropTypes.oneOf(['basic-scan', 'expert-care']),
 };
 
 Pricing.defaultProps = {
   onPlanSelect: () => {},
   currentPlan: null,
   isLoggedIn: false,
-  selectedPlan: null
+  selectedPlan: null,
 };
 
-export default Pricing; 
+export default Pricing;
