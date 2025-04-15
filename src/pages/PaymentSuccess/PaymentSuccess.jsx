@@ -25,14 +25,15 @@ const PaymentSuccess = () => {
     verifyCheckoutSession(
       { session_id: sessionId },
       {
-        onSuccess: (response) => {
-          // Update the account context with the new user data
-          if (response.data?.user) {
-            setAccount(prev => ({
-              ...prev,
-              user: response.data.user
-            }));
-          }
+        onSuccess: () => {
+          // Update only the subscription plan in the account context
+          setAccount(prev => ({
+            ...prev,
+            user: {
+              ...prev.user,
+              subscription_plan: 'expert-care'
+            }
+          }));
           setVerificationStatus('success');
           toast.success('Successfully upgraded to Expert Care plan!');
         },
