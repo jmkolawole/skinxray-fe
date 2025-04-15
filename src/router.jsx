@@ -1,4 +1,5 @@
 import {createBrowserRouter} from 'react-router-dom';
+import {lazy} from 'react';
 import AuthLayout from './layouts/AuthLayout/AuthLayout';
 import { Layout } from './layouts/Layout/Layout';
 import Login from './pages/Auth/Login/Login';
@@ -12,6 +13,8 @@ import ResetPassword from './pages/ResetPassword';
 import ForgotPassword from './pages/Auth/ForgotPassword/ForgotPassword';
 import PricingPage from './pages/Pricing/Pricing';
 import PaymentSuccess from './pages/PaymentSuccess/PaymentSuccess';
+
+const Subscription = lazy(() => import('./pages/Subscription/Subscription'));
 
 export const router = createBrowserRouter([
   // UNPROTECTED PAGES
@@ -68,7 +71,11 @@ export const router = createBrowserRouter([
       {
         path: '/payment/success',
         element: <PaymentSuccess />,
-      }
+      },
+      {
+        path: '/subscription',
+        element: <Subscription />,
+      },
     ],
   },
   // 404 PAGE

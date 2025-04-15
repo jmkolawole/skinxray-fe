@@ -39,6 +39,7 @@ const PricingPage = () => {
       {
         onSuccess: (response) => {
           const url = response.data.url;
+          
           window.location.href = url;
         },
         onError: (error) => {

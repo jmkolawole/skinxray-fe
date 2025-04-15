@@ -1,6 +1,7 @@
 import {useState, useRef, useContext, useEffect} from 'react';
+import {useNavigate} from 'react-router-dom';
 import * as S from './Settings.style';
-import {Button, Text, Avatar} from '../../ds';
+import {Button, Text, Avatar, Icon} from '../../ds';
 import {AccountContext} from '../../contexts';
 import {useUpdateUserMutation} from '../../api/mutations/users.mutation';
 import {handleError} from '../../utils/functions';
@@ -10,6 +11,7 @@ import { getImagesUrl } from '../../api';
 import PasswordField from '../../components/PasswordField/PasswordField';
 
 const Settings = () => {
+  const navigate = useNavigate();
   const [fieldValues, setFieldValues] = useState({
     old_password: '',
     password: '',
@@ -187,6 +189,41 @@ const Settings = () => {
             </Button>
           </S.ImageSection>
           
+          {/* Subscription Section */}
+          <S.SettingsSection>
+            <S.SectionTitle>
+              <S.SectionIcon>
+                <Icon name="creditCard" size={18} />
+              </S.SectionIcon>
+              <Text weight={600} size="md">
+                Subscription
+              </Text>
+            </S.SectionTitle>
+            
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div>
+                <Text weight={500} style={{ marginBottom: '4px' }}>
+                  {account.user.subscription_plan ? 
+                    account.user.subscription_plan.split('-').map(word => 
+                      word.charAt(0).toUpperCase() + word.slice(1)
+                    ).join(' ') : 
+                    'Basic Plan'
+                  }
+                </Text>
+                <Text size="sm" color="neutral.600">
+                  Manage your subscription and billing details
+                </Text>
+              </div>
+              <Button
+                variant="secondary"
+                onClick={() => navigate('/subscription')}
+                width={isMobile ? '100%' : 'auto'}
+              >
+                View Details
+              </Button>
+            </div>
+          </S.SettingsSection>
+
           {/* Password Form */}
           <form 
             ref={formRef}
