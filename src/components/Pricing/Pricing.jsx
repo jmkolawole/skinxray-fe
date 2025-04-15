@@ -16,8 +16,8 @@ const Pricing = ({ onSignUp, currentPlan, isLoggedIn, onPlanSelect, selectedPlan
       const isSelected = selectedPlan === plan;
       return {
         onClick: () => handlePlanAction(plan),
-        children: plan === 'basic' ? 'Get Started Free' : 'Get Started',
-        variant: plan === 'basic' ? 'secondary' : 'primary',
+        children: plan === 'basic-scan' ? 'Get Started Free' : 'Get Started',
+        variant: plan === 'basic-scan' ? 'secondary' : 'primary',
         style: {
           width: '100%',
           ...(isSelected && {
@@ -37,10 +37,10 @@ const Pricing = ({ onSignUp, currentPlan, isLoggedIn, onPlanSelect, selectedPlan
       };
     }
 
-    if (plan === 'basic') {
+    if (plan === 'basic-scan') {
       return {
         onClick: () => handlePlanAction(plan),
-        children: 'Switch to Basic',
+        children: 'Switch to Basic Scan',
         variant: 'secondary',
         style: { width: '100%' }
       };
@@ -67,7 +67,7 @@ const Pricing = ({ onSignUp, currentPlan, isLoggedIn, onPlanSelect, selectedPlan
       )}
       
       <S.PricingCards>
-        <S.PricingCard selected={!isLoggedIn && selectedPlan === 'basic'}>
+        <S.PricingCard selected={!isLoggedIn && selectedPlan === 'basic-scan'}>
           <S.FeatureIcon>
             <i className="fas fa-search"></i>
           </S.FeatureIcon>
@@ -99,7 +99,7 @@ const Pricing = ({ onSignUp, currentPlan, isLoggedIn, onPlanSelect, selectedPlan
           <Button {...getButtonProps('basic')} />
         </S.PricingCard>
 
-        <S.PricingCard selected={!isLoggedIn && selectedPlan === 'premium'}>
+        <S.PricingCard selected={!isLoggedIn && selectedPlan === 'expert-care'}>
           <S.FeatureIcon>
             <i className="fas fa-star"></i>
           </S.FeatureIcon>
@@ -136,7 +136,7 @@ const Pricing = ({ onSignUp, currentPlan, isLoggedIn, onPlanSelect, selectedPlan
               <Text>Detailed health insights</Text>
             </S.PriceFeature>
           </S.PriceFeatures>
-          <Button {...getButtonProps('premium')} />
+          <Button {...getButtonProps('expert-care')} />
         </S.PricingCard>
       </S.PricingCards>
     </S.PricingSection>
@@ -146,9 +146,9 @@ const Pricing = ({ onSignUp, currentPlan, isLoggedIn, onPlanSelect, selectedPlan
 Pricing.propTypes = {
   onSignUp: PropTypes.func.isRequired,
   onPlanSelect: PropTypes.func,
-  currentPlan: PropTypes.oneOf(['basic', 'premium']),
+  currentPlan: PropTypes.oneOf(['basic-scan', 'expert-care']),
   isLoggedIn: PropTypes.bool,
-  selectedPlan: PropTypes.oneOf(['basic', 'premium'])
+  selectedPlan: PropTypes.oneOf(['basic-scan', 'expert-care'])
 };
 
 Pricing.defaultProps = {

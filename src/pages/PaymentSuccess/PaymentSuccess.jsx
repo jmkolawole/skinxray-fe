@@ -1,15 +1,17 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Button, Text } from '../../ds';
 import * as S from './PaymentSuccess.style';
 import { toast } from 'react-toastify';
 import { useVerifyCheckoutSession } from '../../api/mutations/subscription.mutation';
+import { AccountContext } from '../../contexts';
 
 const PaymentSuccess = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const [verificationStatus, setVerificationStatus] = useState('loading'); // loading, success, error
   const { mutate: verifyCheckoutSession } = useVerifyCheckoutSession();
+  const { setAccount } = useContext(AccountContext);
   
   // Get the session_id from URL
   const sessionId = searchParams.get('session_id');
@@ -23,7 +25,14 @@ const PaymentSuccess = () => {
     verifyCheckoutSession(
       { session_id: sessionId },
       {
-        onSuccess: () => {
+        onSuccess: (response) => {
+          // Update the account context with the new user data
+          if (response.data?.user) {
+            setAccount(prev => ({
+              ...prev,
+              user: response.data.user
+            }));
+          }
           setVerificationStatus('success');
           toast.success('Successfully upgraded to Expert Care plan!');
         },
@@ -34,7 +43,7 @@ const PaymentSuccess = () => {
         }
       }
     );
-  }, [sessionId, verifyCheckoutSession]);
+  }, [sessionId, verifyCheckoutSession, setAccount]);
 
   const renderContent = () => {
     switch (verificationStatus) {

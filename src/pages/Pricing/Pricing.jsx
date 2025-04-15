@@ -26,7 +26,7 @@ const PricingPage = () => {
   }, [account, navigate, searchParams]);
 
   const handlePlanSelect = async (plan) => {
-    if (plan === account?.user?.plan) {
+    if (plan === account?.user?.subscription_plan) {
       return; // Don't do anything if selecting current plan
     }
 
@@ -68,7 +68,7 @@ const PricingPage = () => {
 
       <PricingComponent
         isLoggedIn={!!account?.token}
-        currentPlan={account?.user?.plan || 'basic'}
+        currentPlan={account?.user?.subscription_plan || 'basic'}
         selectedPlan={selectedPlan}
         onPlanSelect={handlePlanSelect}
         onSignUp={() => {}} // Not needed here as we're already in pricing page
