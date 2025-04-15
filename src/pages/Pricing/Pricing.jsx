@@ -1,19 +1,20 @@
-import {useContext, useEffect, useState} from 'react';
+import {useContext, useEffect, useMemo} from 'react';
 import {useLocation, useNavigate} from 'react-router-dom';
 import {AccountContext} from '../../contexts';
 import PricingComponent from '../../components/Pricing/Pricing';
 import * as S from './Pricing.style';
 import {toast} from 'react-toastify';
 import { Icon } from '../../ds';
+import { useCreateCheckoutSession } from '../../api/mutations/subscription.mutation';
 
 const PricingPage = () => {
   const {account} = useContext(AccountContext);
   const navigate = useNavigate();
   const location = useLocation();
-  const [isLoading, setIsLoading] = useState(false);
+  const { mutate: createCheckoutSession, isLoading } = useCreateCheckoutSession();
 
   // Get the selected plan from URL if it exists
-  const searchParams = new URLSearchParams(location.search);
+  const searchParams = useMemo(() => new URLSearchParams(location.search), [location.search]);
   const selectedPlan = searchParams.get('plan');
 
   // If user is not logged in and didn't come from signup, redirect to landing
@@ -29,27 +30,23 @@ const PricingPage = () => {
       return; // Don't do anything if selecting current plan
     }
 
-    try {
-      setIsLoading(true);
-
-      // TODO: When backend is ready
-      // const response = await createCheckoutSession({
-      //   plan,
-      //   successUrl: `${window.location.origin}/payment/success`,
-      //   cancelUrl: `${window.location.origin}/pricing`,
-      // });
-      // window.location.href = response.data.url;
-
-      // For now, just simulate loading
-      toast.info('Payment processing will be available soon!');
-      setTimeout(() => {
-        setIsLoading(false);
-      }, 2000);
-    } catch (error) {
-      console.error('Failed to initiate checkout:', error);
-      toast.error('Failed to start checkout process. Please try again.');
-      setIsLoading(false);
-    }
+    createCheckoutSession(
+      { 
+        plan_type: 'expert-care',
+        success_url: `${window.location.origin}/payment/success`,
+        cancel_url: `${window.location.origin}/pricing`
+      },
+      {
+        onSuccess: (response) => {
+          const url = response.data.url;
+          window.location.href = url;
+        },
+        onError: (error) => {
+          console.error('Failed to initiate checkout:', error);
+          toast.error(error.error);
+        }
+      }
+    );
   };
 
   return (

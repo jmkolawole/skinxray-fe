@@ -3,11 +3,13 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Button, Text } from '../../ds';
 import * as S from './PaymentSuccess.style';
 import { toast } from 'react-toastify';
+import { useVerifyCheckoutSession } from '../../api/mutations/subscription.mutation';
 
 const PaymentSuccess = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const [verificationStatus, setVerificationStatus] = useState('loading'); // loading, success, error
+  const { mutate: verifyCheckoutSession } = useVerifyCheckoutSession();
   
   // Get the session_id from URL
   const sessionId = searchParams.get('session_id');
@@ -18,30 +20,21 @@ const PaymentSuccess = () => {
       return;
     }
 
-    const verifyPayment = async () => {
-      try {
-        // TODO: When backend is ready
-        // const response = await verifyCheckoutSession(sessionId);
-        // if (response.success) {
-        //   setVerificationStatus('success');
-        // } else {
-        //   setVerificationStatus('error');
-        // }
-
-        // For now, simulate success after 2 seconds
-        setTimeout(() => {
+    verifyCheckoutSession(
+      { session_id: sessionId },
+      {
+        onSuccess: () => {
           setVerificationStatus('success');
           toast.success('Successfully upgraded to Expert Care plan!');
-        }, 2000);
-      } catch (error) {
-        console.error('Payment verification failed:', error);
-        setVerificationStatus('error');
-        toast.error('Failed to verify payment. Please contact support.');
+        },
+        onError: (error) => {
+          console.error('Payment verification failed:', error);
+          setVerificationStatus('error');
+          toast.error(error.error);
+        }
       }
-    };
-
-    verifyPayment();
-  }, [sessionId]);
+    );
+  }, [sessionId, verifyCheckoutSession]);
 
   const renderContent = () => {
     switch (verificationStatus) {
@@ -97,7 +90,7 @@ const PaymentSuccess = () => {
               Verification Failed
             </Text>
             <Text color="neutral.600" style={{ marginBottom: '24px' }}>
-              We couldn't verify your payment. If you believe this is an error,
+              We couldn&apos;t verify your payment. If you believe this is an error,
               please contact our support team.
             </Text>
             <S.ButtonGroup>
