@@ -28,3 +28,10 @@ export const Spinner = styled.div`
     }
   }
 `;
+
+export const FullPageLoader = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+`;

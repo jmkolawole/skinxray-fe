@@ -3,55 +3,59 @@ import * as S from './Subscription.style';
 import { format } from 'date-fns';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { useSubscriptionStatusQuery } from '../../api/queries/subscription.query';
+import Loader from '../../components/Loader/Loader';
 
 const Subscription = () => {
   const navigate = useNavigate();
-  const subscription = {
-    current_subscription: {
-      status: "active",
-      plan_type: "expert-care",
-      current_period_end: "2025-05-15T10:35:29.000000Z",
-      amount: "3.99",
-      features: {
-        scans_per_day: "Unlimited",
-        analysis_type: "Detailed",
-        live_consultancy: true,
-        ai_chat_support: true,
-        priority_response: true,
-        health_insights: "Detailed"
-      }
-    },
-    next_billing: {
-      date: "2025-05-15 10:35:29",
-      amount: "3.99"
-    },
-    payment_history: [
-      {
-        amount: 29.99,
-        status: "succeeded",
-        payment_method: "card",
-        date: "2024-03-20 00:00:00"
-      }
-    ],
-    customer_portal_url: null
-  };
+  const { data: subscription, isLoading, error } = useSubscriptionStatusQuery();
 
   const handleManageSubscription = () => {
-    if (subscription.customer_portal_url) {
-      window.location.href = subscription.customer_portal_url;
+    if (subscription?.data?.customer_portal_url) {
+      window.location.href = subscription.data.customer_portal_url;
     } else {
       toast.info('Subscription management is currently unavailable. Please try again later.');
     }
   };
 
-  const features = [
-    { icon: 'scan', label: `${subscription.current_subscription.features.scans_per_day} Scans per Day` },
-    { icon: 'chart', label: `${subscription.current_subscription.features.analysis_type} Analysis` },
+  const features = subscription?.data?.current_subscription?.features ? [
+    { icon: 'scan', label: `${subscription.data.current_subscription.features.scans_per_day} Scans per Day` },
+    { icon: 'chart', label: `${subscription.data.current_subscription.features.analysis_type} Analysis` },
     { icon: 'chat', label: 'Live Consultancy' },
     { icon: 'robot', label: 'AI Chat Support' },
     { icon: 'bolt', label: 'Priority Response' },
-    { icon: 'heart', label: `${subscription.current_subscription.features.health_insights} Health Insights` }
-  ];
+    { icon: 'heart', label: `${subscription.data.current_subscription.features.health_insights} Health Insights` }
+  ] : [];
+
+  if (isLoading) {
+    return <Loader size={95}  thickness={1} color="primary.1000" fullPage={true} />;
+  }
+
+  if (error) {
+    return (
+      <S.Container>
+        <S.Header>
+          <S.BackButton onClick={() => navigate(-1)}>
+            <Icon
+              bg="standalone.2"
+              color="shades.0"
+              name="chevronLeft"
+              padding={7}
+              radius={100}
+              size={25}
+              weight={0}
+            />
+          </S.BackButton>
+          <S.Title>Subscription</S.Title>
+        </S.Header>
+        <S.Card>
+          <Text color="destructive.500" align="center">
+            Failed to load subscription information. Please try again later.
+          </Text>
+        </S.Card>
+      </S.Container>
+    );
+  }
 
   return (
     <S.Container>
@@ -76,22 +80,22 @@ const Subscription = () => {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
               <div>
                 <Text size="lg" weight={600} style={{ marginBottom: '0.5rem' }}>
-                  {subscription.current_subscription.plan_type.split('-').map(word => 
+                  {subscription?.data?.current_subscription?.plan_type.split('-').map(word => 
                     word.charAt(0).toUpperCase() + word.slice(1)
                   ).join(' ')}
                 </Text>
                 <Text color="neutral.600">
-                  ${subscription.current_subscription.amount}/month
+                  ${subscription?.data?.current_subscription?.amount}/month
                 </Text>
               </div>
-              <S.StatusBadge status={subscription.current_subscription.status}>
-                {subscription.current_subscription.status.charAt(0).toUpperCase() + 
-                 subscription.current_subscription.status.slice(1)}
+              <S.StatusBadge status={subscription?.data?.current_subscription?.status}>
+                {subscription?.data?.current_subscription?.status.charAt(0).toUpperCase() + 
+                 subscription?.data?.current_subscription?.status.slice(1)}
               </S.StatusBadge>
             </div>
 
             <Text color="neutral.600" style={{ marginBottom: '1rem' }}>
-              Current period ends on {format(new Date(subscription.current_subscription.current_period_end), 'MMMM d, yyyy')}
+              Current period ends on {format(new Date(subscription?.data?.current_subscription?.current_period_end), 'MMMM d, yyyy')}
             </Text>
 
             <S.FeaturesList>
@@ -121,7 +125,7 @@ const Subscription = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {subscription.payment_history.map((payment, index) => (
+                  {subscription?.data?.payment_history.map((payment, index) => (
                     <tr key={index}>
                       <td>{format(new Date(payment.date), 'MMM d, yyyy')}</td>
                       <td>${payment.amount}</td>
@@ -144,10 +148,10 @@ const Subscription = () => {
             Next Billing
           </Text>
           <Text color="neutral.600" style={{ marginBottom: '0.5rem' }}>
-            Amount: ${subscription.next_billing.amount}
+            Amount: ${subscription?.data?.next_billing?.amount}
           </Text>
           <Text color="neutral.600" style={{ marginBottom: '1.5rem' }}>
-            Date: {format(new Date(subscription.next_billing.date), 'MMMM d, yyyy')}
+            Date: {format(new Date(subscription?.data?.next_billing?.date), 'MMMM d, yyyy')}
           </Text>
           
           <Button 
