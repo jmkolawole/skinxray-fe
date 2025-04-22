@@ -69,7 +69,7 @@ const PricingPage = () => {
 
       <PricingComponent
         isLoggedIn={!!account?.token}
-        currentPlan={account?.user?.subscription_plan || 'basic'}
+        currentPlan={account?.user?.subscription_plan || 'basic-scan'}
         selectedPlan={selectedPlan}
         onPlanSelect={handlePlanSelect}
         onSignUp={() => {}} // Not needed here as we're already in pricing page

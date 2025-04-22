@@ -17,6 +17,7 @@ const Pricing = ({
     onPlanSelect(plan);
   };
 
+
   const getButtonProps = (plan) => {
     if (!isLoggedIn) {
       const isSelected = selectedPlan === plan;
@@ -111,7 +112,7 @@ const Pricing = ({
               <Text>Access to symptom checker</Text>
             </S.PriceFeature>
           </S.PriceFeatures>
-          <Button {...getButtonProps('basic')} />
+          <Button {...getButtonProps('basic-scan')} />
         </S.PricingCard>
 
         <S.PricingCard selected={!isLoggedIn && selectedPlan === 'expert-care'}>

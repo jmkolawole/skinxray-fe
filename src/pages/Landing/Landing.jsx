@@ -58,7 +58,7 @@ const Landing = () => {
           
           <S.ButtonGroup>
             <Button 
-              onClick={() => handleSignUp('basic')}
+              onClick={() => handleSignUp('basic-scan')}
               size="lg"
               variant="primary"
             >
