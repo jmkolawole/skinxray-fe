@@ -27,6 +27,15 @@ const Subscription = () => {
     { icon: 'heart', label: `${subscription.data.current_subscription.features.health_insights} Health Insights` }
   ] : [];
 
+  const formatDate = (dateString) => {
+    if (!dateString) return 'Not available';
+    try {
+      return format(new Date(dateString), 'MMMM d, yyyy');
+    } catch {
+      return 'Invalid date';
+    }
+  };
+
   if (isLoading) {
     return <Loader size={95}  thickness={1} color="primary.1000" fullPage={true} />;
   }
@@ -57,6 +66,9 @@ const Subscription = () => {
     );
   }
 
+  // Handle case when user has no subscription
+  const noSubscription = !subscription?.data?.current_subscription;
+
   return (
     <S.Container>
       <S.Header>
@@ -77,91 +89,115 @@ const Subscription = () => {
       <S.Grid>
         <div>
           <S.Card>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-              <div>
-                <Text size="lg" weight={600} style={{ marginBottom: '0.5rem' }}>
-                  {subscription?.data?.current_subscription?.plan_type.split('-').map(word => 
-                    word.charAt(0).toUpperCase() + word.slice(1)
-                  ).join(' ')}
+            {noSubscription ? (
+              <S.BasicContainer>
+                <Text size="lg" weight={600}>
+                  Basic Plan
                 </Text>
-                <Text color="neutral.600">
-                  ${subscription?.data?.current_subscription?.amount}/month
+                <Text color="neutral.600" style={{ marginBottom: '1.5rem' }}>
+                  You currently don&apos;t have any active paid subscription.
                 </Text>
-              </div>
-              <S.StatusBadge status={subscription?.data?.current_subscription?.status}>
-                {subscription?.data?.current_subscription?.status.charAt(0).toUpperCase() + 
-                 subscription?.data?.current_subscription?.status.slice(1)}
-              </S.StatusBadge>
-            </div>
+                <Button 
+                  variant="primary" 
+                  fullWidth
+                  onClick={() => navigate('/pricing')}
+                >
+                  Upgrade Now
+                </Button>
+              </S.BasicContainer>
+            ) : (
+              <>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                  <div>
+                    <Text size="lg" weight={600} style={{ marginBottom: '0.5rem' }}>
+                      {subscription?.data?.current_subscription?.plan_type?.split('-').map(word => 
+                        word.charAt(0).toUpperCase() + word.slice(1)
+                      ).join(' ') || 'Basic Plan'}
+                    </Text>
+                    <Text color="neutral.600">
+                      ${subscription?.data?.current_subscription?.amount || '0'}/month
+                    </Text>
+                  </div>
+                  <S.StatusBadge status={subscription?.data?.current_subscription?.status || 'active'}>
+                    {(subscription?.data?.current_subscription?.status || 'active').charAt(0).toUpperCase() + 
+                     (subscription?.data?.current_subscription?.status || 'active').slice(1)}
+                  </S.StatusBadge>
+                </div>
 
-            <Text color="neutral.600" style={{ marginBottom: '1rem' }}>
-              Current period ends on {format(new Date(subscription?.data?.current_subscription?.current_period_end), 'MMMM d, yyyy')}
-            </Text>
+                <Text color="neutral.600" style={{ marginBottom: '1rem' }}>
+                  Current period ends on {formatDate(subscription?.data?.current_subscription?.current_period_end)}
+                </Text>
 
-            <S.FeaturesList>
-              {features.map((feature, index) => (
-                <S.FeatureItem key={index}>
-                  <S.IconWrapper>
-                    <Icon name={feature.icon} size={16} />
-                  </S.IconWrapper>
-                  <Text>{feature.label}</Text>
-                </S.FeatureItem>
-              ))}
-            </S.FeaturesList>
-          </S.Card>
-
-          <S.Card style={{ marginTop: '1.5rem' }}>
-            <Text size="lg" weight={600} style={{ marginBottom: '1rem' }}>
-              Payment History
-            </Text>
-            <S.PaymentHistoryTable>
-              <S.Table>
-                <thead>
-                  <tr>
-                    <th>Date</th>
-                    <th>Amount</th>
-                    <th>Status</th>
-                    <th>Method</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {subscription?.data?.payment_history.map((payment, index) => (
-                    <tr key={index}>
-                      <td>{format(new Date(payment.date), 'MMM d, yyyy')}</td>
-                      <td>${payment.amount}</td>
-                      <td>
-                        <S.StatusBadge status={payment.status}>
-                          {payment.status.charAt(0).toUpperCase() + payment.status.slice(1)}
-                        </S.StatusBadge>
-                      </td>
-                      <td style={{ textTransform: 'capitalize' }}>{payment.payment_method}</td>
-                    </tr>
+                <S.FeaturesList>
+                  {features.map((feature, index) => (
+                    <S.FeatureItem key={index}>
+                      <S.IconWrapper>
+                        <Icon name={feature.icon} size={16} />
+                      </S.IconWrapper>
+                      <Text>{feature.label}</Text>
+                    </S.FeatureItem>
                   ))}
-                </tbody>
-              </S.Table>
-            </S.PaymentHistoryTable>
+                </S.FeaturesList>
+              </>
+            )}
           </S.Card>
+
+          {!noSubscription && subscription?.data?.payment_history?.length > 0 && (
+            <S.Card style={{ marginTop: '1.5rem' }}>
+              <Text size="lg" weight={600} style={{ marginBottom: '1rem' }}>
+                Payment History
+              </Text>
+              <S.PaymentHistoryTable>
+                <S.Table>
+                  <thead>
+                    <tr>
+                      <th>Date</th>
+                      <th>Amount</th>
+                      <th>Status</th>
+                      <th>Method</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {subscription?.data?.payment_history.map((payment, index) => (
+                      <tr key={index}>
+                        <td>{formatDate(payment.date)}</td>
+                        <td>${payment.amount}</td>
+                        <td>
+                          <S.StatusBadge status={payment.status}>
+                            {payment.status.charAt(0).toUpperCase() + payment.status.slice(1)}
+                          </S.StatusBadge>
+                        </td>
+                        <td style={{ textTransform: 'capitalize' }}>{payment.payment_method}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </S.Table>
+              </S.PaymentHistoryTable>
+            </S.Card>
+          )}
         </div>
 
-        <S.Card>
-          <Text size="lg" weight={600} style={{ marginBottom: '1rem' }}>
-            Next Billing
-          </Text>
-          <Text color="neutral.600" style={{ marginBottom: '0.5rem' }}>
-            Amount: ${subscription?.data?.next_billing?.amount}
-          </Text>
-          <Text color="neutral.600" style={{ marginBottom: '1.5rem' }}>
-            Date: {format(new Date(subscription?.data?.next_billing?.date), 'MMMM d, yyyy')}
-          </Text>
-          
-          <Button 
-            variant="primary" 
-            fullWidth
-            onClick={handleManageSubscription}
-          >
-            Manage Subscription
-          </Button>
-        </S.Card>
+        {!noSubscription && subscription?.data?.next_billing && (
+          <S.Card>
+            <Text size="lg" weight={600} style={{ marginBottom: '1rem' }}>
+              Next Billing
+            </Text>
+            <Text color="neutral.600" style={{ marginBottom: '0.5rem' }}>
+              Amount: ${subscription?.data?.next_billing?.amount || '0'}
+            </Text>
+            <Text color="neutral.600" style={{ marginBottom: '1.5rem' }}>
+              Date: {formatDate(subscription?.data?.next_billing?.date)}
+            </Text>
+            
+            <Button 
+              variant="primary" 
+              fullWidth
+              onClick={handleManageSubscription}
+            >
+              Manage Subscription
+            </Button>
+          </S.Card>
+        )}
       </S.Grid>
     </S.Container>
   );

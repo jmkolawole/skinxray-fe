@@ -112,3 +112,9 @@ export const BackButton = styled.button`
     opacity: 0.8;
   }
 `; 
+
+export const BasicContainer = styled.div`
+  & > p:first-child {
+    margin-bottom: .5rem;
+  }
+`;
