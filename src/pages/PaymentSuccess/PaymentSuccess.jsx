@@ -82,7 +82,7 @@ const PaymentSuccess = () => {
               </Button>
               <Button
                 variant="secondary"
-                onClick={() => navigate('/settings')}
+                onClick={() => navigate('/subscription')}
               >
                 View Subscription
               </Button>
