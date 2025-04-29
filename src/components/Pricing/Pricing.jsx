@@ -1,4 +1,4 @@
-import {Text, Button} from '../../ds';
+import {Text, Button, Icon} from '../../ds';
 import PropTypes from 'prop-types';
 import * as S from './Pricing.style';
 
@@ -8,7 +8,7 @@ const Pricing = ({
   isLoggedIn,
   onPlanSelect,
   selectedPlan,
-}) => { 
+}) => {
   const handlePlanAction = (plan) => {
     if (!isLoggedIn) {
       onSignUp(plan);
@@ -16,7 +16,6 @@ const Pricing = ({
     }
     onPlanSelect(plan);
   };
-
 
   const getButtonProps = (plan) => {
     if (!isLoggedIn) {
@@ -85,7 +84,13 @@ const Pricing = ({
       <S.PricingCards>
         <S.PricingCard selected={!isLoggedIn && selectedPlan === 'basic-scan'}>
           <S.FeatureIcon>
-            <i className="fas fa-search"></i>
+            <Icon
+              bg="inherit"
+              color="primary.1000"
+              name="search"
+              size={20}
+              weight={0}
+            />
           </S.FeatureIcon>
           <Text weight={600} type="h4">
             Basic Scan
@@ -100,15 +105,33 @@ const Pricing = ({
           </S.PriceTag>
           <S.PriceFeatures>
             <S.PriceFeature>
-              <i className="fas fa-check"></i>
+              <Icon
+                bg="inherit"
+                color="primary.1100"
+                name="check"
+                size={18}
+                weight={0}
+              />
               <Text>2 AI scans per day</Text>
             </S.PriceFeature>
             <S.PriceFeature>
-              <i className="fas fa-check"></i>
+              <Icon
+                bg="inherit"
+                color="primary.1100"
+                name="check"
+                size={18}
+                weight={0}
+              />
               <Text>Basic analysis reports</Text>
             </S.PriceFeature>
             <S.PriceFeature>
-              <i className="fas fa-check"></i>
+              <Icon
+                bg="inherit"
+                color="primary.1100"
+                name="check"
+                size={18}
+                weight={0}
+              />
               <Text>Access to symptom checker</Text>
             </S.PriceFeature>
           </S.PriceFeatures>
@@ -117,7 +140,13 @@ const Pricing = ({
 
         <S.PricingCard selected={!isLoggedIn && selectedPlan === 'expert-care'}>
           <S.FeatureIcon>
-            <i className="fas fa-star"></i>
+            <Icon
+              bg="inherit"
+              color="primary.1000"
+              name="star"
+              size={22}
+              weight={0}
+            />
           </S.FeatureIcon>
           <Text weight={600} type="h4">
             Expert Care
@@ -132,23 +161,53 @@ const Pricing = ({
           </S.PriceTag>
           <S.PriceFeatures>
             <S.PriceFeature>
-              <i className="fas fa-check"></i>
+              <Icon
+                bg="inherit"
+                color="primary.1100"
+                name="check"
+                size={18}
+                weight={0}
+              />
               <Text>Unlimited AI scans</Text>
             </S.PriceFeature>
             <S.PriceFeature>
-              <i className="fas fa-check"></i>
+              <Icon
+                bg="inherit"
+                color="primary.1100"
+                name="check"
+                size={18}
+                weight={0}
+              />
               <Text>Live consultancy with experts</Text>
             </S.PriceFeature>
             <S.PriceFeature>
-              <i className="fas fa-check"></i>
+              <Icon
+                bg="inherit"
+                color="primary.1100"
+                name="check"
+                size={18}
+                weight={0}
+              />
               <Text>Real-time AI chat support</Text>
             </S.PriceFeature>
             <S.PriceFeature>
-              <i className="fas fa-check"></i>
+              <Icon
+                bg="inherit"
+                color="primary.1100"
+                name="check"
+                size={18}
+                weight={0}
+              />
               <Text>Priority response time</Text>
             </S.PriceFeature>
             <S.PriceFeature>
-              <i className="fas fa-check"></i>
+              <Icon
+                bg="inherit"
+                color="primary.1100"
+                name="check"
+                size={18}
+                weight={0}
+              />
               <Text>Detailed health insights</Text>
             </S.PriceFeature>
           </S.PriceFeatures>

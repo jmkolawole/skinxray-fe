@@ -79,3 +79,7 @@ export {RewindCog} from './RewindCog.svg';
 export {OpenFolder} from './OpenFolder.svg';
 export {KanbanBoard} from './KanbanBoard.svg';
 export {Home} from './Home.svg';
+export {Medical} from './Medical.svg';
+export {Robot} from './Robot.svg';
+export {Result} from './Result.svg';
+export {Star} from './Star.svg';
