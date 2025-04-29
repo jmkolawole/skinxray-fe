@@ -3,6 +3,7 @@ import {useNavigate} from 'react-router-dom';
 import {Button, Icon, Text} from '../../ds';
 import {AccountContext} from '../../contexts';
 import Pricing from '../../components/Pricing/Pricing';
+import FAQ from '../../components/FAQ/FAQ';
 import * as S from './Landing.style';
 import heroImage from '../../assets/images/hero.jpg';
 
@@ -92,7 +93,7 @@ const Landing = () => {
         <S.FeatureCards>
           <S.FeatureCard>
             <S.FeatureIcon>
-              <Icon name="camera" size="24" color="primary.1000" />
+              <Icon name="camera" size="24" color="primary.1000"/>
             </S.FeatureIcon>
             <Text weight={600} type="h5">
               Upload an Image
@@ -105,7 +106,7 @@ const Landing = () => {
 
           <S.FeatureCard>
             <S.FeatureIcon>
-              <Icon name="medical" size="28" color="primary.1000" />
+              <Icon name="medical" size="28" color="primary.1000" weight={1.5} />
             </S.FeatureIcon>
             <Text weight={600} type="h5">
               Describe Symptoms
@@ -118,7 +119,7 @@ const Landing = () => {
 
           <S.FeatureCard>
             <S.FeatureIcon>
-              <Icon name="robot" size="28" color="primary.1000" />
+              <Icon name="robot" size="28" color="primary.1000" weight={1.5} />
             </S.FeatureIcon>
             <Text weight={600} type="h5">
               AI Analysis
@@ -131,7 +132,7 @@ const Landing = () => {
 
           <S.FeatureCard>
             <S.FeatureIcon>
-              <Icon name="result" size="28" color="primary.1000" />
+              <Icon name="result" size="28" color="primary.1000" weight={1.5} />
             </S.FeatureIcon>
             <Text weight={600} type="h5">
               Get Results
@@ -143,6 +144,8 @@ const Landing = () => {
           </S.FeatureCard>
         </S.FeatureCards>
       </S.FeaturesSection>
+
+      <FAQ />
 
       <Pricing onSignUp={handleSignUp} />
 

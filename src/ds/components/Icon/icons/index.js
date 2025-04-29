@@ -83,3 +83,5 @@ export {Medical} from './Medical.svg';
 export {Robot} from './Robot.svg';
 export {Result} from './Result.svg';
 export {Star} from './Star.svg';
+export {Device} from './Device.svg';
+export {Lock} from './Lock.svg';

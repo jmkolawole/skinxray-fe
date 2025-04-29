@@ -1,6 +1,6 @@
 import {IconWrapper} from '../Icon.style';
 
-export const Robot = ({...rest}) => (
+export const Device = ({...rest}) => (
   <IconWrapper {...rest}>
     <svg
       width="22"
@@ -10,25 +10,25 @@ export const Robot = ({...rest}) => (
       xmlns="http://www.w3.org/2000/svg"
     >
       <path
-        d="M17 4H12V2C12 1.44772 11.5523 1 11 1C10.4477 1 10 1.44772 10 2V4H5C3.89543 4 3 4.89543 3 6V16C3 17.1046 3.89543 18 5 18H17C18.1046 18 19 17.1046 19 16V6C19 4.89543 18.1046 4 17 4Z"
+        d="M15 2H7C5.89543 2 5 2.89543 5 4V18C5 19.1046 5.89543 20 7 20H15C16.1046 20 17 19.1046 17 18V4C17 2.89543 16.1046 2 15 2Z"
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
       <path
-        d="M8 10C8 10.5523 7.55228 11 7 11C6.44772 11 6 10.5523 6 10C6 9.44772 6.44772 9 7 9C7.55228 9 8 9.44772 8 10Z"
+        d="M6 6H16V16H6V6Z"
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
       <path
-        d="M16 10C16 10.5523 15.5523 11 15 11C14.4477 11 14 10.5523 14 10C14 9.44772 14.4477 9 15 9C15.5523 9 16 9.44772 16 10Z"
+        d="M7 3H15C15.5523 3 16 3.44772 16 4V4H6V4C6 3.44772 6.44772 3 7 3Z"
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
       <path
-        d="M8 14H14C15.1046 14 16 14.8954 16 16C16 17.1046 15.1046 18 14 18H8C6.89543 18 6 17.1046 6 16C6 14.8954 6.89543 14 8 14Z"
+        d="M7 19H15C15.5523 19 16 18.5523 16 18V18H6V18C6 18.5523 6.44772 19 7 19Z"
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"

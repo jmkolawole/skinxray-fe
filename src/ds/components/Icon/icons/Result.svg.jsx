@@ -3,13 +3,36 @@ import {IconWrapper} from '../Icon.style';
 export const Result = ({...rest}) => (
   <IconWrapper {...rest}>
     <svg
+      width="22"
+      height="22"
+      viewBox="0 0 22 22"
+      fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      width="32"
-      height="32"
-      fill="#2AB3B5"
-      viewBox="0 0 256 256"
     >
-      <path d="M168,152a8,8,0,0,1-8,8H96a8,8,0,0,1,0-16h64A8,8,0,0,1,168,152Zm-8-40H96a8,8,0,0,0,0,16h64a8,8,0,0,0,0-16Zm56-64V216a16,16,0,0,1-16,16H56a16,16,0,0,1-16-16V48A16,16,0,0,1,56,32H92.26a47.92,47.92,0,0,1,71.48,0H200A16,16,0,0,1,216,48ZM96,64h64a32,32,0,0,0-64,0ZM200,48H173.25A47.93,47.93,0,0,1,176,64v8a8,8,0,0,1-8,8H88a8,8,0,0,1-8-8V64a47.93,47.93,0,0,1,2.75-16H56V216H200Z"></path>
+      <path
+        d="M14 13H8C7.44772 13 7 13.4477 7 14C7 14.5523 7.44772 15 8 15H14C14.5523 15 15 14.5523 15 14C15 13.4477 14.5523 13 14 13Z"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M14 9H8C7.44772 9 7 9.44772 7 10C7 10.5523 7.44772 11 8 11H14C14.5523 11 15 10.5523 15 10C15 9.44772 14.5523 9 14 9Z"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M17 2H8C6.34315 2 5 3.34315 5 5V17C5 18.6569 6.34315 20 8 20H17C18.6569 20 20 18.6569 20 17V5C20 3.34315 18.6569 2 17 2Z"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M8 6C8 4.34315 9.34315 3 11 3H14C15.6569 3 17 4.34315 17 6H8Z"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
     </svg>
   </IconWrapper>
 );
