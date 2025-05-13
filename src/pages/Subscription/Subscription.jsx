@@ -19,12 +19,12 @@ const Subscription = () => {
   };
 
   const features = subscription?.data?.current_subscription?.features ? [
-    { icon: 'scan', label: `${subscription.data.current_subscription.features.scans_per_day} Scans per Day` },
-    { icon: 'chart', label: `${subscription.data.current_subscription.features.analysis_type} Analysis` },
-    { icon: 'chat', label: 'Live Consultancy' },
+    { icon: 'scan', weight: .8, label: `${subscription.data.current_subscription.features.scans_per_day} Scans per Day` },
+    { icon: 'chart', weight: 1, label: `${subscription.data.current_subscription.features.analysis_type} Analysis` },
+    { icon: 'messages', label: 'Live Consultancy' },
     { icon: 'robot', label: 'AI Chat Support' },
-    { icon: 'bolt', label: 'Priority Response' },
-    { icon: 'heart', label: `${subscription.data.current_subscription.features.health_insights} Health Insights` }
+    { icon: 'fast', weight: 1, label: 'Priority Response' },
+    { icon: 'health', weight: 1, label: `${subscription.data.current_subscription.features.health_insights} Health Insights` }
   ] : [];
 
   const formatDate = (dateString) => {
@@ -132,7 +132,7 @@ const Subscription = () => {
                   {features.map((feature, index) => (
                     <S.FeatureItem key={index}>
                       <S.IconWrapper>
-                        <Icon name={feature.icon} size={16} />
+                        <Icon name={feature.icon} size={16} weight={feature.weight} />
                       </S.IconWrapper>
                       <Text>{feature.label}</Text>
                     </S.FeatureItem>

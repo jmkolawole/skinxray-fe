@@ -13,12 +13,19 @@ axiosInstance.interceptors.response.use(
   (error) => {
     // Check if error is due to authentication (401)
     if (error.response && error.response.status === 401) {
-      // Clear account data from localStorage
-      localStorage.removeItem('account');
+      // Only handle token expiration for authenticated routes
+      const isAuthRoute = ['/login', '/signup', '/auth/google'].some(route => 
+        window.location.pathname.includes(route)
+      );
       
-      // Redirect to landing page if not already there
-      if (window.location.pathname !== '/') {
-        window.location.replace('/');
+      if (!isAuthRoute) {
+        // Clear account data from localStorage
+        localStorage.removeItem('account');
+        
+        // Redirect to landing page if not already there
+        if (window.location.pathname !== '/') {
+          window.location.replace('/');
+        }
       }
     }
     

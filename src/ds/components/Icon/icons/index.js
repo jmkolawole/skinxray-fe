@@ -85,3 +85,6 @@ export {Result} from './Result.svg';
 export {Star} from './Star.svg';
 export {Device} from './Device.svg';
 export {Lock} from './Lock.svg';
+export {Scan} from './Scan.svg';
+export {Fast} from './Fast.svg';
+export {Health} from './Health.svg';

@@ -166,13 +166,22 @@ const Login = ({isSignUp = false}) => {
 
       loginMutate(loginData, {
         onSuccess: (res) => {
-          setAccount({
-            user: res.data.user,
-            token: res.data.token,
-          });
-          navigate('/home');
+          if (res.data?.user && res.data?.token) {
+            setAccount({
+              user: res.data.user,
+              token: res.data.token,
+            });
+            navigate('/home');
+          } else {
+            setFieldErrors({
+              email: ['Invalid login response. Please try again.'],
+            });
+          }
         },
-        onError: (err) => handleError(err, setFieldErrors),
+        onError: (err) => {
+          handleError(err, setFieldErrors, true, true);
+          // Do not navigate on error
+        },
       });
     }
   };

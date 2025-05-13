@@ -8,11 +8,13 @@ import { getImagesUrl } from '../api';
  * @param {object} err
  * @param {function} setter
  * @param {boolean} inCamelCase
+ * @param {boolean} isAuthRoute
  */
-export const handleError = (err, setter = () => {}, inCamelCase = true) => {
-  if (err?.unauthenticated) {
+export const handleError = (err, setter = () => {}, inCamelCase = true, isAuthRoute = false) => {
+  if (err?.unauthenticated && !isAuthRoute) {
     localStorage.removeItem('account');
     location.replace('/');
+    return;
   }
 
   if (err?.status === false && err?.error) {
