@@ -12,6 +12,7 @@ import {Button, Text, TextInput, Icon} from '../../../ds/components';
 import Loader from '../../../components/Loader/Loader';
 import PropTypes from 'prop-types';
 import PasswordField from '../../../components/PasswordField/PasswordField';
+import GoogleLogo from '../../../assets/images/google-logo.svg';
 
 const Login = ({isSignUp = false}) => {
   const navigate = useNavigate();
@@ -96,7 +97,7 @@ const Login = ({isSignUp = false}) => {
           },
           token,
         });
-        
+
         // If coming from premium plan selection, redirect to pricing
         if (selectedPlan === 'premium') {
           navigate('/pricing?from=signup&plan=premium');
@@ -272,20 +273,14 @@ const Login = ({isSignUp = false}) => {
                 onClick={handleGoogleLogin}
                 aria-label="Sign in with Google"
               >
-                <Icon name="google" size={20} />
+                <img src={GoogleLogo} alt="Google" />
                 <Text>Google</Text>
               </S.SocialButton>
 
-              <S.SocialButton
-                type="button"
-                onClick={() => {
-                  /* TODO: Implement Apple login */
-                }}
-                aria-label="Sign in with Apple"
-              >
+              {/* <S.SocialButton type="button" aria-label="Sign in with Apple">
                 <Icon name="apple" size={20} />
                 <Text>Continue with Apple</Text>
-              </S.SocialButton>
+              </S.SocialButton> */}
             </S.SocialButtonsContainer>
           </S.SocialLoginSection>
 
