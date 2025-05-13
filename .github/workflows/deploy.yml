@@ -41,13 +41,62 @@ jobs:
           mkdir -p ~/.ssh
           ssh-keyscan -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
           
+      - name: Create Nginx configuration
+        run: |
+          echo 'server {
+              listen 80;
+              server_name skinxray.com www.skinxray.com;
+              root /var/www/skinxray.com/frontend/dist;
+              index index.html;
+              
+              # Enable gzip compression
+              gzip on;
+              gzip_types text/plain text/css application/json application/javascript text/xml application/xml application/xml+rss text/javascript;
+              
+              location / {
+                  try_files $uri $uri/ /index.html;
+                  add_header Cache-Control "no-cache, no-store, must-revalidate";
+              }
+              
+              location /static {
+                  expires 1y;
+                  add_header Cache-Control "public, no-transform";
+              }
+              
+              location /api {
+                  proxy_pass http://localhost:8000;
+                  proxy_http_version 1.1;
+                  proxy_set_header Upgrade $http_upgrade;
+                  proxy_set_header Connection "upgrade";
+                  proxy_set_header Host $host;
+                  proxy_set_header X-Real-IP $remote_addr;
+                  proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                  proxy_set_header X-Forwarded-Proto $scheme;
+                  proxy_set_header X-Forwarded-Host $host;
+                  proxy_set_header X-Forwarded-Port $server_port;
+              }
+              
+              # Security headers
+              add_header X-Frame-Options "SAMEORIGIN" always;
+              add_header X-XSS-Protection "1; mode=block" always;
+              add_header X-Content-Type-Options "nosniff" always;
+              add_header Referrer-Policy "no-referrer-when-downgrade" always;
+              add_header Content-Security-Policy "default-src * data: blob: filesystem: about: ws: wss: '"'"'unsafe-inline'"'"' '"'"'unsafe-eval'"'"'; script-src * data: blob: '"'"'unsafe-inline'"'"' '"'"'unsafe-eval'"'"'; connect-src * data: blob: '"'"'unsafe-inline'"'"'; img-src * data: blob: '"'"'unsafe-inline'"'"'; frame-src * data: blob: ; style-src * data: blob: '"'"'unsafe-inline'"'"'; font-src * data: blob: '"'"'unsafe-inline'"'"';" always;
+          }' > nginx.conf
+          
       - name: Deploy to server
         run: |
-          # Create a temporary tar of the dist directory
-          tar -czf dist.tar.gz dist/
+          # Create a temporary tar of the dist directory and nginx config
+          tar -czf deploy.tar.gz dist/ nginx.conf
           
           # Copy the tar file to the server
-          scp -P ${{ secrets.SSH_PORT }} dist.tar.gz ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:/var/www/skinxray.com/frontend/
+          scp -P ${{ secrets.SSH_PORT }} deploy.tar.gz ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:/var/www/skinxray.com/frontend/
           
-          # Extract and replace the old build on the server
-          ssh -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} "cd /var/www/skinxray.com/frontend/ && rm -rf dist/ && tar -xzf dist.tar.gz && rm dist.tar.gz"
+          # Extract and set up on the server
+          ssh -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} "cd /var/www/skinxray.com/frontend/ && \
+            tar -xzf deploy.tar.gz && \
+            sudo mv nginx.conf /etc/nginx/sites-available/skinxray.com && \
+            sudo ln -sf /etc/nginx/sites-available/skinxray.com /etc/nginx/sites-enabled/ && \
+            sudo nginx -t && \
+            sudo systemctl restart nginx && \
+            rm deploy.tar.gz"
