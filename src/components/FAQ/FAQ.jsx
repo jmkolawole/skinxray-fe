@@ -55,7 +55,7 @@ const FAQAccordion = ({ question, answer, icon, isOpen, onClick, weight }) => (
         }}
       />
     </S.Question>
-    <S.Answer isOpen={isOpen}>
+    <S.Answer $isOpen={isOpen}>
       <Text color="neutral.600">
         {answer}
       </Text>

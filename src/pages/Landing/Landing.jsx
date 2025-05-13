@@ -93,7 +93,7 @@ const Landing = () => {
         <S.FeatureCards>
           <S.FeatureCard>
             <S.FeatureIcon>
-              <Icon name="camera" size="24" color="primary.1000"/>
+              <Icon name="camera" size={24} color="primary.1000"/>
             </S.FeatureIcon>
             <Text weight={600} type="h5">
               Upload an Image
@@ -106,7 +106,7 @@ const Landing = () => {
 
           <S.FeatureCard>
             <S.FeatureIcon>
-              <Icon name="medical" size="28" color="primary.1000" weight={1.5} />
+              <Icon name="medical" size={28} color="primary.1000" weight={1.5} />
             </S.FeatureIcon>
             <Text weight={600} type="h5">
               Describe Symptoms
@@ -119,7 +119,7 @@ const Landing = () => {
 
           <S.FeatureCard>
             <S.FeatureIcon>
-              <Icon name="robot" size="28" color="primary.1000" weight={1.5} />
+              <Icon name="robot" size={28} color="primary.1000" weight={1.5} />
             </S.FeatureIcon>
             <Text weight={600} type="h5">
               AI Analysis
@@ -132,7 +132,7 @@ const Landing = () => {
 
           <S.FeatureCard>
             <S.FeatureIcon>
-              <Icon name="result" size="28" color="primary.1000" weight={1.5} />
+              <Icon name="result" size={28} color="primary.1000" weight={1.5} />
             </S.FeatureIcon>
             <Text weight={600} type="h5">
               Get Results

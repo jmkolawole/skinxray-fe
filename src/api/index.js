@@ -5,6 +5,11 @@ const apiUrl = import.meta.env.VITE_APP_API_URL;
 // Create axios instance with default config
 const axiosInstance = axios.create({
   baseURL: apiUrl,
+  withCredentials: true, // Required for sending cookies
+  headers: {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+  }
 });
 
 // Response interceptor for handling token expiration
@@ -22,8 +27,8 @@ axiosInstance.interceptors.response.use(
         // Clear account data from localStorage
         localStorage.removeItem('account');
         
-        // Redirect to landing page if not already there
-        if (window.location.pathname !== '/') {
+        // Redirect to landing page if not already there and not an API call
+        if (window.location.pathname !== '/' && !error.config?.url?.includes('/api/')) {
           window.location.replace('/');
         }
       }
@@ -32,10 +37,6 @@ axiosInstance.interceptors.response.use(
     return Promise.reject(error);
   }
 );
-
-const reqConfig = {
-  headers: {},
-};
 
 /**
  * Generic request handler
@@ -55,51 +56,48 @@ export const request = async (
   headers = {}
 ) => {
   const account = JSON.parse(localStorage.getItem('account') || '{}');
+  
+  // Create a new config object for each request to prevent header pollution
+  const currentReqConfig = {
+    headers: { ...headers },
+    params,
+  };
+
   if (auth && account && account.token) {
-    reqConfig.headers['Authorization'] = `Bearer ${account.token}`;
+    currentReqConfig.headers['Authorization'] = `Bearer ${account.token}`;
   }
 
-  reqConfig.params = params;
-  reqConfig.headers = {...reqConfig.headers, ...headers};
+  try {
+    const response = ['get', 'delete'].includes(method)
+      ? await axiosInstance[method](`${path}`, currentReqConfig)
+      : await axiosInstance[method](`${path}`, data, currentReqConfig);
 
-  if (['get', 'delete'].includes(method)) {
-    return axiosInstance[method](`${path}`, reqConfig)
-      .then((res) => {
-        return res.data;
-      })
-      .catch((err) => {
-        const unauthenticated = auth && err.response
-          ? {unauthenticated: err.response.status === 401}
-          : {};
+    return response.data;
+  } catch (err) {
+    // Handle CORS errors specifically
+    if (err.message?.includes('Network Error') || err.code === 'ERR_NETWORK') {
+      console.error('CORS or Network Error:', err);
+      throw {
+        status: false,
+        error: 'Unable to connect to the server. Please check your connection.',
+      };
+    }
 
-        throw {
-          ...(err.response?.data || {}),
-          ...unauthenticated,
-          status: err.response?.status === 401 ? false : err.response?.data?.status,
-        };
-      });
-  } else {
-    return axiosInstance[method](`${path}`, data, reqConfig)
-      .then((res) => {
-        return res.data;
-      })
-      .catch((err) => {
-        const unauthenticated = auth && err.response
-          ? {unauthenticated: err.response.status === 401}
-          : {};
+    const unauthenticated = auth && err.response
+      ? {unauthenticated: err.response.status === 401}
+      : {};
 
-        throw {
-          ...(err.response?.data || {}),
-          ...unauthenticated,
-          status: err.response?.status === 401 ? false : err.response?.data?.status,
-          error: err.response?.status === 401 
-            ? "You're not authenticated, please login" 
-            : err.response?.data?.error,
-        };
-      });
+    throw {
+      ...(err.response?.data || {}),
+      ...unauthenticated,
+      status: err.response?.status === 401 ? false : err.response?.data?.status,
+      error: err.response?.status === 401 
+        ? "You're not authenticated, please login" 
+        : err.response?.data?.error,
+    };
   }
 };
 
 export const getImagesUrl = (filename) => {
-  return `${apiUrl}/image${filename}`;
+  return filename ? `${apiUrl}/image${filename}` : null;
 }; 

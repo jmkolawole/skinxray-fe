@@ -4,10 +4,10 @@ import * as S from './Pricing.style';
 
 const Pricing = ({
   onSignUp,
-  currentPlan,
-  isLoggedIn,
-  onPlanSelect,
-  selectedPlan,
+  onPlanSelect = () => {},
+  currentPlan = null,
+  isLoggedIn = false,
+  selectedPlan = null,
 }) => {
   const handlePlanAction = (plan) => {
     if (!isLoggedIn) {
@@ -224,13 +224,6 @@ Pricing.propTypes = {
   currentPlan: PropTypes.oneOf(['basic-scan', 'expert-care']),
   isLoggedIn: PropTypes.bool,
   selectedPlan: PropTypes.oneOf(['basic-scan', 'expert-care']),
-};
-
-Pricing.defaultProps = {
-  onPlanSelect: () => {},
-  currentPlan: null,
-  isLoggedIn: false,
-  selectedPlan: null,
 };
 
 export default Pricing;

@@ -49,7 +49,7 @@ const Topbar = () => {
     const user = account.user;
 
     // If user has a local avatar
-    if (user.avatar) {
+    if (user?.avatar) {
         return {
           type: 'image',
           value: getImagesUrl(user.avatar)
@@ -57,7 +57,7 @@ const Topbar = () => {
       }
     
     // If user has a social avatar (e.g., from Google)
-    if (user.socialAvatar) {
+    if (user?.socialAvatar) {
       return {
         type: 'image',
         value: user.socialAvatar
@@ -67,7 +67,7 @@ const Topbar = () => {
     // Fallback to text avatar using email
     return {
       type: 'text',
-      value: user.email
+      value: user?.email
     };
   };
 

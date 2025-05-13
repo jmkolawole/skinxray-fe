@@ -60,9 +60,9 @@ export const QuestionContent = styled.div`
 `;
 
 export const Answer = styled.div`
-  padding: ${({isOpen}) => (isOpen ? '0 20px 20px' : '0 20px')};
-  max-height: ${({isOpen}) => (isOpen ? '500px' : '0')};
-  opacity: ${({isOpen}) => (isOpen ? '1' : '0')};
+  padding: ${({$isOpen}) => ($isOpen ? '0 20px 20px' : '0 20px')};
+  max-height: ${({$isOpen}) => ($isOpen ? '500px' : '0')};
+  opacity: ${({$isOpen}) => ($isOpen ? '1' : '0')};
   transition: all 0.3s ease;
   overflow: hidden;
 `; 
