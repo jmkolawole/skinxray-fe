@@ -4,7 +4,6 @@ import {Avatar, Text} from '../../ds';
 import * as S from './Home.style';
 import {parseApiResponse, truncateText} from '../../utils/functions';
 import { useNavigate } from 'react-router-dom';
-import { getImagesUrl } from '../../api';
 import placeholderImage from '../../assets/images/placeholder.jpg';
 
 const History = () => {
@@ -33,8 +32,7 @@ const History = () => {
   // Get the appropriate image source for the history item
   const getImageSource = (history) => {
     if (isImageDiagnosis(history)) {
-      console.log(history.image_path);
-      return getImagesUrl(history.image_path);
+      return history.image_path;
     }
     // Return local placeholder for text-based diagnoses
     return placeholderImage;

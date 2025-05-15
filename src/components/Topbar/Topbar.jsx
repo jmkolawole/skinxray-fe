@@ -3,7 +3,6 @@ import * as S from './Topbar.style';
 import {useNavigate} from 'react-router-dom';
 import {Avatar, Icon, Menu} from '../../ds';
 import {AccountContext} from '../../contexts';
-import { getImagesUrl } from '../../api';
 
 const Topbar = () => {
   const {account} = useContext(AccountContext);
@@ -52,7 +51,7 @@ const Topbar = () => {
     if (user?.avatar) {
         return {
           type: 'image',
-          value: getImagesUrl(user.avatar)
+          value: user.avatar
         };
       }
     

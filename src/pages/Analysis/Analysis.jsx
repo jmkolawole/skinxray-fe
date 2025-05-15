@@ -3,7 +3,6 @@ import {Text, colors} from '../../ds';
 import * as S from './Analysis.style';
 import {useLocation} from 'react-router-dom';
 import {parseApiResponse} from '../../utils/functions';
-import { getImagesUrl } from '../../api';
 
 // Create a style element for print styles
 const addPrintStyles = () => {
@@ -327,7 +326,7 @@ const Analysis = () => {
                   }}
                 >
                   <img 
-                    src={getImagesUrl(imagePath)} 
+                    src={imagePath} 
                     alt="Uploaded skin condition" 
                     style={{ 
                       maxWidth: '100%', 

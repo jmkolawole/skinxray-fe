@@ -7,7 +7,6 @@ import {useUpdateUserMutation} from '../../api/mutations/users.mutation';
 import {handleError} from '../../utils/functions';
 import Loader from '../../components/Loader/Loader';
 import { toast } from 'react-toastify';
-import { getImagesUrl } from '../../api';
 import PasswordField from '../../components/PasswordField/PasswordField';
 
 const Settings = () => {
@@ -51,7 +50,7 @@ const Settings = () => {
   }, []);
 
   useEffect(() => {
-    setPreviewImage(account.user.avatar ? getImagesUrl(account.user.avatar) : null);
+    setPreviewImage(account.user.avatar ? account.user.avatar : null);
   }, [account]);
 
   const handleInputChange = (e, field) => {

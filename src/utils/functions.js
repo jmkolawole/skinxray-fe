@@ -1,7 +1,6 @@
 import dayjs from 'dayjs';
 import {camelCase} from 'lodash';
 import {toast} from 'react-toastify';
-import { getImagesUrl } from '../api';
 
 /**
  * Error handler
@@ -116,5 +115,5 @@ export const getAvatarUrl = (url) => {
     return url;
   }
   // Otherwise, use getImagesUrl for local avatars
-  return url ? getImagesUrl(url) : null;
+  return url ? url : null;
 };
