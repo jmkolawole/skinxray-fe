@@ -29,7 +29,7 @@ jobs:
       - name: Build project
         run: npm run build
         env:
-          VITE_APP_API_URL: ${{ secrets.VITE_APP_API_URL }}
+          VITE_APP_API_URL: 'https://api.skinxray.com'
           
       - name: Set up SSH
         uses: webfactory/ssh-agent@v0.7.0
