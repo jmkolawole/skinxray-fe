@@ -43,7 +43,7 @@ const ForgotPassword = () => {
           title="Return to Login"
           aria-label="Return to Login"
         >
-          <Icon name="arrow-left" color="shades.0" />
+          <Icon name="chevronLeft" color="shades.0" />
         </Button>
       </S.BackToHomeContainer>
 
