@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import { Helmet } from 'react-helmet-async';
 import { Text } from '../../ds';
 
 const Container = styled.div`
@@ -106,25 +107,30 @@ Accordion.propTypes = {
 };
 
 const PrivacyPolicy = () => {
-    // This should be updated whenever the policy is modified
     const policyDate = "March 14, 2024";
 
     return (
-        <Container>
-            <Text weight={700} type="h2" style={{ marginBottom: '16px' }}>
-                Privacy Policy
-            </Text>
-            <PolicyDate>
-                <Text color="neutral.600">
-                    Last Updated: {policyDate}
+        <>
+            <Helmet>
+                <title>Privacy Policy - Skinxray AI</title>
+                <meta name="description" content="Skinxray AI's privacy policy outlines how we collect, use, and protect your personal information." />
+            </Helmet>
+            <Container>
+                <Text weight={700} type="h2" style={{ marginBottom: '16px' }}>
+                    Privacy Policy
                 </Text>
-            </PolicyDate>
-            {POLICY_SECTIONS.map((section, index) => (
-                <Accordion key={index} title={section.title}>
-                    {section.content}
-                </Accordion>
-            ))}
-        </Container>
+                <PolicyDate>
+                    <Text color="neutral.600">
+                        Last Updated: {policyDate}
+                    </Text>
+                </PolicyDate>
+                {POLICY_SECTIONS.map((section, index) => (
+                    <Accordion key={index} title={section.title}>
+                        {section.content}
+                    </Accordion>
+                ))}
+            </Container>
+        </>
     );
 };
 

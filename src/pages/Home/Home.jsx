@@ -7,6 +7,7 @@ import {useNavigate} from 'react-router-dom';
 import History from './History';
 import {useGetDiagnosisMutation, useImageDiagnosisMutation} from '../../api/mutations/diagnosis.mutation';
 import {handleError} from '../../utils/functions';
+import { Helmet } from 'react-helmet-async';
 
 const MedicalDisclaimer = () => {
   return (
@@ -91,47 +92,53 @@ const Home = () => {
   };
 
   return (
-    <S.Container>
-      <S.Content>
-        <S.Header>
-          <Text weight={700} type="h2">
-            Skin Health Diagnostic
-          </Text>
-          <Text color="neutral.600" size="md">
-            Upload an image or describe your symptoms for an AI-powered analysis
-          </Text>
-        </S.Header>
-        <S.MainContent>
-          <Tab
-            height={40}
-            items={['Upload Image', 'Describe Symptoms']}
-            width={isMobile ? '100%' : 180}
-            activeTab={
-              uploadType === 'upload' ? 'Upload Image' : 'Describe Symptoms'
-            }
-            onChange={(item) => {
-              setUploadType(item === 'Upload Image' ? 'upload' : 'describe');
-            }}
-          />
-          <S.SymptomsWrapper>
-            <Text weight={600} type="h6">
-              {uploadType === 'upload' ? 'Upload Image' : 'Describe Symptoms'}
+    <>
+      <Helmet>
+        <title>Dashboard - Skinxray AI</title>
+        <meta name="description" content="Upload skin images or describe symptoms for AI-powered skin health analysis." />
+      </Helmet>
+      <S.Container>
+        <S.Content>
+          <S.Header>
+            <Text weight={700} type="h2">
+              Skin Health Diagnostic
             </Text>
-            {uploadType === 'upload' ? (
-              <DragAndDrop isLoading={isImagePending} onUpload={handleUpload} />
-            ) : (
-              <Description
-                isLoading={isDescriptionPending}
-                onSubmit={handleSubmitDescription}
-              />
-            )}
-          </S.SymptomsWrapper>
-        </S.MainContent>
-        
-        <MedicalDisclaimer />
-        <History />
-      </S.Content>
-    </S.Container>
+            <Text color="neutral.600" size="md">
+              Upload an image or describe your symptoms for an AI-powered analysis
+            </Text>
+          </S.Header>
+          <S.MainContent>
+            <Tab
+              height={40}
+              items={['Upload Image', 'Describe Symptoms']}
+              width={isMobile ? '100%' : 180}
+              activeTab={
+                uploadType === 'upload' ? 'Upload Image' : 'Describe Symptoms'
+              }
+              onChange={(item) => {
+                setUploadType(item === 'Upload Image' ? 'upload' : 'describe');
+              }}
+            />
+            <S.SymptomsWrapper>
+              <Text weight={600} type="h6">
+                {uploadType === 'upload' ? 'Upload Image' : 'Describe Symptoms'}
+              </Text>
+              {uploadType === 'upload' ? (
+                <DragAndDrop isLoading={isImagePending} onUpload={handleUpload} />
+              ) : (
+                <Description
+                  isLoading={isDescriptionPending}
+                  onSubmit={handleSubmitDescription}
+                />
+              )}
+            </S.SymptomsWrapper>
+          </S.MainContent>
+          
+          <MedicalDisclaimer />
+          <History />
+        </S.Content>
+      </S.Container>
+    </>
   );
 };
 
