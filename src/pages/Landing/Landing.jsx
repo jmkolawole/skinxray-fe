@@ -6,6 +6,7 @@ import Pricing from '../../components/Pricing/Pricing';
 import FAQ from '../../components/FAQ/FAQ';
 import * as S from './Landing.style';
 import heroImage from '../../assets/images/hero.jpg';
+import logo from '../../assets/images/logo.png';
 
 const Landing = () => {
   const {account} = useContext(AccountContext);
@@ -37,7 +38,7 @@ const Landing = () => {
         <S.HeroContent>
           <S.LogoContainer>
             <S.Logo>
-              <i className="fas fa-heartbeat"></i>
+              <img src={logo} alt="Skinxray AI" />
             </S.Logo>
             <Text weight={700} type="h1" color="primary.1000">
               Skinxray AI

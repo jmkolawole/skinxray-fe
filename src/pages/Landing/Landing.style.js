@@ -41,6 +41,12 @@ export const LogoContainer = styled.div`
   display: flex;
   align-items: center;
   margin-bottom: 24px;
+
+  img {
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+  }
 `;
 
 export const Logo = styled.div`
