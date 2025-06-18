@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { colors } from '../../ds';
+import { Link } from 'react-router-dom';
 
 export const Container = styled.div`
   display: flex;
@@ -195,4 +196,13 @@ export const Footer = styled.footer`
   text-align: center;
   border-top: 1px solid ${colors.neutral[200]};
   margin-top: auto;
+`;
+
+export const FooterLink = styled(Link)`
+  color: inherit;
+  text-decoration: none;
+  
+  &:hover {
+    text-decoration: underline;
+  }
 `; 

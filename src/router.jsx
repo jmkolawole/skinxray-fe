@@ -13,6 +13,7 @@ import ResetPassword from './pages/ResetPassword';
 import ForgotPassword from './pages/Auth/ForgotPassword/ForgotPassword';
 import PricingPage from './pages/Pricing/Pricing';
 import PaymentSuccess from './pages/PaymentSuccess/PaymentSuccess';
+import PrivacyPolicy from './pages/PrivacyPolicy/PrivacyPolicy';
 
 const Subscription = lazy(() => import('./pages/Subscription/Subscription'));
 
@@ -22,6 +23,10 @@ export const router = createBrowserRouter([
     path: '/',
     element: <Landing />,
     index: true,
+  },
+  {
+    path: '/privacy-policy',
+    element: <PrivacyPolicy />,
   },
   {
     element: <AuthLayout />,

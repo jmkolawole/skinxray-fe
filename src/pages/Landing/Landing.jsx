@@ -176,6 +176,8 @@ const Landing = () => {
       <S.Footer>
         <Text size="sm" color="neutral.500">
           © {new Date().getFullYear()} Skinxray AI. All rights reserved.
+          {' • '}
+          <S.FooterLink to="/privacy-policy">Privacy Policy</S.FooterLink>
         </Text>
       </S.Footer>
     </S.Container>
