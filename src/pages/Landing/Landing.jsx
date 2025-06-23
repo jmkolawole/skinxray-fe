@@ -8,6 +8,8 @@ import FAQ from '../../components/FAQ/FAQ';
 import * as S from './Landing.style';
 import heroImage from '../../assets/images/hero.jpg';
 import logo from '../../assets/images/logo.png';
+import googlePlayBadge from '../../assets/images/google-play-badge.svg';
+import appStoreBadge from '../../assets/images/app-store-badge.svg';
 
 const Landing = () => {
   const {account} = useContext(AccountContext);
@@ -155,6 +157,25 @@ const Landing = () => {
         <FAQ />
 
         <Pricing onSignUp={handleSignUp} />
+
+        <S.MobileAppSection>
+          <Text weight={700} type="h3" color="neutral.100" align="center">
+            Get Skinxray AI on Mobile
+          </Text>
+          <S.Rider color="neutral.200" size="lg" align="center" weight={400}>
+            Download our mobile app for a seamless experience on the go
+          </S.Rider>
+          
+          <S.AppStoreButtons>
+            <S.StoreButton disabled onClick={(e) => e.preventDefault()}>
+              <img src={googlePlayBadge} alt="Get it on Google Play" />
+            </S.StoreButton>
+
+            <S.StoreButton disabled onClick={(e) => e.preventDefault()}>
+              <img src={appStoreBadge} alt="Download on the App Store" />
+            </S.StoreButton>
+          </S.AppStoreButtons>
+        </S.MobileAppSection>
 
         <S.DisclaimerSection>
           <S.DisclaimerIcon>

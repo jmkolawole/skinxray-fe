@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { colors } from '../../ds';
+import { colors, Text } from '../../ds';
 import { Link } from 'react-router-dom';
 
 export const Container = styled.div`
@@ -211,4 +211,60 @@ export const FooterLink = styled(Link)`
   &:hover {
     text-decoration: underline;
   }
-`; 
+`;
+
+export const MobileAppSection = styled.div`
+  margin: 64px 0;
+  text-align: center;
+`;
+
+export const AppStoreButtons = styled.div`
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  margin-top: 24px;
+  
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: center;
+  }
+`;
+
+export const StoreButton = styled.a`
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  cursor: ${props => props.disabled ? 'not-allowed' : 'pointer'};
+  opacity: ${props => props.disabled ? 0.6 : 1};
+  background: transparent;
+
+  img {
+    height: 40px;
+    width: auto;
+  }
+
+  &:hover {
+    opacity: ${props => props.disabled ? 0.6 : 0.85};
+  }
+
+  @media (max-width: 768px) {
+    width: auto;
+    justify-content: center;
+  }
+`;
+
+export const StoreButtonText = styled.div`
+  text-align: left;
+  
+  @media (max-width: 768px) {
+    text-align: center;
+  }
+`;
+
+export const Rider = styled(Text)`
+  margin-top: 16px;
+`;
