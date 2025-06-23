@@ -142,3 +142,23 @@ export const DeleteButton = styled(Button)`
     width: 100%;
   }
 `;
+
+export const DangerZone = styled.div`
+  margin-top: 48px;
+  padding-top: 32px;
+  border-top: 1px solid ${colors.neutral[200]};
+`;
+
+export const DangerZoneHeader = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 24px;
+`;
+
+export const DangerZoneSection = styled(SettingsSection)`
+  background-color: ${colors.destructive[50]};
+  border: 1px solid ${colors.destructive[200]};
+  border-radius: 8px;
+  padding: 24px;
+`;

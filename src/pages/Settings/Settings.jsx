@@ -1,16 +1,19 @@
 import {useState, useRef, useContext, useEffect} from 'react';
 import {useNavigate} from 'react-router-dom';
+import {Helmet} from 'react-helmet-async';
 import * as S from './Settings.style';
 import {Button, Text, Avatar, Icon} from '../../ds';
 import {AccountContext} from '../../contexts';
-import {useUpdateUserMutation} from '../../api/mutations/users.mutation';
+import {useUpdateUserMutation, useDeleteAccountMutation} from '../../api/mutations/users.mutation';
 import {handleError} from '../../utils/functions';
 import Loader from '../../components/Loader/Loader';
 import { toast } from 'react-toastify';
 import PasswordField from '../../components/PasswordField/PasswordField';
+import Modal from '../../components/Modal/Modal';
 
 const Settings = () => {
   const navigate = useNavigate();
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [fieldValues, setFieldValues] = useState({
     old_password: '',
     password: '',
@@ -29,9 +32,10 @@ const Settings = () => {
   const fileInputRef = useRef(null);
   const formRef = useRef(null);
 
-  const {account, setAccount} = useContext(AccountContext);
+  const {account, setAccount, clearAccount} = useContext(AccountContext);
 
   const {mutate, isPending} = useUpdateUserMutation();
+  const {mutate: deleteAccount, isPending: isDeleting} = useDeleteAccountMutation();
 
   // Check if the screen is mobile size
   useEffect(() => {
@@ -153,141 +157,209 @@ const Settings = () => {
     });
   };
 
+  const handleDeleteAccount = () => {
+    deleteAccount(null, {
+      onSuccess: () => {
+        clearAccount();
+        toast.success('Your account has been deleted successfully');
+        navigate('/');
+      },
+      onError: (err) => {
+        toast.error(err.error || 'Failed to delete account');
+      },
+    });
+  };
+
   return (
-    <S.Container>
-      <S.Content>
-        <S.Header>
-          <Text weight={600} type="h6">
-            Settings
-          </Text>
-        </S.Header>
-        <S.ContentInner>
-          {/* Profile Image Section */}
-          <S.ImageSection>
-            <Avatar
-              radius={isMobile ? 80 : 100}
-              size={isMobile ? 80 : 100}
-              type={previewImage ? 'image' : 'text'}
-              value={
-                previewImage
-                  ? previewImage
-                  : account.user.email
-              }
-            />
-            <S.FileInput
-              ref={fileInputRef}
-              type="file"
-              accept="image/*"
-              onChange={handleImageChange}
-            />
-            <Button 
-              onClick={handleChooseImageClick}
-              width={isMobile ? '100%' : 'auto'}
-            >
-              Choose Image
-            </Button>
-          </S.ImageSection>
-          
-          {/* Subscription Section */}
-          <S.SettingsSection>
-            <S.SectionTitle>
-              <S.SectionIcon>
-                <Icon name="creditCard" size={18} />
-              </S.SectionIcon>
-              <Text weight={600} size="md">
-                Subscription
-              </Text>
-            </S.SectionTitle>
-            
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <div>
-                <Text weight={500} style={{ marginBottom: '4px' }}>
-                  {account.user.subscription_plan ? 
-                    account.user.subscription_plan.split('-').map(word => 
-                      word.charAt(0).toUpperCase() + word.slice(1)
-                    ).join(' ') : 
-                    'Basic Plan'
-                  }
-                </Text>
-                <Text size="sm" color="neutral.600">
-                  Manage your subscription and billing details
-                </Text>
-              </div>
-              <Button
-                variant="secondary"
-                onClick={() => navigate('/subscription')}
+    <>
+      <Helmet>
+        <title>Settings - Skinxray AI</title>
+        <meta name="description" content="Manage your Skinxray AI account settings, profile, and preferences." />
+      </Helmet>
+      <S.Container>
+        <S.Content>
+          <S.Header>
+            <Text weight={600} type="h6">
+              Settings
+            </Text>
+          </S.Header>
+          <S.ContentInner>
+            {/* Profile Image Section */}
+            <S.ImageSection>
+              <Avatar
+                radius={isMobile ? 80 : 100}
+                size={isMobile ? 80 : 100}
+                type={previewImage ? 'image' : 'text'}
+                value={
+                  previewImage
+                    ? previewImage
+                    : account.user.email
+                }
+              />
+              <S.FileInput
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+              />
+              <Button 
+                onClick={handleChooseImageClick}
                 width={isMobile ? '100%' : 'auto'}
               >
-                View Details
+                Choose Image
               </Button>
-            </div>
-          </S.SettingsSection>
-
-          {/* Password Form */}
-          <form 
-            ref={formRef}
-            onSubmit={handleSubmit}
-            method="post"
-            autoComplete="off"
-          >
+            </S.ImageSection>
+            
+            {/* Subscription Section */}
             <S.SettingsSection>
               <S.SectionTitle>
                 <S.SectionIcon>
-                  <i className="fas fa-lock"></i>
+                  <Icon name="creditCard" size={18} />
                 </S.SectionIcon>
                 <Text weight={600} size="md">
-                  Change Password
+                  Subscription
                 </Text>
               </S.SectionTitle>
               
-              <PasswordField
-                label="Current Password"
-                placeholder="Enter your current password"
-                value={fieldValues.old_password}
-                onChange={(e) => handleInputChange(e, 'old_password')}
-                error={fieldErrors?.old_password}
-                onKeyDown={() => resetErrors('old_password')}
-                autoComplete="current-password"
-                name="old_password"
-              />
-              
-              <PasswordField
-                label="New Password"
-                placeholder="Enter a new password"
-                value={fieldValues.password}
-                onChange={(e) => handleInputChange(e, 'password')}
-                error={fieldErrors?.password}
-                onKeyDown={() => resetErrors('password')}
-                autoComplete="new-password"
-                name="password"
-              />
-              
-              <PasswordField
-                label="Confirm New Password"
-                placeholder="Re-enter your new password"
-                value={fieldValues.password_confirmation}
-                onChange={(e) => handleInputChange(e, 'password_confirmation')}
-                error={fieldErrors?.password_confirmation}
-                onKeyDown={() => resetErrors('password_confirmation')}
-                autoComplete="new-password"
-                name="password_confirmation"
-              />
-              
-              <S.SaveButton
-                type="submit"
-                radius={8}
-                size="md"
-                variant="primary"
-                width={isMobile ? '100%' : 'fit-content'}
-                disabled={isPending}
-              >
-                {isPending ? <Loader /> : 'Update Information'}
-              </S.SaveButton>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div>
+                  <Text weight={500} style={{ marginBottom: '4px' }}>
+                    {account.user.subscription_plan ? 
+                      account.user.subscription_plan.split('-').map(word => 
+                        word.charAt(0).toUpperCase() + word.slice(1)
+                      ).join(' ') : 
+                      'Basic Plan'
+                    }
+                  </Text>
+                  <Text size="sm" color="neutral.600">
+                    Manage your subscription and billing details
+                  </Text>
+                </div>
+                <Button
+                  variant="secondary"
+                  onClick={() => navigate('/subscription')}
+                  width={isMobile ? '100%' : 'auto'}
+                >
+                  View Details
+                </Button>
+              </div>
             </S.SettingsSection>
-          </form>
-        </S.ContentInner>
-      </S.Content>
-    </S.Container>
+
+            {/* Password Form */}
+            <form 
+              ref={formRef}
+              onSubmit={handleSubmit}
+              method="post"
+              autoComplete="off"
+            >
+              <S.SettingsSection>
+                <S.SectionTitle>
+                  <S.SectionIcon>
+                    <i className="fas fa-lock"></i>
+                  </S.SectionIcon>
+                  <Text weight={600} size="md">
+                    Change Password
+                  </Text>
+                </S.SectionTitle>
+                
+                <PasswordField
+                  label="Current Password"
+                  placeholder="Enter your current password"
+                  value={fieldValues.old_password}
+                  onChange={(e) => handleInputChange(e, 'old_password')}
+                  error={fieldErrors?.old_password}
+                  onKeyDown={() => resetErrors('old_password')}
+                  autoComplete="current-password"
+                  name="old_password"
+                />
+                
+                <PasswordField
+                  label="New Password"
+                  placeholder="Enter a new password"
+                  value={fieldValues.password}
+                  onChange={(e) => handleInputChange(e, 'password')}
+                  error={fieldErrors?.password}
+                  onKeyDown={() => resetErrors('password')}
+                  autoComplete="new-password"
+                  name="password"
+                />
+                
+                <PasswordField
+                  label="Confirm New Password"
+                  placeholder="Re-enter your new password"
+                  value={fieldValues.password_confirmation}
+                  onChange={(e) => handleInputChange(e, 'password_confirmation')}
+                  error={fieldErrors?.password_confirmation}
+                  onKeyDown={() => resetErrors('password_confirmation')}
+                  autoComplete="new-password"
+                  name="password_confirmation"
+                />
+                
+                <S.SaveButton
+                  type="submit"
+                  radius={8}
+                  size="md"
+                  variant="primary"
+                  width={isMobile ? '100%' : 'fit-content'}
+                  disabled={isPending}
+                >
+                  {isPending ? <Loader /> : 'Update Information'}
+                </S.SaveButton>
+              </S.SettingsSection>
+            </form>
+
+            {/* Danger Zone */}
+            <S.DangerZone>
+              <S.DangerZoneHeader>
+                <Icon name="warning" size={20} color="destructive.500" />
+                <Text weight={600} size="lg" color="destructive.500">
+                  Danger Zone
+                </Text>
+              </S.DangerZoneHeader>
+              
+              <S.DangerZoneSection>
+                <S.SectionTitle>
+                  <S.SectionIcon>
+                    <Icon name="trash" size={18} color="destructive.500" />
+                  </S.SectionIcon>
+                  <Text weight={600} size="md" color="destructive.500">
+                    Delete Account
+                  </Text>
+                </S.SectionTitle>
+                
+                <div>
+                  <Text weight={500} style={{ marginBottom: '8px' }}>
+                    Permanently Delete Your Account
+                  </Text>
+                  <Text size="sm" color="neutral.600" style={{ marginBottom: '24px' }}>
+                    Once you delete your account, there is no going back. All your data, including medical history, images, and preferences will be permanently deleted.
+                  </Text>
+                  <Button
+                    variant="danger"
+                    onClick={() => setIsDeleteModalOpen(true)}
+                    width={isMobile ? '100%' : 'auto'}
+                    disabled={isDeleting}
+                  >
+                    {isDeleting ? <Loader /> : 'Delete Account'}
+                  </Button>
+                </div>
+              </S.DangerZoneSection>
+            </S.DangerZone>
+          </S.ContentInner>
+        </S.Content>
+      </S.Container>
+
+      <Modal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        title="Delete Account"
+        content="Are you sure you want to delete your account? This action cannot be undone and all your data, including medical history, images, and preferences will be permanently deleted."
+        confirmText="Yes, Delete My Account"
+        cancelText="Cancel"
+        onConfirm={handleDeleteAccount}
+        isDanger={true}
+      />
+    </>
   );
 };
 
