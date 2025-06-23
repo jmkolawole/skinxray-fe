@@ -2,12 +2,26 @@ import { useState } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Helmet } from 'react-helmet-async';
-import { Text } from '../../ds';
+import { Text, Button, Icon } from '../../ds';
+import { useNavigate } from 'react-router-dom';
 
 const Container = styled.div`
   max-width: 1200px;
   margin: 0 auto;
   padding: 40px 20px;
+`;
+
+const Header = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 32px;
+`;
+
+const BackButton = styled(Button)`
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
 `;
 
 const PolicyDate = styled.div`
@@ -108,6 +122,7 @@ Accordion.propTypes = {
 
 const PrivacyPolicy = () => {
     const policyDate = "March 14, 2024";
+    const navigate = useNavigate();
 
     return (
         <>
@@ -116,6 +131,15 @@ const PrivacyPolicy = () => {
                 <meta name="description" content="Skinxray AI's privacy policy outlines how we collect, use, and protect your personal information." />
             </Helmet>
             <Container>
+                <Header>
+                    <BackButton 
+                        variant="secondary" 
+                        onClick={() => navigate('/')}
+                    >
+                        <Icon name="arrowLeft" size={16} />
+                        Back to Home
+                    </BackButton>
+                </Header>
                 <Text weight={700} type="h2" style={{ marginBottom: '16px' }}>
                     Privacy Policy
                 </Text>
