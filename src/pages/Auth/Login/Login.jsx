@@ -78,7 +78,7 @@ const Login = ({isSignUp = false}) => {
   };
 
   // Handle redirect with token and user data (for social login)
-useEffect(() => {
+  useEffect(() => {
     if (token && userData) {
       try {
         let user;
@@ -108,11 +108,11 @@ useEffect(() => {
         const socialAvatar = user.social_accounts?.[0]?.avatar;
   
         console.log("Social avatar", socialAvatar);
-  
+
         // Create new user object without the avatar property
         const userWithoutAvatar = {...user};
         delete userWithoutAvatar.avatar;
-  
+
         setAccount({
           user: {
             ...userWithoutAvatar,
@@ -121,7 +121,7 @@ useEffect(() => {
           },
           token,
         });
-  
+
         // If coming from premium plan selection, redirect to pricing
         if (selectedPlan === 'premium') {
           navigate('/pricing?from=signup&plan=premium');
@@ -130,7 +130,6 @@ useEffect(() => {
         }
       } catch (err) {
         console.error('Error processing login data:', err);
-
       }
     } else if (error) {
       console.error('Login error:', error);
