@@ -16,12 +16,20 @@ const History = () => {
     if (data) {
       // Convert object to array if data.data is an object
       const historiesData = data.data;
+      console.log('🔍 Raw API data:', historiesData);
+      console.log('🔍 Is array?', Array.isArray(historiesData));
+      console.log('🔍 Type:', typeof historiesData);
+      
       if (Array.isArray(historiesData)) {
+        console.log('✅ Using data as array');
         setHistories(historiesData);
       } else if (typeof historiesData === 'object' && historiesData !== null) {
         // Convert object to array
-        setHistories(Object.values(historiesData));
+        const convertedArray = Object.values(historiesData);
+        console.log('🔄 Converted object to array:', convertedArray);
+        setHistories(convertedArray);
       } else {
+        console.log('❌ Setting empty array as fallback');
         setHistories([]);
       }
     }
