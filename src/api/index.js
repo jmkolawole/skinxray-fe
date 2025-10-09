@@ -4,6 +4,8 @@ const apiUrl = import.meta.env.DEV || import.meta.env.MODE === 'preview'
   ? 'http://localhost:8000/api'  // Use backend URL with /api prefix in development/preview
   : 'https://api.skinxray.com/api';  // Use production API URL
 
+  console.log("Is development",import.meta.env.DEV)
+
 // Create axios instance with default config
 const axiosInstance = axios.create({
   baseURL: apiUrl,

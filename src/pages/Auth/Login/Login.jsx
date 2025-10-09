@@ -78,17 +78,45 @@ const Login = ({isSignUp = false}) => {
   };
 
   // Handle redirect with token and user data (for social login)
-  useEffect(() => {
+useEffect(() => {
     if (token && userData) {
+      console.log("Raw user data", userData);
       try {
-        const user = JSON.parse(userData);
+        let user;
+        
+        // Try to detect if it's base64 encoded or already JSON
+        if (userData.startsWith('{') || userData.startsWith('[')) {
+          // It's already JSON (fallback case)
+          console.log("Detected JSON format");
+          user = JSON.parse(userData);
+        } else {
+          // Try to decode as URL-safe base64
+          console.log("Attempting URL-safe base64 decode");
+          try {
+            // Convert URL-safe base64 back to standard base64
+            const standardBase64 = userData.replace(/-/g, '+').replace(/_/g, '/');
+            // Add padding if needed
+            const paddedBase64 = standardBase64 + '='.repeat((4 - standardBase64.length % 4) % 4);
+            
+            const decodedUserData = atob(paddedBase64);
+            console.log("Decoded user data", decodedUserData);
+            user = JSON.parse(decodedUserData);
+          } catch (base64Error) {
+            console.error('Base64 decode failed, trying as direct JSON:', base64Error);
+            // If base64 fails, try parsing as JSON directly
+            user = JSON.parse(userData);
+          }
+        }
+        
         // Get social avatar from social accounts if available
         const socialAvatar = user.social_accounts?.[0]?.avatar;
-
+  
+        console.log("Social avatar", socialAvatar);
+  
         // Create new user object without the avatar property
         const userWithoutAvatar = {...user};
         delete userWithoutAvatar.avatar;
-
+  
         setAccount({
           user: {
             ...userWithoutAvatar,
@@ -97,7 +125,7 @@ const Login = ({isSignUp = false}) => {
           },
           token,
         });
-
+  
         // If coming from premium plan selection, redirect to pricing
         if (selectedPlan === 'premium') {
           navigate('/pricing?from=signup&plan=premium');
@@ -106,6 +134,7 @@ const Login = ({isSignUp = false}) => {
         }
       } catch (err) {
         console.error('Error processing login data:', err);
+        console.error('Failed userData:', userData);
       }
     } else if (error) {
       console.error('Login error:', error);
