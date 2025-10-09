@@ -81,9 +81,40 @@ const Login = ({isSignUp = false}) => {
   useEffect(() => {
     if (token && userData) {
       try {
-        const user = JSON.parse(userData);
+        let user;
+
+        // Try to detect if it's base64 encoded or already JSON
+        if (userData.startsWith('{') || userData.startsWith('[')) {
+          // It's already JSON (fallback case)
+          user = JSON.parse(userData);
+        } else {
+          // Try to decode as URL-safe base64
+          try {
+            // Convert URL-safe base64 back to standard base64
+            const standardBase64 = userData
+              .replace(/-/g, '+')
+              .replace(/_/g, '/');
+            // Add padding if needed
+            const paddedBase64 =
+              standardBase64 +
+              '='.repeat((4 - (standardBase64.length % 4)) % 4);
+
+            const decodedUserData = atob(paddedBase64);
+            user = JSON.parse(decodedUserData);
+          } catch (base64Error) {
+            console.error(
+              'Base64 decode failed, trying as direct JSON:',
+              base64Error
+            );
+            // If base64 fails, try parsing as JSON directly
+            user = JSON.parse(userData);
+          }
+        }
+
         // Get social avatar from social accounts if available
         const socialAvatar = user.social_accounts?.[0]?.avatar;
+
+        console.log('Social avatar', socialAvatar);
 
         // Create new user object without the avatar property
         const userWithoutAvatar = {...user};
@@ -93,7 +124,7 @@ const Login = ({isSignUp = false}) => {
           user: {
             ...userWithoutAvatar,
             avatar: null, // Ensure local avatar starts as null
-            socialAvatar: socialAvatar, // Set social avatar from Google 
+            socialAvatar: socialAvatar, // Set social avatar from Google
           },
           token,
         });
@@ -112,7 +143,6 @@ const Login = ({isSignUp = false}) => {
       // Optionally show error to user
     }
   }, [token, userData, error, setAccount, navigate, selectedPlan]);
-
   // Handle Google login click
   const handleGoogleLogin = () => {
     googleRedirect(null, {
