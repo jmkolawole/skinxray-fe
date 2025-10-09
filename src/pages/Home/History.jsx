@@ -14,7 +14,16 @@ const History = () => {
 
   useEffect(() => {
     if (data) {
-      setHistories(data.data);
+      // Convert object to array if data.data is an object
+      const historiesData = data.data;
+      if (Array.isArray(historiesData)) {
+        setHistories(historiesData);
+      } else if (typeof historiesData === 'object' && historiesData !== null) {
+        // Convert object to array
+        setHistories(Object.values(historiesData));
+      } else {
+        setHistories([]);
+      }
     }
   }, [data]);
 
