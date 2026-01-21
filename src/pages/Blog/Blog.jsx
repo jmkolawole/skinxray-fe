@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import * as S from './Blog.style';
 import logo from '../../assets/images/logo.png';
+import { sanityClient, queries, urlFor } from '../../lib/sanity';
 
 // Placeholder icons
 const CalendarIcon = () => (
@@ -28,105 +29,96 @@ const ImageIcon = () => (
   </svg>
 );
 
-// Placeholder blog data (will be replaced with Strapi data later)
+// Placeholder data for when Sanity has no content yet
 const PLACEHOLDER_POSTS = [
   {
-    id: 1,
-    slug: 'understanding-common-skin-conditions',
+    _id: '1',
+    slug: { current: 'understanding-common-skin-conditions' },
     title: 'Understanding Common Skin Conditions: A Comprehensive Guide',
     excerpt: 'Learn about the most common skin conditions affecting millions of people worldwide, from eczema to psoriasis, and understand their causes, symptoms, and treatment options.',
-    category: 'Skin Health',
-    author: 'Dr. Sarah Johnson',
-    authorInitials: 'SJ',
-    date: '2026-01-15',
+    category: { title: 'Skin Health' },
+    author: { name: 'Dr. Sarah Johnson', initials: 'SJ' },
+    publishedAt: '2026-01-15',
     readTime: '8 min read',
     featured: true,
-    image: null, // Placeholder - will be Strapi image URL
+    featuredImage: null,
   },
   {
-    id: 2,
-    slug: 'ai-in-dermatology',
+    _id: '2',
+    slug: { current: 'ai-in-dermatology' },
     title: 'How AI is Revolutionizing Dermatology and Skin Care',
     excerpt: 'Discover how artificial intelligence is transforming the way we diagnose and treat skin conditions, making dermatological care more accessible than ever.',
-    category: 'Technology',
-    author: 'Michael Chen',
-    authorInitials: 'MC',
-    date: '2026-01-12',
+    category: { title: 'Technology' },
+    author: { name: 'Michael Chen', initials: 'MC' },
+    publishedAt: '2026-01-12',
     readTime: '6 min read',
     featured: false,
-    image: null,
+    featuredImage: null,
   },
   {
-    id: 3,
-    slug: 'skincare-routine-for-beginners',
+    _id: '3',
+    slug: { current: 'skincare-routine-for-beginners' },
     title: 'Building Your Perfect Skincare Routine: A Beginner\'s Guide',
     excerpt: 'Starting a skincare routine can be overwhelming. This guide breaks down the essentials and helps you create a routine that works for your skin type.',
-    category: 'Skincare Tips',
-    author: 'Emma Williams',
-    authorInitials: 'EW',
-    date: '2026-01-10',
+    category: { title: 'Skincare Tips' },
+    author: { name: 'Emma Williams', initials: 'EW' },
+    publishedAt: '2026-01-10',
     readTime: '5 min read',
     featured: false,
-    image: null,
+    featuredImage: null,
   },
   {
-    id: 4,
-    slug: 'sun-protection-myths',
+    _id: '4',
+    slug: { current: 'sun-protection-myths' },
     title: '10 Sun Protection Myths Debunked by Dermatologists',
     excerpt: 'Think you know everything about sunscreen? Dermatologists reveal common misconceptions about sun protection that could be putting your skin at risk.',
-    category: 'Sun Care',
-    author: 'Dr. James Park',
-    authorInitials: 'JP',
-    date: '2026-01-08',
+    category: { title: 'Sun Care' },
+    author: { name: 'Dr. James Park', initials: 'JP' },
+    publishedAt: '2026-01-08',
     readTime: '7 min read',
     featured: false,
-    image: null,
+    featuredImage: null,
   },
   {
-    id: 5,
-    slug: 'acne-treatment-options',
+    _id: '5',
+    slug: { current: 'acne-treatment-options' },
     title: 'Modern Acne Treatment: From Over-the-Counter to Prescription',
     excerpt: 'Explore the full spectrum of acne treatments available today, including new innovations in skincare technology and when to consider professional help.',
-    category: 'Acne',
-    author: 'Dr. Lisa Martinez',
-    authorInitials: 'LM',
-    date: '2026-01-05',
+    category: { title: 'Acne' },
+    author: { name: 'Dr. Lisa Martinez', initials: 'LM' },
+    publishedAt: '2026-01-05',
     readTime: '9 min read',
     featured: false,
-    image: null,
-  },
-  {
-    id: 6,
-    slug: 'skin-aging-prevention',
-    title: 'The Science of Skin Aging: Prevention and Treatment Strategies',
-    excerpt: 'Understanding how skin ages at the cellular level can help you make better choices for maintaining youthful, healthy skin throughout your life.',
-    category: 'Anti-Aging',
-    author: 'Dr. Robert Kim',
-    authorInitials: 'RK',
-    date: '2026-01-02',
-    readTime: '10 min read',
-    featured: false,
-    image: null,
+    featuredImage: null,
   },
 ];
 
 const Blog = () => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [usePlaceholder, setUsePlaceholder] = useState(false);
 
-  // Simulate loading data (will be replaced with Strapi fetch)
   useEffect(() => {
     const fetchPosts = async () => {
-      // TODO: Replace with Strapi API call
-      // const response = await fetch('YOUR_STRAPI_URL/api/posts?populate=*');
-      // const data = await response.json();
-      // setPosts(data.data);
-      
-      // Simulate API delay
-      setTimeout(() => {
+      try {
+        const data = await sanityClient.fetch(queries.allPosts);
+        
+        if (data && data.length > 0) {
+          setPosts(data);
+          setUsePlaceholder(false);
+        } else {
+          // No content in Sanity yet, use placeholders
+          setPosts(PLACEHOLDER_POSTS);
+          setUsePlaceholder(true);
+        }
+      } catch (error) {
+        console.error('Error fetching posts:', error);
+        // Fallback to placeholders on error
         setPosts(PLACEHOLDER_POSTS);
+        setUsePlaceholder(true);
+      } finally {
         setLoading(false);
-      }, 500);
+      }
     };
 
     fetchPosts();
@@ -136,8 +128,22 @@ const Blog = () => {
   const regularPosts = posts.filter(post => !post.featured);
 
   const formatDate = (dateString) => {
+    if (!dateString) return '';
     const options = { year: 'numeric', month: 'long', day: 'numeric' };
     return new Date(dateString).toLocaleDateString('en-US', options);
+  };
+
+  const getPostSlug = (post) => {
+    return post.slug?.current || post.slug;
+  };
+
+  const getImageUrl = (image) => {
+    if (!image) return null;
+    try {
+      return urlFor(image).width(800).url();
+    } catch {
+      return null;
+    }
   };
 
   return (
@@ -171,6 +177,11 @@ const Blog = () => {
           <S.HeroSubtitle>
             Expert articles, tips, and the latest research on skin health, dermatology, and AI-powered skincare solutions.
           </S.HeroSubtitle>
+          {usePlaceholder && (
+            <p style={{ color: '#6C757D', fontSize: '14px', marginTop: '16px' }}>
+              <em>Showing sample content. Add posts in Sanity Studio to see your own content.</em>
+            </p>
+          )}
         </S.HeroSection>
 
         {/* Blog Content */}
@@ -206,10 +217,10 @@ const Blog = () => {
             <>
               {/* Featured Post */}
               {featuredPost && (
-                <S.FeaturedPost to={`/blog/${featuredPost.slug}`}>
+                <S.FeaturedPost to={`/blog/${getPostSlug(featuredPost)}`}>
                   <S.FeaturedImage>
-                    {featuredPost.image ? (
-                      <img src={featuredPost.image} alt={featuredPost.title} />
+                    {getImageUrl(featuredPost.featuredImage) ? (
+                      <img src={getImageUrl(featuredPost.featuredImage)} alt={featuredPost.title} />
                     ) : (
                       <S.ImagePlaceholder>
                         <ImageIcon />
@@ -218,17 +229,17 @@ const Blog = () => {
                   </S.FeaturedImage>
                   <S.FeaturedContent>
                     <S.FeaturedBadge>Featured</S.FeaturedBadge>
-                    <S.CardCategory>{featuredPost.category}</S.CardCategory>
+                    <S.CardCategory>{featuredPost.category?.title || 'Uncategorized'}</S.CardCategory>
                     <S.FeaturedTitle>{featuredPost.title}</S.FeaturedTitle>
                     <S.FeaturedExcerpt>{featuredPost.excerpt}</S.FeaturedExcerpt>
                     <S.FeaturedMeta>
                       <S.MetaItem>
                         <CalendarIcon />
-                        {formatDate(featuredPost.date)}
+                        {formatDate(featuredPost.publishedAt)}
                       </S.MetaItem>
                       <S.MetaItem>
                         <ClockIcon />
-                        {featuredPost.readTime}
+                        {featuredPost.readTime || '5 min read'}
                       </S.MetaItem>
                     </S.FeaturedMeta>
                   </S.FeaturedContent>
@@ -239,10 +250,10 @@ const Blog = () => {
               <S.SectionTitle>Latest Articles</S.SectionTitle>
               <S.BlogGrid>
                 {regularPosts.map((post) => (
-                  <S.BlogCard key={post.id} to={`/blog/${post.slug}`}>
+                  <S.BlogCard key={post._id} to={`/blog/${getPostSlug(post)}`}>
                     <S.CardImage>
-                      {post.image ? (
-                        <img src={post.image} alt={post.title} />
+                      {getImageUrl(post.featuredImage) ? (
+                        <img src={getImageUrl(post.featuredImage)} alt={post.title} />
                       ) : (
                         <S.ImagePlaceholder>
                           <ImageIcon />
@@ -250,15 +261,15 @@ const Blog = () => {
                       )}
                     </S.CardImage>
                     <S.CardContent>
-                      <S.CardCategory>{post.category}</S.CardCategory>
+                      <S.CardCategory>{post.category?.title || 'Uncategorized'}</S.CardCategory>
                       <S.CardTitle>{post.title}</S.CardTitle>
                       <S.CardExcerpt>{post.excerpt}</S.CardExcerpt>
                       <S.CardMeta>
                         <S.CardAuthor>
-                          <S.AuthorAvatar>{post.authorInitials}</S.AuthorAvatar>
-                          {post.author}
+                          <S.AuthorAvatar>{post.author?.initials || '?'}</S.AuthorAvatar>
+                          {post.author?.name || 'Anonymous'}
                         </S.CardAuthor>
-                        <span>{post.readTime}</span>
+                        <span>{post.readTime || '5 min read'}</span>
                       </S.CardMeta>
                     </S.CardContent>
                   </S.BlogCard>
