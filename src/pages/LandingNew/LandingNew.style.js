@@ -54,8 +54,12 @@ export const Nav = styled.nav`
   top: 0;
   z-index: 100;
   
-  @media (max-width: 1024px) {
+  @media (max-width: 1200px) {
     padding: 16px 40px;
+  }
+  
+  @media (max-width: 1100px) {
+    padding: 14px 24px;
   }
   
   @media (max-width: 980px) {
@@ -72,26 +76,37 @@ export const NavLogo = styled.div`
 
 export const LogoIcon = styled.div`
   img {
-  width: 48px;
-  height: 48px;
-  background: linear-gradient(135deg, ${colors.primary[1000]} 0%, #4fd1c5 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-size: 20px;
-  box-shadow: 0 4px 12px rgba(42, 179, 181, 0.3);
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, ${colors.primary[1000]} 0%, #4fd1c5 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 20px;
+    box-shadow: 0 4px 12px rgba(42, 179, 181, 0.3);
   }
   
+  @media (max-width: 1100px) {
+    img {
+      width: 40px;
+      height: 40px;
+    }
+  }
 `;
 
 export const LogoText = styled.span`
   font-size: 24px;
   font-weight: 700;
   color: ${colors.neutral[800]};
+  white-space: nowrap;
   
   span {
     color: ${colors.primary[1000]};
+  }
+  
+  @media (max-width: 1100px) {
+    font-size: 20px;
   }
 `;
 
@@ -99,6 +114,14 @@ export const NavLinks = styled.div`
   display: flex;
   align-items: center;
   gap: 40px;
+  
+  @media (max-width: 1200px) {
+    gap: 24px;
+  }
+  
+  @media (max-width: 1100px) {
+    gap: 16px;
+  }
   
   @media (max-width: 980px) {
     display: none;
@@ -113,6 +136,11 @@ export const NavLink = styled.a`
   text-decoration: none;
   transition: color 0.2s ease;
   cursor: pointer;
+  white-space: nowrap;
+  
+  @media (max-width: 1100px) {
+    font-size: 14px;
+  }
   
   &:hover {
     color: ${colors.primary[1000]};
@@ -123,6 +151,10 @@ export const NavButtons = styled.div`
   display: flex;
   align-items: center;
   gap: 16px;
+  
+  @media (max-width: 1100px) {
+    gap: 8px;
+  }
   
   @media (max-width: 980px) {
     display: none;
@@ -136,6 +168,7 @@ export const NavButton = styled.button`
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
+  white-space: nowrap;
   
   ${props => props.$variant === 'primary' ? `
     background: linear-gradient(135deg, ${colors.primary[1000]} 0%, #4fd1c5 100%);
@@ -157,6 +190,11 @@ export const NavButton = styled.button`
     }
   `}
   
+  @media (max-width: 1100px) {
+    padding: 10px 18px;
+    font-size: 14px;
+  }
+  
   @media (max-width: 980px) {
     padding: 10px 16px;
     font-size: 14px;
@@ -172,6 +210,14 @@ export const HeroSection = styled.section`
   min-height: 600px;
   position: relative;
   overflow: hidden;
+
+  @media (max-width: 1500px) {
+    padding: 60px 100px 60px 120px;
+  }
+
+  @media (max-width: 1200px) {
+    padding: 60px 100px 60px 100px;
+  }
   
   @media (max-width: 1024px) {
     flex-direction: column;
