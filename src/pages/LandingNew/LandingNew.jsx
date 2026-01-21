@@ -264,6 +264,7 @@ const LandingNew = () => {
         <meta name="description" content="Get instant AI-powered analysis of your skin conditions. Upload an image or describe your symptoms for personalized insights - anytime, anywhere." />
       </Helmet>
 
+      <S.GlobalFontStyle />
       <S.Container>
         {/* Navigation */}
         <S.Nav>
@@ -299,12 +300,31 @@ const LandingNew = () => {
         {/* Mobile Menu Overlay - Drops from top */}
         <S.MobileMenuOverlay $isOpen={isMobileMenuOpen} onClick={() => setIsMobileMenuOpen(false)}>
           <S.MobileMenuContent $isOpen={isMobileMenuOpen} onClick={(e) => e.stopPropagation()}>
+            <S.MobileMenuHeader>
+              <S.MobileMenuLogo>
+                <img src={logo} alt="Skinxray AI" />
+                <S.MobileMenuLogoText>Skin<span>Xray</span></S.MobileMenuLogoText>
+              </S.MobileMenuLogo>
+              <S.MobileMenuCloseButton onClick={() => setIsMobileMenuOpen(false)}>
+                <CloseIcon />
+              </S.MobileMenuCloseButton>
+            </S.MobileMenuHeader>
+            
             <S.MobileMenuLink onClick={() => scrollToSection('how-it-works')}>How it Works</S.MobileMenuLink>
             <S.MobileMenuLink onClick={() => scrollToSection('features')}>Features</S.MobileMenuLink>
             <S.MobileMenuLink onClick={() => scrollToSection('faq')}>FAQ</S.MobileMenuLink>
             <S.MobileMenuLink onClick={() => scrollToSection('pricing')}>Pricing</S.MobileMenuLink>
             <S.MobileMenuLink onClick={() => scrollToSection('reviews')}>Reviews</S.MobileMenuLink>
             <S.MobileMenuLink onClick={() => scrollToSection('download')}>Download</S.MobileMenuLink>
+            
+            <S.MobileMenuActions>
+              <S.MobileMenuActionButton onClick={() => { handleLogin(); setIsMobileMenuOpen(false); }}>
+                Sign In
+              </S.MobileMenuActionButton>
+              <S.MobileMenuActionButton $variant="primary" onClick={() => { handleSignUp(); setIsMobileMenuOpen(false); }}>
+                Get Started
+              </S.MobileMenuActionButton>
+            </S.MobileMenuActions>
           </S.MobileMenuContent>
         </S.MobileMenuOverlay>
 

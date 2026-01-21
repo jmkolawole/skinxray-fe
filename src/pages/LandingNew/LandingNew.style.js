@@ -1,6 +1,11 @@
-import styled, { keyframes } from 'styled-components';
+import styled, { keyframes, createGlobalStyle } from 'styled-components';
 import { colors, Text } from '../../ds';
 import { Link } from 'react-router-dom';
+
+// Global font import for Outfit
+export const GlobalFontStyle = createGlobalStyle`
+  @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
+`;
 
 // Animations
 const fadeInUp = keyframes`
@@ -30,6 +35,11 @@ export const Container = styled.div`
   min-height: 100vh;
   background-color: ${colors.shades[0]};
   overflow-x: hidden;
+  font-family: 'Outfit', sans-serif;
+  
+  * {
+    font-family: 'Outfit', sans-serif;
+  }
 `;
 
 
@@ -48,7 +58,7 @@ export const Nav = styled.nav`
     padding: 16px 40px;
   }
   
-  @media (max-width: 768px) {
+  @media (max-width: 980px) {
     padding: 16px 20px;
   }
 `;
@@ -90,14 +100,15 @@ export const NavLinks = styled.div`
   align-items: center;
   gap: 40px;
   
-  @media (max-width: 768px) {
+  @media (max-width: 980px) {
     display: none;
   }
 `;
 
 export const NavLink = styled.a`
   font-size: 16px;
-  font-weight: 500;
+  font-weight: 400;
+  font-family: 'Outfit', sans-serif;
   color: ${colors.neutral[700]};
   text-decoration: none;
   transition: color 0.2s ease;
@@ -113,7 +124,7 @@ export const NavButtons = styled.div`
   align-items: center;
   gap: 16px;
   
-  @media (max-width: 768px) {
+  @media (max-width: 980px) {
     display: none;
   }
 `;
@@ -146,7 +157,7 @@ export const NavButton = styled.button`
     }
   `}
   
-  @media (max-width: 768px) {
+  @media (max-width: 980px) {
     padding: 10px 16px;
     font-size: 14px;
   }
@@ -168,7 +179,7 @@ export const HeroSection = styled.section`
     text-align: center;
   }
   
-  @media (max-width: 768px) {
+  @media (max-width: 980px) {
     padding: 32px 20px 48px;
     min-height: auto;
   }
@@ -221,7 +232,7 @@ export const HeroTitle = styled.h1`
     font-size: 48px;
   }
   
-  @media (max-width: 768px) {
+  @media (max-width: 980px) {
     font-size: 36px;
   }
 `;
@@ -239,7 +250,7 @@ export const HeroSubtitle = styled.p`
     margin-right: auto;
   }
   
-  @media (max-width: 768px) {
+  @media (max-width: 980px) {
     font-size: 16px;
     margin-bottom: 32px;
   }
@@ -273,7 +284,7 @@ export const HeroCTA = styled.button`
     transform: translateX(4px);
   }
   
-  @media (max-width: 768px) {
+  @media (max-width: 980px) {
     padding: 16px 28px;
     font-size: 16px;
   }
@@ -297,7 +308,7 @@ export const HeroImage = styled.img`
   border-radius: 24px;
   box-shadow: 0 32px 64px rgba(0, 0, 0, 0.12);
   
-  @media (max-width: 768px) {
+  @media (max-width: 980px) {
     max-height: 300px;
   }
 `;
@@ -312,7 +323,7 @@ export const TrustSection = styled.section`
   border-top: 1px solid ${colors.neutral[100]};
   border-bottom: 1px solid ${colors.neutral[100]};
   
-  @media (max-width: 768px) {
+  @media (max-width: 980px) {
     flex-direction: column;
     gap: 24px;
     padding: 32px 20px;
@@ -345,7 +356,7 @@ export const HowItWorksSection = styled.section`
     padding: 80px 40px;
   }
   
-  @media (max-width: 768px) {
+  @media (max-width: 980px) {
     padding: 60px 20px;
   }
 `;
@@ -375,7 +386,7 @@ export const SectionTitle = styled.h2`
     background-clip: text;
   }
   
-  @media (max-width: 768px) {
+  @media (max-width: 980px) {
     font-size: 32px;
   }
 `;
@@ -388,7 +399,7 @@ export const SectionSubtitle = styled.p`
   margin: 0 auto 60px;
   line-height: 1.6;
   
-  @media (max-width: 768px) {
+  @media (max-width: 980px) {
     font-size: 16px;
     margin-bottom: 40px;
   }
@@ -405,7 +416,7 @@ export const StepsGrid = styled.div`
     grid-template-columns: repeat(2, 1fr);
   }
   
-  @media (max-width: 768px) {
+  @media (max-width: 980px) {
     grid-template-columns: 1fr;
     gap: 24px;
   }
@@ -464,7 +475,7 @@ export const FeaturesSection = styled.section`
     padding: 80px 40px;
   }
   
-  @media (max-width: 768px) {
+  @media (max-width: 980px) {
     padding: 60px 20px;
   }
 `;
@@ -480,7 +491,7 @@ export const FeaturesGrid = styled.div`
     grid-template-columns: repeat(2, 1fr);
   }
   
-  @media (max-width: 768px) {
+  @media (max-width: 980px) {
     grid-template-columns: 1fr;
     gap: 24px;
   }
@@ -537,7 +548,7 @@ export const ReviewsSection = styled.section`
     padding: 80px 40px;
   }
   
-  @media (max-width: 768px) {
+  @media (max-width: 980px) {
     padding: 60px 20px;
   }
 `;
@@ -553,7 +564,7 @@ export const ReviewsGrid = styled.div`
     grid-template-columns: repeat(2, 1fr);
   }
   
-  @media (max-width: 768px) {
+  @media (max-width: 980px) {
     grid-template-columns: 1fr;
     gap: 24px;
   }
@@ -629,7 +640,7 @@ export const CTASection = styled.section`
     padding: 80px 40px;
   }
   
-  @media (max-width: 768px) {
+  @media (max-width: 980px) {
     padding: 60px 20px;
   }
 `;
@@ -647,7 +658,7 @@ export const CTATitle = styled.h2`
     background-clip: text;
   }
   
-  @media (max-width: 768px) {
+  @media (max-width: 980px) {
     font-size: 32px;
   }
 `;
@@ -659,7 +670,7 @@ export const CTASubtitle = styled.p`
   margin: 0 auto 40px;
   line-height: 1.6;
   
-  @media (max-width: 768px) {
+  @media (max-width: 980px) {
     font-size: 16px;
   }
 `;
@@ -685,7 +696,7 @@ export const CTAButton = styled.button`
     box-shadow: 0 12px 32px rgba(42, 179, 181, 0.4);
   }
   
-  @media (max-width: 768px) {
+  @media (max-width: 980px) {
     padding: 16px 32px;
     font-size: 16px;
   }
@@ -706,7 +717,7 @@ export const Footer = styled.footer`
     padding: 60px 40px 32px;
   }
   
-  @media (max-width: 768px) {
+  @media (max-width: 980px) {
     padding: 48px 20px 24px;
   }
 `;
@@ -722,7 +733,7 @@ export const FooterTop = styled.div`
     gap: 40px;
   }
   
-  @media (max-width: 768px) {
+  @media (max-width: 980px) {
     grid-template-columns: 1fr;
     gap: 32px;
   }
@@ -815,7 +826,7 @@ export const FooterBottom = styled.div`
   padding-top: 32px;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
   
-  @media (max-width: 768px) {
+  @media (max-width: 980px) {
     flex-direction: column;
     gap: 20px;
     text-align: center;
@@ -860,7 +871,7 @@ export const MobileNavRight = styled.div`
   align-items: center;
   gap: 12px;
   
-  @media (max-width: 768px) {
+  @media (max-width: 980px) {
     display: flex;
   }
 `;
@@ -871,6 +882,7 @@ export const MobileSignInButton = styled.button`
   padding: 8px 12px;
   font-size: 14px;
   font-weight: 600;
+  font-family: 'Outfit', sans-serif;
   color: ${colors.primary[1000]};
   cursor: pointer;
   white-space: nowrap;
@@ -890,7 +902,7 @@ export const MobileMenuButton = styled.button`
   color: ${colors.neutral[700]};
   z-index: 1001;
   
-  @media (max-width: 768px) {
+  @media (max-width: 980px) {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -908,7 +920,7 @@ export const MobileMenuOverlay = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.4);
+  background: rgba(0, 0, 0, 0.5);
   z-index: 1000;
   opacity: ${props => props.$isOpen ? 1 : 0};
   visibility: ${props => props.$isOpen ? 'visible' : 'hidden'};
@@ -916,7 +928,7 @@ export const MobileMenuOverlay = styled.div`
   transition: opacity 0.3s ease, visibility 0.3s ease;
   display: none;
   
-  @media (max-width: 768px) {
+  @media (max-width: 980px) {
     display: block;
   }
 `;
@@ -926,37 +938,148 @@ export const MobileMenuContent = styled.div`
   top: 0;
   left: 0;
   right: 0;
-  background: ${colors.shades[0]};
+  width: 100%;
+  box-sizing: border-box;
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(10px);
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15);
-  padding: 80px 20px 24px;
+  padding: 20px 24px 32px 24px;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 8px;
   transform: ${props => props.$isOpen ? 'translateY(0)' : 'translateY(-100%)'};
   transition: transform 0.3s ease;
-  border-radius: 0 0 20px 20px;
+  overflow-y: auto;
+  max-height: 90vh;
+  z-index: 1001;
+`;
+
+export const MobileMenuHeader = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding-bottom: 16px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid ${colors.neutral[200]};
+  box-sizing: border-box;
+`;
+
+export const MobileMenuLogo = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+  
+  img {
+    width: 36px;
+    height: 36px;
+    border-radius: 0px;
+  }
+`;
+
+export const MobileMenuCloseButton = styled.button`
+  background: ${colors.neutral[100]};
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  color: ${colors.neutral[700]};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+  
+  &:hover {
+    background: ${colors.neutral[200]};
+    color: ${colors.neutral[900]};
+  }
+  
+  svg {
+    width: 20px;
+    height: 20px;
+  }
+`;
+
+export const MobileMenuLogoText = styled.span`
+  font-size: 20px;
+  font-weight: 700;
+  font-family: 'Outfit', sans-serif;
+  color: ${colors.neutral[800]};
+  
+  span {
+    color: ${colors.primary[1000]};
+  }
 `;
 
 export const MobileMenuLink = styled.button`
   background: none;
   border: none;
-  padding: 16px 20px;
+  padding: 14px 16px;
   text-align: left;
   font-size: 16px;
-  font-weight: 500;
+  font-weight: 400;
+  font-family: 'Outfit', sans-serif;
   color: ${colors.neutral[700]};
   cursor: pointer;
-  border-radius: 12px;
+  border-radius: 8px;
   transition: all 0.2s ease;
   
   &:hover {
-    background: ${colors.neutral[50]};
+    background: rgba(42, 179, 181, 0.1);
     color: ${colors.primary[1000]};
   }
   
   &:active {
-    background: ${colors.neutral[100]};
+    background: rgba(42, 179, 181, 0.15);
   }
+`;
+
+export const MobileMenuDivider = styled.div`
+  height: 1px;
+  background: ${colors.neutral[200]};
+  margin: 16px 0;
+`;
+
+export const MobileMenuActions = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid ${colors.neutral[200]};
+`;
+
+export const MobileMenuActionButton = styled.button`
+  padding: 14px 24px;
+  border-radius: 50px;
+  font-size: 16px;
+  font-weight: 600;
+  font-family: 'Outfit', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+  width: 100%;
+  
+  ${props => props.$variant === 'primary' ? `
+    background: linear-gradient(135deg, ${colors.primary[1000]} 0%, #4fd1c5 100%);
+    color: white;
+    border: none;
+    box-shadow: 0 4px 14px rgba(42, 179, 181, 0.3);
+    
+    &:hover {
+      box-shadow: 0 6px 20px rgba(42, 179, 181, 0.4);
+    }
+  ` : `
+    background: ${colors.neutral[100]};
+    color: ${colors.neutral[700]};
+    border: none;
+    
+    &:hover {
+      background: ${colors.neutral[200]};
+    }
+  `}
 `;
 
 // Scroll to Top Button
@@ -988,7 +1111,7 @@ export const ScrollToTopButton = styled.button`
     height: 24px;
   }
   
-  @media (max-width: 768px) {
+  @media (max-width: 980px) {
     bottom: 24px;
     right: 24px;
     width: 48px;
@@ -1029,7 +1152,7 @@ export const MobileAppSection = styled.section`
     padding: 80px 40px;
   }
   
-  @media (max-width: 768px) {
+  @media (max-width: 980px) {
     padding: 60px 20px;
   }
 `;
@@ -1044,7 +1167,7 @@ export const AppStoreButtons = styled.div`
   justify-content: center;
   margin-top: 32px;
   
-  @media (max-width: 768px) {
+  @media (max-width: 980px) {
     flex-direction: column;
     align-items: center;
     gap: 12px;
@@ -1073,7 +1196,7 @@ export const StoreButton = styled.a`
     transform: ${props => props.disabled ? 'none' : 'translateY(-2px)'};
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: 980px) {
     width: auto;
     justify-content: center;
     
@@ -1100,7 +1223,7 @@ export const DisclaimerSection = styled.section`
     margin: 0 40px 0;
   }
   
-  @media (max-width: 768px) {
+  @media (max-width: 980px) {
     margin: 0 20px 0;
     flex-direction: row;
     padding: 20px;
