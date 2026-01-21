@@ -15,6 +15,8 @@ import ForgotPassword from './pages/Auth/ForgotPassword/ForgotPassword';
 import PricingPage from './pages/Pricing/Pricing';
 import PaymentSuccess from './pages/PaymentSuccess/PaymentSuccess';
 import PrivacyPolicy from './pages/PrivacyPolicy/PrivacyPolicy';
+import Blog from './pages/Blog/Blog';
+import BlogPost from './pages/BlogPost/BlogPost';
 
 const Subscription = lazy(() => import('./pages/Subscription/Subscription'));
 
@@ -32,6 +34,14 @@ export const router = createBrowserRouter([
   {
     path: '/privacy-policy',
     element: <PrivacyPolicy />,
+  },
+  {
+    path: '/blog',
+    element: <Blog />,
+  },
+  {
+    path: '/blog/:slug',
+    element: <BlogPost />,
   },
   {
     element: <AuthLayout />,

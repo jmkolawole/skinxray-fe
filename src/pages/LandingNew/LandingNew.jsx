@@ -281,6 +281,7 @@ const LandingNew = () => {
             <S.NavLink onClick={() => scrollToSection('faq')}>FAQ</S.NavLink>
             <S.NavLink onClick={() => scrollToSection('pricing')}>Pricing</S.NavLink>
             <S.NavLink onClick={() => scrollToSection('reviews')}>Reviews</S.NavLink>
+            <S.NavLink href="/blog">Blog</S.NavLink>
             <S.NavLink onClick={() => scrollToSection('download')}>Download</S.NavLink>
           </S.NavLinks>
 
@@ -315,6 +316,7 @@ const LandingNew = () => {
             <S.MobileMenuLink onClick={() => scrollToSection('faq')}>FAQ</S.MobileMenuLink>
             <S.MobileMenuLink onClick={() => scrollToSection('pricing')}>Pricing</S.MobileMenuLink>
             <S.MobileMenuLink onClick={() => scrollToSection('reviews')}>Reviews</S.MobileMenuLink>
+            <S.MobileMenuLink onClick={() => { navigate('/blog'); setIsMobileMenuOpen(false); }}>Blog</S.MobileMenuLink>
             <S.MobileMenuLink onClick={() => scrollToSection('download')}>Download</S.MobileMenuLink>
             
             <S.MobileMenuActions>
@@ -537,7 +539,7 @@ const LandingNew = () => {
               <S.FooterColumnTitle>Company</S.FooterColumnTitle>
               <S.FooterLinks>
                 <li><S.FooterExternalLink>About Us</S.FooterExternalLink></li>
-                <li><S.FooterExternalLink>Blog</S.FooterExternalLink></li>
+                <li><S.FooterLink to="/blog">Blog</S.FooterLink></li>
                 <li><S.FooterExternalLink>Careers</S.FooterExternalLink></li>
                 <li><S.FooterExternalLink>Contact</S.FooterExternalLink></li>
               </S.FooterLinks>
