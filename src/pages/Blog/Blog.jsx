@@ -107,14 +107,14 @@ const Blog = () => {
           setPosts(data);
           setUsePlaceholder(false);
         } else {
-          // No content in Sanity yet, use placeholders
-          setPosts(PLACEHOLDER_POSTS);
+          // No content in Sanity yet - show empty state
+          setPosts([]);
           setUsePlaceholder(true);
         }
       } catch (error) {
         console.error('Error fetching posts:', error);
-        // Fallback to placeholders on error
-        setPosts(PLACEHOLDER_POSTS);
+        // Show empty state on error
+        setPosts([]);
         setUsePlaceholder(true);
       } finally {
         setLoading(false);
@@ -177,9 +177,9 @@ const Blog = () => {
           <S.HeroSubtitle>
             Expert articles, tips, and the latest research on skin health, dermatology, and AI-powered skincare solutions.
           </S.HeroSubtitle>
-          {usePlaceholder && (
-            <p style={{ color: '#6C757D', fontSize: '14px', marginTop: '16px' }}>
-              <em>Showing sample content. Add posts in Sanity Studio to see your own content.</em>
+          {usePlaceholder && posts.length === 0 && !loading && (
+            <p style={{ color: '#6C757D', fontSize: '16px', marginTop: '24px' }}>
+              No articles yet. Check back soon for skin health insights and tips!
             </p>
           )}
         </S.HeroSection>
@@ -246,35 +246,39 @@ const Blog = () => {
                 </S.FeaturedPost>
               )}
 
-              {/* Regular Posts Grid */}
-              <S.SectionTitle>Latest Articles</S.SectionTitle>
-              <S.BlogGrid>
-                {regularPosts.map((post) => (
-                  <S.BlogCard key={post._id} to={`/blog/${getPostSlug(post)}`}>
-                    <S.CardImage>
-                      {getImageUrl(post.featuredImage) ? (
-                        <img src={getImageUrl(post.featuredImage)} alt={post.title} />
-                      ) : (
-                        <S.ImagePlaceholder>
-                          <ImageIcon />
-                        </S.ImagePlaceholder>
-                      )}
-                    </S.CardImage>
-                    <S.CardContent>
-                      <S.CardCategory>{post.category?.title || 'Uncategorized'}</S.CardCategory>
-                      <S.CardTitle>{post.title}</S.CardTitle>
-                      <S.CardExcerpt>{post.excerpt}</S.CardExcerpt>
-                      <S.CardMeta>
-                        <S.CardAuthor>
-                          <S.AuthorAvatar>{post.author?.initials || '?'}</S.AuthorAvatar>
-                          {post.author?.name || 'Anonymous'}
-                        </S.CardAuthor>
-                        <span>{post.readTime || '5 min read'}</span>
-                      </S.CardMeta>
-                    </S.CardContent>
-                  </S.BlogCard>
-                ))}
-              </S.BlogGrid>
+              {/* Regular Posts Grid - Only show if there are posts */}
+              {regularPosts.length > 0 && (
+                <>
+                  <S.SectionTitle>Latest Articles</S.SectionTitle>
+                  <S.BlogGrid>
+                    {regularPosts.map((post) => (
+                      <S.BlogCard key={post._id} to={`/blog/${getPostSlug(post)}`}>
+                        <S.CardImage>
+                          {getImageUrl(post.featuredImage) ? (
+                            <img src={getImageUrl(post.featuredImage)} alt={post.title} />
+                          ) : (
+                            <S.ImagePlaceholder>
+                              <ImageIcon />
+                            </S.ImagePlaceholder>
+                          )}
+                        </S.CardImage>
+                        <S.CardContent>
+                          <S.CardCategory>{post.category?.title || 'Uncategorized'}</S.CardCategory>
+                          <S.CardTitle>{post.title}</S.CardTitle>
+                          <S.CardExcerpt>{post.excerpt}</S.CardExcerpt>
+                          <S.CardMeta>
+                            <S.CardAuthor>
+                              <S.AuthorAvatar>{post.author?.initials || '?'}</S.AuthorAvatar>
+                              {post.author?.name || 'Anonymous'}
+                            </S.CardAuthor>
+                            <span>{post.readTime || '5 min read'}</span>
+                          </S.CardMeta>
+                        </S.CardContent>
+                      </S.BlogCard>
+                    ))}
+                  </S.BlogGrid>
+                </>
+              )}
             </>
           )}
         </S.BlogSection>

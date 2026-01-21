@@ -203,7 +203,7 @@ const RELATED_POSTS = [
 const BlogPost = () => {
   const { slug } = useParams();
   const [post, setPost] = useState(null);
-  const [relatedPosts, setRelatedPosts] = useState(RELATED_POSTS);
+  const [relatedPosts, setRelatedPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [usePlaceholder, setUsePlaceholder] = useState(false);
 
@@ -221,17 +221,23 @@ const BlogPost = () => {
             const related = await sanityClient.fetch(queries.relatedPosts(data.category._id, data._id));
             if (related && related.length > 0) {
               setRelatedPosts(related);
+            } else {
+              setRelatedPosts([]);
             }
+          } else {
+            setRelatedPosts([]);
           }
         } else {
-          // Fallback to placeholder
-          setPost(PLACEHOLDER_POSTS[slug] || null);
+          // No post found in Sanity
+          setPost(null);
           setUsePlaceholder(true);
+          setRelatedPosts([]);
         }
       } catch (error) {
         console.error('Error fetching post:', error);
-        setPost(PLACEHOLDER_POSTS[slug] || null);
+        setPost(null);
         setUsePlaceholder(true);
+        setRelatedPosts([]);
       } finally {
         setLoading(false);
       }
@@ -440,30 +446,32 @@ const BlogPost = () => {
           </S.ShareSection>
         </S.ArticleContainer>
 
-        {/* Related Posts */}
-        <S.RelatedSection>
-          <S.RelatedTitle>Related Articles</S.RelatedTitle>
-          <S.RelatedGrid>
-            {relatedPosts.map((relatedPost) => (
-              <S.RelatedCard key={relatedPost._id} to={`/blog/${getPostSlug(relatedPost)}`}>
-                <S.RelatedImage>
-                  {getImageUrl(relatedPost.featuredImage) ? (
-                    <img src={getImageUrl(relatedPost.featuredImage)} alt={relatedPost.title} />
-                  ) : (
-                    <S.ImagePlaceholder>
-                      <ImageIcon />
-                    </S.ImagePlaceholder>
-                  )}
-                </S.RelatedImage>
-                <S.RelatedContent>
-                  <S.RelatedCategory>{relatedPost.category?.title || 'Uncategorized'}</S.RelatedCategory>
-                  <S.RelatedPostTitle>{relatedPost.title}</S.RelatedPostTitle>
-                  <S.RelatedMeta>{relatedPost.readTime || '5 min read'}</S.RelatedMeta>
-                </S.RelatedContent>
-              </S.RelatedCard>
-            ))}
-          </S.RelatedGrid>
-        </S.RelatedSection>
+        {/* Related Posts - Only show if there are related posts from Sanity */}
+        {relatedPosts.length > 0 && (
+          <S.RelatedSection>
+            <S.RelatedTitle>Related Articles</S.RelatedTitle>
+            <S.RelatedGrid>
+              {relatedPosts.map((relatedPost) => (
+                <S.RelatedCard key={relatedPost._id} to={`/blog/${getPostSlug(relatedPost)}`}>
+                  <S.RelatedImage>
+                    {getImageUrl(relatedPost.featuredImage) ? (
+                      <img src={getImageUrl(relatedPost.featuredImage)} alt={relatedPost.title} />
+                    ) : (
+                      <S.ImagePlaceholder>
+                        <ImageIcon />
+                      </S.ImagePlaceholder>
+                    )}
+                  </S.RelatedImage>
+                  <S.RelatedContent>
+                    <S.RelatedCategory>{relatedPost.category?.title || 'Uncategorized'}</S.RelatedCategory>
+                    <S.RelatedPostTitle>{relatedPost.title}</S.RelatedPostTitle>
+                    <S.RelatedMeta>{relatedPost.readTime || '5 min read'}</S.RelatedMeta>
+                  </S.RelatedContent>
+                </S.RelatedCard>
+              ))}
+            </S.RelatedGrid>
+          </S.RelatedSection>
+        )}
 
         {/* CTA Section */}
         <S.CTASection>

@@ -36,6 +36,7 @@ export const queries = {
       image
     },
     "category": category->{
+      _id,
       title,
       slug
     }
@@ -58,6 +59,7 @@ export const queries = {
       image
     },
     "category": category->{
+      _id,
       title,
       slug
     }
@@ -82,6 +84,7 @@ export const queries = {
       bio
     },
     "category": category->{
+      _id,
       title,
       slug
     }
