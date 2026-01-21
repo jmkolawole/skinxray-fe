@@ -7,7 +7,7 @@ import Home from './pages/Home/Home';
 import Logout from './pages/Auth/Logout/Logout';
 import Analysis from './pages/Analysis/Analysis';
 import Settings from './pages/Settings/Settings';
-import Landing from './pages/Landing/Landing';
+//import Landing from './pages/Landing/Landing';
 import LandingNew from './pages/LandingNew/LandingNew';
 import NotFound from './pages/NotFound/NotFound';
 import ResetPassword from './pages/ResetPassword';
@@ -24,13 +24,13 @@ export const router = createBrowserRouter([
   // UNPROTECTED PAGES
   {
     path: '/',
-    element: <Landing />,
+    element: <LandingNew />,
     index: true,
   },
-  {
+  /* {
     path: '/new',
     element: <LandingNew />,
-  },
+  }, */
   {
     path: '/privacy-policy',
     element: <PrivacyPolicy />,

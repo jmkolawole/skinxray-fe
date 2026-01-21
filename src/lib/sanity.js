@@ -1,11 +1,13 @@
 import { createClient } from '@sanity/client';
 import imageUrlBuilder from '@sanity/image-url';
 
+const isProd = import.meta.env.PROD;
+
 export const sanityClient = createClient({
-  projectId: 'ny6ol74f',
-  dataset: 'production',
+  projectId: import.meta.env.VITE_SANITY_PROJECT_ID || 'ny6ol74f',
+  dataset: import.meta.env.VITE_SANITY_DATASET || 'production',
   apiVersion: '2024-01-01',
-  useCdn: false, // Set to false for fresh data during development
+  useCdn: isProd, // Use CDN in production for faster responses, false in dev for fresh data
 });
 
 // Image URL builder
