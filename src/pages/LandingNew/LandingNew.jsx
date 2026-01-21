@@ -1,9 +1,14 @@
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { AccountContext } from '../../contexts';
-import heroImage from '../../assets/images/hero.jpg';
+import { Icon, Text } from '../../ds';
+import FAQ from '../../components/FAQ/FAQ';
+import Pricing from '../../components/Pricing/Pricing';
+import googlePlayBadge from '../../assets/images/google-play-badge.svg';
+import appStoreBadge from '../../assets/images/app-store-badge.svg';
 import * as S from './LandingNew.style';
+import heroImage from '../../assets/images/hero2.png';
 
 // Icons as simple SVG components
 const SparklesIcon = () => (
@@ -124,9 +129,32 @@ const LinkedInIcon = () => (
   </svg>
 );
 
+const HamburgerIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <line x1="3" y1="12" x2="21" y2="12" />
+    <line x1="3" y1="6" x2="21" y2="6" />
+    <line x1="3" y1="18" x2="21" y2="18" />
+  </svg>
+);
+
+const CloseIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <line x1="18" y1="6" x2="6" y2="18" />
+    <line x1="6" y1="6" x2="18" y2="18" />
+  </svg>
+);
+
+const ChevronUpIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <polyline points="18,15 12,9 6,15" />
+  </svg>
+);
+
 const LandingNew = () => {
   const { account } = useContext(AccountContext);
   const navigate = useNavigate();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [showScrollTop, setShowScrollTop] = useState(false);
 
   // Redirect authenticated users to the home page
   useEffect(() => {
@@ -134,6 +162,20 @@ const LandingNew = () => {
       navigate('/home');
     }
   }, [account, navigate]);
+
+  // Handle scroll to show/hide scroll to top button
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 300) {
+        setShowScrollTop(true);
+      } else {
+        setShowScrollTop(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const handleLogin = () => {
     navigate('/login');
@@ -151,7 +193,16 @@ const LandingNew = () => {
     const element = document.getElementById(sectionId);
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
+      setIsMobileMenuOpen(false); // Close mobile menu after navigation
     }
+  };
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
   const steps = [
@@ -231,15 +282,38 @@ const LandingNew = () => {
           <S.NavLinks>
             <S.NavLink onClick={() => scrollToSection('how-it-works')}>How it Works</S.NavLink>
             <S.NavLink onClick={() => scrollToSection('features')}>Features</S.NavLink>
+            <S.NavLink onClick={() => scrollToSection('faq')}>FAQ</S.NavLink>
+            <S.NavLink onClick={() => scrollToSection('pricing')}>Pricing</S.NavLink>
             <S.NavLink onClick={() => scrollToSection('reviews')}>Reviews</S.NavLink>
+            <S.NavLink onClick={() => scrollToSection('download')}>Download</S.NavLink>
           </S.NavLinks>
 
           <S.NavButtons>
             <S.NavButton onClick={handleLogin}>Sign In</S.NavButton>
             <S.NavButton $variant="primary" onClick={() => handleSignUp()}>Get Started</S.NavButton>
           </S.NavButtons>
+
+          <S.MobileNavRight>
+            <S.MobileSignInButton onClick={handleLogin}>Sign In / Sign Up</S.MobileSignInButton>
+            <S.MobileMenuButton onClick={toggleMobileMenu}>
+              {isMobileMenuOpen ? <CloseIcon /> : <HamburgerIcon />}
+            </S.MobileMenuButton>
+          </S.MobileNavRight>
         </S.Nav>
 
+        {/* Mobile Menu Overlay - Drops from top */}
+        <S.MobileMenuOverlay $isOpen={isMobileMenuOpen} onClick={() => setIsMobileMenuOpen(false)}>
+          <S.MobileMenuContent $isOpen={isMobileMenuOpen} onClick={(e) => e.stopPropagation()}>
+            <S.MobileMenuLink onClick={() => scrollToSection('how-it-works')}>How it Works</S.MobileMenuLink>
+            <S.MobileMenuLink onClick={() => scrollToSection('features')}>Features</S.MobileMenuLink>
+            <S.MobileMenuLink onClick={() => scrollToSection('faq')}>FAQ</S.MobileMenuLink>
+            <S.MobileMenuLink onClick={() => scrollToSection('pricing')}>Pricing</S.MobileMenuLink>
+            <S.MobileMenuLink onClick={() => scrollToSection('reviews')}>Reviews</S.MobileMenuLink>
+            <S.MobileMenuLink onClick={() => scrollToSection('download')}>Download</S.MobileMenuLink>
+          </S.MobileMenuContent>
+        </S.MobileMenuOverlay>
+
+        
         {/* Hero Section */}
         <S.HeroSection>
           <S.HeroContent>
@@ -316,6 +390,16 @@ const LandingNew = () => {
           </S.FeaturesGrid>
         </S.FeaturesSection>
 
+        {/* FAQ Section */}
+        <S.FAQWrapper id="faq">
+          <FAQ />
+        </S.FAQWrapper>
+
+        {/* Pricing Section */}
+        <S.PricingWrapper id="pricing">
+          <Pricing onSignUp={handleSignUp} />
+        </S.PricingWrapper>
+
         {/* Reviews Section */}
         <S.ReviewsSection id="reviews">
           <S.SectionLabel>Reviews</S.SectionLabel>
@@ -359,6 +443,55 @@ const LandingNew = () => {
           </S.CTAFeatures>
         </S.CTASection>
 
+        {/* Mobile App Section */}
+        <S.MobileAppSection id="download">
+          <Text weight={700} type="h3" color="neutral.100" align="center">
+            Get Skinxray AI on Mobile
+          </Text>
+          <S.Rider color="neutral.200" size="lg" align="center" weight={400}>
+            Download our mobile app for a seamless experience on the go
+          </S.Rider>
+          
+          <S.AppStoreButtons>
+            <S.StoreButton 
+              href="https://play.google.com/store/apps/details?id=com.skinxrayapp.mobile" 
+              target="_blank" 
+              rel="noopener noreferrer"
+            >
+              <img src={googlePlayBadge} alt="Get it on Google Play" />
+            </S.StoreButton>
+
+            <S.StoreButton disabled onClick={(e) => e.preventDefault()}>
+              <img src={appStoreBadge} alt="Download on the App Store" />
+            </S.StoreButton>
+          </S.AppStoreButtons>
+        </S.MobileAppSection>
+
+        {/* Disclaimer Section */}
+        <S.DisclaimerSection>
+          <S.DisclaimerIcon>
+            <Icon
+              bg="inherit"
+              color="warning.500"
+              name="warning"
+              size={20}
+              weight={0}
+            />
+          </S.DisclaimerIcon>
+          <S.DisclaimerContent>
+            <Text weight={600} size="md" color="neutral.800">
+              Medical Disclaimer
+            </Text>
+            <Text size="sm" color="neutral.700">
+              Skinxray AI is for informational purposes only and is not a
+              substitute for professional medical advice, diagnosis, or treatment.
+              Always seek the advice of your physician or other qualified health
+              provider with any questions you may have regarding a medical
+              condition.
+            </Text>
+          </S.DisclaimerContent>
+        </S.DisclaimerSection>
+
         {/* Footer */}
         <S.Footer>
           <S.FooterTop>
@@ -379,8 +512,9 @@ const LandingNew = () => {
               <S.FooterLinks>
                 <li><S.FooterExternalLink onClick={() => scrollToSection('features')}>Features</S.FooterExternalLink></li>
                 <li><S.FooterExternalLink onClick={() => scrollToSection('how-it-works')}>How It Works</S.FooterExternalLink></li>
-                <li><S.FooterExternalLink onClick={() => handleSignUp()}>Pricing</S.FooterExternalLink></li>
-                <li><S.FooterExternalLink onClick={() => scrollToSection('reviews')}>FAQ</S.FooterExternalLink></li>
+                <li><S.FooterExternalLink onClick={() => scrollToSection('pricing')}>Pricing</S.FooterExternalLink></li>
+                <li><S.FooterExternalLink onClick={() => scrollToSection('faq')}>FAQ</S.FooterExternalLink></li>
+                <li><S.FooterExternalLink onClick={() => scrollToSection('download')}>Download</S.FooterExternalLink></li>
               </S.FooterLinks>
             </S.FooterColumn>
 
@@ -422,6 +556,13 @@ const LandingNew = () => {
             </S.FooterSocial>
           </S.FooterBottom>
         </S.Footer>
+
+        {/* Scroll to Top Button */}
+        {showScrollTop && (
+          <S.ScrollToTopButton onClick={scrollToTop} aria-label="Return to top">
+            <ChevronUpIcon />
+          </S.ScrollToTopButton>
+        )}
       </S.Container>
     </>
   );

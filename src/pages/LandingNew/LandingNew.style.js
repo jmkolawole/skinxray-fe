@@ -1,5 +1,5 @@
 import styled, { keyframes } from 'styled-components';
-import { colors } from '../../ds';
+import { colors, Text } from '../../ds';
 import { Link } from 'react-router-dom';
 
 // Animations
@@ -31,6 +31,7 @@ export const Container = styled.div`
   background-color: ${colors.shades[0]};
   overflow-x: hidden;
 `;
+
 
 // Navigation
 export const Nav = styled.nav`
@@ -111,7 +112,7 @@ export const NavButtons = styled.div`
   gap: 16px;
   
   @media (max-width: 768px) {
-    gap: 8px;
+    display: none;
   }
 `;
 
@@ -153,7 +154,7 @@ export const NavButton = styled.button`
 export const HeroSection = styled.section`
   display: flex;
   align-items: center;
-  padding: 60px 80px 80px;
+  padding: 60px 100px 60px 220px;
   background: linear-gradient(180deg, #f0fdfa 0%, ${colors.shades[0]} 100%);
   min-height: 600px;
   position: relative;
@@ -850,6 +851,32 @@ export const SocialLink = styled.a`
   }
 `;
 
+// Mobile Navigation Right Section
+export const MobileNavRight = styled.div`
+  display: none;
+  align-items: center;
+  gap: 12px;
+  
+  @media (max-width: 768px) {
+    display: flex;
+  }
+`;
+
+export const MobileSignInButton = styled.button`
+  background: none;
+  border: none;
+  padding: 8px 12px;
+  font-size: 14px;
+  font-weight: 600;
+  color: ${colors.primary[1000]};
+  cursor: pointer;
+  white-space: nowrap;
+  
+  &:hover {
+    color: ${colors.primary[1100]};
+  }
+`;
+
 // Mobile Menu
 export const MobileMenuButton = styled.button`
   display: none;
@@ -858,6 +885,7 @@ export const MobileMenuButton = styled.button`
   padding: 8px;
   cursor: pointer;
   color: ${colors.neutral[700]};
+  z-index: 1001;
   
   @media (max-width: 768px) {
     display: flex;
@@ -869,4 +897,222 @@ export const MobileMenuButton = styled.button`
     width: 24px;
     height: 24px;
   }
+`;
+
+export const MobileMenuOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 1000;
+  opacity: ${props => props.$isOpen ? 1 : 0};
+  visibility: ${props => props.$isOpen ? 'visible' : 'hidden'};
+  pointer-events: ${props => props.$isOpen ? 'auto' : 'none'};
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  display: none;
+  
+  @media (max-width: 768px) {
+    display: block;
+  }
+`;
+
+export const MobileMenuContent = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: ${colors.shades[0]};
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15);
+  padding: 80px 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  transform: ${props => props.$isOpen ? 'translateY(0)' : 'translateY(-100%)'};
+  transition: transform 0.3s ease;
+  border-radius: 0 0 20px 20px;
+`;
+
+export const MobileMenuLink = styled.button`
+  background: none;
+  border: none;
+  padding: 16px 20px;
+  text-align: left;
+  font-size: 16px;
+  font-weight: 500;
+  color: ${colors.neutral[700]};
+  cursor: pointer;
+  border-radius: 12px;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    background: ${colors.neutral[50]};
+    color: ${colors.primary[1000]};
+  }
+  
+  &:active {
+    background: ${colors.neutral[100]};
+  }
+`;
+
+// Scroll to Top Button
+export const ScrollToTopButton = styled.button`
+  position: fixed;
+  bottom: 32px;
+  right: 32px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, ${colors.primary[1000]} 0%, #4fd1c5 100%);
+  color: white;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 24px rgba(42, 179, 181, 0.3);
+  transition: all 0.3s ease;
+  z-index: 999;
+  
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(42, 179, 181, 0.4);
+  }
+  
+  svg {
+    width: 24px;
+    height: 24px;
+  }
+  
+  @media (max-width: 768px) {
+    bottom: 24px;
+    right: 24px;
+    width: 48px;
+    height: 48px;
+    
+    svg {
+      width: 20px;
+      height: 20px;
+    }
+  }
+`;
+
+// FAQ Wrapper
+export const FAQWrapper = styled.div`
+  background: linear-gradient(135deg, ${colors.primary[1000]} 0%, #4fd1c5 100%);
+  
+  h3 {
+    color: ${colors.shades[0]};
+  }
+`;
+
+// Pricing Wrapper
+export const PricingWrapper = styled.div`
+  background-color: #f9fafb;
+  
+  section {
+    background-color: transparent;
+  }
+`;
+
+// Mobile App Section
+export const MobileAppSection = styled.section`
+  padding: 100px 80px;
+  background: linear-gradient(135deg, ${colors.primary[1000]} 0%, #4fd1c5 100%);
+  text-align: center;
+  
+  @media (max-width: 1024px) {
+    padding: 80px 40px;
+  }
+  
+  @media (max-width: 768px) {
+    padding: 60px 20px;
+  }
+`;
+
+export const Rider = styled(Text)`
+  margin-top: 16px;
+`;
+
+export const AppStoreButtons = styled.div`
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  margin-top: 32px;
+  
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+`;
+
+export const StoreButton = styled.a`
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  cursor: ${props => props.disabled ? 'not-allowed' : 'pointer'};
+  opacity: ${props => props.disabled ? 0.6 : 1};
+  background: transparent;
+
+  img {
+    height: 50px;
+    width: auto;
+  }
+
+  &:hover {
+    opacity: ${props => props.disabled ? 0.6 : 0.85};
+    transform: ${props => props.disabled ? 'none' : 'translateY(-2px)'};
+  }
+
+  @media (max-width: 768px) {
+    width: auto;
+    justify-content: center;
+    
+    img {
+      height: 45px;
+    }
+  }
+`;
+
+// Disclaimer Section
+export const DisclaimerSection = styled.section`
+  display: flex;
+  background-color: ${colors.shades[0]};
+  border: 1px solid ${colors.neutral[200]};
+  border-left: 4px solid #f97316;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.05);
+  border-radius: 12px;
+  padding: 24px;
+  margin: 0 80px 0;
+  gap: 16px;
+  align-items: flex-start;
+  
+  @media (max-width: 1024px) {
+    margin: 0 40px 0;
+  }
+  
+  @media (max-width: 768px) {
+    margin: 0 20px 0;
+    flex-direction: row;
+    padding: 20px;
+  }
+`;
+
+export const DisclaimerIcon = styled.div`
+  color: #f97316;
+  font-size: 24px;
+  flex-shrink: 0;
+`;
+
+export const DisclaimerContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
 `;
