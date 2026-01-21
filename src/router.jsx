@@ -8,6 +8,7 @@ import Logout from './pages/Auth/Logout/Logout';
 import Analysis from './pages/Analysis/Analysis';
 import Settings from './pages/Settings/Settings';
 import Landing from './pages/Landing/Landing';
+import LandingNew from './pages/LandingNew/LandingNew';
 import NotFound from './pages/NotFound/NotFound';
 import ResetPassword from './pages/ResetPassword';
 import ForgotPassword from './pages/Auth/ForgotPassword/ForgotPassword';
@@ -23,6 +24,10 @@ export const router = createBrowserRouter([
     path: '/',
     element: <Landing />,
     index: true,
+  },
+  {
+    path: '/new',
+    element: <LandingNew />,
   },
   {
     path: '/privacy-policy',
