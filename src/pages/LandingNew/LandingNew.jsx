@@ -9,6 +9,7 @@ import googlePlayBadge from '../../assets/images/google-play-badge.svg';
 import appStoreBadge from '../../assets/images/app-store-badge.svg';
 import * as S from './LandingNew.style';
 import heroImage from '../../assets/images/hero2.png';
+import logo from '../../assets/images/logo.png';
 
 // Icons as simple SVG components
 const SparklesIcon = () => (
@@ -102,12 +103,6 @@ const LockIcon = () => (
   </svg>
 );
 
-const ClipboardIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2" />
-    <rect x="8" y="2" width="8" height="4" rx="1" ry="1" />
-  </svg>
-);
 
 const TwitterIcon = () => (
   <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
@@ -274,7 +269,7 @@ const LandingNew = () => {
         <S.Nav>
           <S.NavLogo>
             <S.LogoIcon>
-              <ClipboardIcon />
+            <img src={logo} alt="Skinxray AI" />
             </S.LogoIcon>
             <S.LogoText>Skin<span>Xray</span></S.LogoText>
           </S.NavLogo>
@@ -498,7 +493,7 @@ const LandingNew = () => {
             <S.FooterBrand>
               <S.FooterLogo>
                 <S.FooterLogoIcon>
-                  <ClipboardIcon />
+                  <img src={logo} alt="Skinxray AI" />
                 </S.FooterLogoIcon>
                 <S.FooterLogoText>Skin<span>Xray</span></S.FooterLogoText>
               </S.FooterLogo>

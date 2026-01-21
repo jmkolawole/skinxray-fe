@@ -61,9 +61,9 @@ export const NavLogo = styled.div`
 `;
 
 export const LogoIcon = styled.div`
+  img {
   width: 48px;
   height: 48px;
-  border-radius: 12px;
   background: linear-gradient(135deg, ${colors.primary[1000]} 0%, #4fd1c5 100%);
   display: flex;
   align-items: center;
@@ -71,6 +71,8 @@ export const LogoIcon = styled.div`
   color: white;
   font-size: 20px;
   box-shadow: 0 4px 12px rgba(42, 179, 181, 0.3);
+  }
+  
 `;
 
 export const LogoText = styled.span`
@@ -736,15 +738,16 @@ export const FooterLogo = styled.div`
 `;
 
 export const FooterLogoIcon = styled.div`
+  
+  img{
   width: 44px;
   height: 44px;
-  border-radius: 12px;
-  background: linear-gradient(135deg, ${colors.primary[1000]} 0%, #4fd1c5 100%);
+  border-radius: 6px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
   font-size: 18px;
+  }
 `;
 
 export const FooterLogoText = styled.span`
