@@ -94,118 +94,12 @@ const portableTextComponents = {
   },
 };
 
-// Placeholder post data
-const PLACEHOLDER_POSTS = {
-  'understanding-common-skin-conditions': {
-    _id: '1',
-    slug: { current: 'understanding-common-skin-conditions' },
-    title: 'Understanding Common Skin Conditions: A Comprehensive Guide',
-    excerpt: 'Learn about the most common skin conditions affecting millions of people worldwide.',
-    category: { title: 'Skin Health', _id: 'cat1' },
-    author: { name: 'Dr. Sarah Johnson', initials: 'SJ', bio: 'Board-certified dermatologist with 15+ years of experience' },
-    publishedAt: '2026-01-15',
-    readTime: '8 min read',
-    featuredImage: null,
-    tags: ['Skin Health', 'Dermatology', 'Eczema', 'Psoriasis', 'Treatment'],
-    content: null,
-    htmlContent: `
-      <p>Skin conditions affect millions of people worldwide, and understanding them is the first step toward effective management and treatment. In this comprehensive guide, we'll explore some of the most common skin conditions, their causes, symptoms, and available treatment options.</p>
-
-      <h2>What Are Skin Conditions?</h2>
-      <p>Skin conditions encompass a wide range of disorders that affect the skin's appearance, texture, or function. They can be temporary or chronic, mild or severe, and may be caused by various factors including genetics, environmental triggers, infections, or immune system responses.</p>
-
-      <h2>Common Types of Skin Conditions</h2>
-      
-      <h3>1. Eczema (Atopic Dermatitis)</h3>
-      <p>Eczema is a chronic condition characterized by dry, itchy, and inflamed skin. It often appears in childhood and can persist into adulthood. Common triggers include:</p>
-      <ul>
-        <li>Environmental allergens (dust mites, pollen)</li>
-        <li>Irritants (soaps, detergents)</li>
-        <li>Stress and emotional factors</li>
-        <li>Weather changes</li>
-      </ul>
-
-      <h3>2. Psoriasis</h3>
-      <p>Psoriasis is an autoimmune condition that causes rapid skin cell buildup, resulting in thick, scaly patches. These patches can appear anywhere on the body but commonly affect the scalp, elbows, and knees.</p>
-
-      <blockquote>
-        "Understanding your skin condition is the first step toward effective management. Don't hesitate to seek professional help for proper diagnosis and treatment."
-      </blockquote>
-
-      <h2>When to Seek Professional Help</h2>
-      <p>While many skin conditions can be managed with over-the-counter treatments, it's important to consult a dermatologist if you experience persistent symptoms that don't improve with home care.</p>
-
-      <h2>The Role of AI in Skin Health</h2>
-      <p>Modern technology, including AI-powered tools like SkinXray, can help you better understand and monitor your skin health. While these tools don't replace professional medical advice, they can provide valuable insights and help you decide when to seek professional care.</p>
-    `,
-  },
-  'ai-in-dermatology': {
-    _id: '2',
-    slug: { current: 'ai-in-dermatology' },
-    title: 'How AI is Revolutionizing Dermatology and Skin Care',
-    excerpt: 'Discover how artificial intelligence is transforming the way we diagnose and treat skin conditions.',
-    category: { title: 'Technology', _id: 'cat2' },
-    author: { name: 'Michael Chen', initials: 'MC', bio: 'Health technology researcher and writer' },
-    publishedAt: '2026-01-12',
-    readTime: '6 min read',
-    featuredImage: null,
-    tags: ['AI', 'Technology', 'Healthcare', 'Innovation', 'Dermatology'],
-    content: null,
-    htmlContent: `
-      <p>Artificial intelligence is transforming healthcare in unprecedented ways, and dermatology is at the forefront of this revolution. From early detection of skin cancer to personalized treatment recommendations, AI is making skin care more accessible and effective than ever before.</p>
-
-      <h2>The Rise of AI in Healthcare</h2>
-      <p>Over the past decade, AI has made remarkable strides in medical diagnosis. Machine learning algorithms can now analyze medical images with accuracy that rivals—and sometimes exceeds—that of human experts.</p>
-
-      <h2>How AI Analyzes Skin Conditions</h2>
-      <p>AI-powered skin analysis tools use deep learning algorithms trained on millions of dermatological images. These systems can identify potential skin conditions from photographs, detect subtle patterns invisible to the human eye, and provide instant preliminary assessments.</p>
-
-      <h2>Benefits of AI in Dermatology</h2>
-      <p>AI tools can bring dermatological expertise to underserved areas where specialists may not be readily available. This democratization of healthcare can lead to earlier detection and better outcomes.</p>
-
-      <blockquote>
-        "AI doesn't replace dermatologists—it empowers them. By handling initial screenings, AI allows specialists to focus on complex cases that require their expertise."
-      </blockquote>
-
-      <h2>The Future of AI in Skin Health</h2>
-      <p>As AI technology continues to evolve, we can expect even more sophisticated tools that integrate with wearable devices, provide real-time monitoring, and offer increasingly personalized recommendations.</p>
-    `,
-  },
-};
-
-const RELATED_POSTS = [
-  {
-    _id: '3',
-    slug: { current: 'skincare-routine-for-beginners' },
-    title: 'Building Your Perfect Skincare Routine',
-    category: { title: 'Skincare Tips' },
-    readTime: '5 min read',
-    featuredImage: null,
-  },
-  {
-    _id: '4',
-    slug: { current: 'sun-protection-myths' },
-    title: '10 Sun Protection Myths Debunked',
-    category: { title: 'Sun Care' },
-    readTime: '7 min read',
-    featuredImage: null,
-  },
-  {
-    _id: '5',
-    slug: { current: 'acne-treatment-options' },
-    title: 'Modern Acne Treatment Options',
-    category: { title: 'Acne' },
-    readTime: '9 min read',
-    featuredImage: null,
-  },
-];
-
 const BlogPost = () => {
   const { slug } = useParams();
   const [post, setPost] = useState(null);
   const [relatedPosts, setRelatedPosts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [usePlaceholder, setUsePlaceholder] = useState(false);
+  const [/* usePlaceholder,  */setUsePlaceholder] = useState(false);
 
   useEffect(() => {
     const fetchPost = async () => {
@@ -333,7 +227,7 @@ const BlogPost = () => {
         </S.Nav>
         <S.ArticleContainer style={{ textAlign: 'center', paddingTop: '100px' }}>
           <h1>Post Not Found</h1>
-          <p>The blog post you're looking for doesn't exist.</p>
+          <p>The blog post you&apos;re looking for doesn&apos;t exist.</p>
           <S.BackLink to="/blog">
             <ArrowLeftIcon />
             Back to Blog
