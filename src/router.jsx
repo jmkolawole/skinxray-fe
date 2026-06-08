@@ -15,6 +15,10 @@ import ForgotPassword from './pages/Auth/ForgotPassword/ForgotPassword';
 import PricingPage from './pages/Pricing/Pricing';
 import PaymentSuccess from './pages/PaymentSuccess/PaymentSuccess';
 import PrivacyPolicy from './pages/PrivacyPolicy/PrivacyPolicy';
+import AboutUs from './pages/AboutUs/AboutUs';
+import TermsOfService from './pages/TermsOfService/TermsOfService';
+import HIPAACompliance from './pages/HIPAACompliance/HIPAACompliance';
+import MedicalDisclaimer from './pages/MedicalDisclaimer/MedicalDisclaimer';
 import Blog from './pages/Blog/Blog';
 import BlogPost from './pages/BlogPost/BlogPost';
 
@@ -34,6 +38,22 @@ export const router = createBrowserRouter([
   {
     path: '/privacy-policy',
     element: <PrivacyPolicy />,
+  },
+  {
+    path: '/about',
+    element: <AboutUs />,
+  },
+  {
+    path: '/terms-of-service',
+    element: <TermsOfService />,
+  },
+  {
+    path: '/hipaa-compliance',
+    element: <HIPAACompliance />,
+  },
+  {
+    path: '/medical-disclaimer',
+    element: <MedicalDisclaimer />,
   },
   {
     path: '/blog',

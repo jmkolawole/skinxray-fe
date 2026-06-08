@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { AccountContext } from '../../contexts';
 import { Icon, Text } from '../../ds';
@@ -371,6 +371,12 @@ const LandingNew = () => {
           </S.TrustItem>
         </S.TrustSection>
 
+        <S.HeroDisclaimer>
+          Skinxray AI is for informational purposes only and is not a substitute for
+          professional medical advice, diagnosis, or treatment.{' '}
+          <Link to="/medical-disclaimer">Read full disclaimer</Link>
+        </S.HeroDisclaimer>
+
         {/* How It Works Section */}
         <S.HowItWorksSection id="how-it-works">
           <S.SectionLabel>How It Works</S.SectionLabel>
@@ -407,11 +413,6 @@ const LandingNew = () => {
           </S.FeaturesGrid>
         </S.FeaturesSection>
 
-        {/* FAQ Section */}
-        <S.FAQWrapper id="faq">
-          <FAQ />
-        </S.FAQWrapper>
-
         {/* Pricing Section */}
         <S.PricingWrapper id="pricing">
           <Pricing onSignUp={handleSignUp} />
@@ -444,6 +445,11 @@ const LandingNew = () => {
             ))}
           </S.ReviewsGrid>
         </S.ReviewsSection>
+
+        {/* FAQ Section */}
+        <S.FAQWrapper id="faq">
+          <FAQ />
+        </S.FAQWrapper>
 
         {/* CTA Section */}
         <S.CTASection>
@@ -485,7 +491,7 @@ const LandingNew = () => {
         </S.MobileAppSection>
 
         {/* Disclaimer Section */}
-        <S.DisclaimerSection>
+        <S.DisclaimerSection id="disclaimer">
           <S.DisclaimerIcon>
             <Icon
               bg="inherit"
@@ -538,10 +544,18 @@ const LandingNew = () => {
             <S.FooterColumn>
               <S.FooterColumnTitle>Company</S.FooterColumnTitle>
               <S.FooterLinks>
-                <li><S.FooterExternalLink>About Us</S.FooterExternalLink></li>
+                <li><S.FooterLink to="/about">About Us</S.FooterLink></li>
                 <li><S.FooterLink to="/blog">Blog</S.FooterLink></li>
-                <li><S.FooterExternalLink>Careers</S.FooterExternalLink></li>
-                <li><S.FooterExternalLink>Contact</S.FooterExternalLink></li>
+                <li>
+                  <S.FooterExternalLink href="mailto:skinxray@gmail.com?subject=Careers%20Inquiry">
+                    Careers
+                  </S.FooterExternalLink>
+                </li>
+                <li>
+                  <S.FooterExternalLink href="mailto:skinxray@gmail.com">
+                    Contact
+                  </S.FooterExternalLink>
+                </li>
               </S.FooterLinks>
             </S.FooterColumn>
 
@@ -549,9 +563,9 @@ const LandingNew = () => {
               <S.FooterColumnTitle>Legal</S.FooterColumnTitle>
               <S.FooterLinks>
                 <li><S.FooterLink to="/privacy-policy">Privacy Policy</S.FooterLink></li>
-                <li><S.FooterExternalLink>Terms of Service</S.FooterExternalLink></li>
-                <li><S.FooterExternalLink>HIPAA Compliance</S.FooterExternalLink></li>
-                <li><S.FooterExternalLink>Medical Disclaimer</S.FooterExternalLink></li>
+                <li><S.FooterLink to="/terms-of-service">Terms of Service</S.FooterLink></li>
+                <li><S.FooterLink to="/hipaa-compliance">HIPAA Compliance</S.FooterLink></li>
+                <li><S.FooterLink to="/medical-disclaimer">Medical Disclaimer</S.FooterLink></li>
               </S.FooterLinks>
             </S.FooterColumn>
           </S.FooterTop>

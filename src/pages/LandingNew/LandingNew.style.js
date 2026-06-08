@@ -393,6 +393,35 @@ export const TrustText = styled.span`
   color: ${colors.neutral[700]};
 `;
 
+export const HeroDisclaimer = styled.p`
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 0 80px 32px;
+  font-size: 13px;
+  line-height: 1.6;
+  color: ${colors.neutral[500]};
+  text-align: center;
+
+  a {
+    color: ${colors.primary[1000]};
+    text-decoration: underline;
+    text-underline-offset: 2px;
+
+    &:hover {
+      color: ${colors.primary[900]};
+    }
+  }
+
+  @media (max-width: 1024px) {
+    padding: 0 40px 28px;
+  }
+
+  @media (max-width: 980px) {
+    padding: 0 20px 24px;
+    font-size: 12px;
+  }
+`;
+
 // How It Works Section
 export const HowItWorksSection = styled.section`
   padding: 100px 80px;
