@@ -148,3 +148,107 @@ export const BasicContainer = styled.div`
   flex-direction: column;
   gap: 16px;
 `;
+
+export const HistoryHeader = styled.div`
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+`;
+
+export const HistoryCount = styled.p`
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: ${({ theme }) => theme.colors.text.light};
+`;
+
+export const HistoryList = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+`;
+
+export const HistoryItem = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  border: 1px solid ${({ theme }) => theme.colors.border};
+  background: ${({ theme }) => theme.colors.background.main};
+`;
+
+export const HistoryItemTop = styled.div`
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+`;
+
+export const HistoryDate = styled.span`
+  font-size: 13px;
+  font-weight: 600;
+  color: ${({ theme }) => theme.colors.text.primary};
+  white-space: nowrap;
+`;
+
+export const HistoryMeta = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: ${({ theme }) => theme.colors.text.secondary};
+`;
+
+export const HistoryDetail = styled.p`
+  margin: 0;
+  font-size: 13px;
+  color: ${({ theme }) => theme.colors.text.secondary};
+`;
+
+export const HistoryAmount = styled.span`
+  font-size: 13px;
+  font-weight: 600;
+  color: ${({ theme }) => theme.colors.text.primary};
+`;
+
+export const PaginationBar = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid ${({ theme }) => theme.colors.border};
+  flex-wrap: wrap;
+`;
+
+export const PaginationText = styled.span`
+  font-size: 13px;
+  color: ${({ theme }) => theme.colors.text.secondary};
+`;
+
+export const PaginationActions = styled.div`
+  display: flex;
+  gap: 8px;
+`;
+
+export const PaginationButton = styled.button`
+  padding: 8px 14px;
+  border-radius: 10px;
+  border: 1px solid ${({ theme }) => theme.colors.border};
+  background: ${({ theme, $primary }) => ($primary ? theme.colors.primary : theme.colors.card)};
+  color: ${({ theme, $primary }) => ($primary ? theme.colors.white : theme.colors.text.primary)};
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+
+  &:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+`;

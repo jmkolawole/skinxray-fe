@@ -1,3 +1,4 @@
+import { useMemo, useState } from 'react';
 import { Badge, Icon, PrimaryButton, Text } from '../../ds';
 import * as S from './Subscription.style';
 import { format } from 'date-fns';
@@ -10,12 +11,14 @@ import {
   formatSubscriptionPrice,
   getProviderManageMessage,
   getStatusBadgeVariant,
+  HISTORY_PAGE_SIZE,
 } from '../../utils/subscription';
 import Loader from '../../components/Loader/Loader';
 
 const Subscription = () => {
   const navigate = useNavigate();
   const { data: subscription, isLoading, error } = useSubscriptionStatusQuery();
+  const [historyPage, setHistoryPage] = useState(1);
 
   const handleManageSubscription = () => {
     if (subscription?.data?.customer_portal_url) {
@@ -28,7 +31,13 @@ const Subscription = () => {
   const currentSub = subscription?.data?.current_subscription;
   const noSubscription = !currentSub;
   const paymentHistory = subscription?.data?.payment_history ?? [];
-  const historyRows = paymentHistory.map(formatHistoryRow);
+  const historyRows = useMemo(() => paymentHistory.map(formatHistoryRow), [paymentHistory]);
+  const totalHistoryPages = Math.max(1, Math.ceil(historyRows.length / HISTORY_PAGE_SIZE));
+  const paginatedHistory = useMemo(() => {
+    const start = (historyPage - 1) * HISTORY_PAGE_SIZE;
+    return historyRows.slice(start, start + HISTORY_PAGE_SIZE);
+  }, [historyRows, historyPage]);
+
   const providerMessage = currentSub ? getProviderManageMessage(currentSub.payment_provider) : null;
   const isStripeSubscription = currentSub?.payment_provider === 'stripe';
   const showUpgradeCta =
@@ -45,10 +54,10 @@ const Subscription = () => {
       ]
     : [];
 
-  const formatDate = (dateString) => {
+  const formatDate = (dateString, short = false) => {
     if (!dateString) return 'Not available';
     try {
-      return format(new Date(dateString), 'MMMM d, yyyy');
+      return format(new Date(dateString), short ? 'MMM d, yyyy' : 'MMMM d, yyyy');
     } catch {
       return 'Invalid date';
     }
@@ -59,6 +68,8 @@ const Subscription = () => {
     : 'Basic Scan';
 
   const subscriptionPrice = formatSubscriptionPrice(currentSub);
+  const historyStart = historyRows.length === 0 ? 0 : (historyPage - 1) * HISTORY_PAGE_SIZE + 1;
+  const historyEnd = Math.min(historyPage * HISTORY_PAGE_SIZE, historyRows.length);
 
   if (isLoading) {
     return <Loader size={95} thickness={1} color="primary.1000" fullPage />;
@@ -147,31 +158,56 @@ const Subscription = () => {
 
         {historyRows.length > 0 && (
           <S.Card style={{ marginTop: 24 }}>
-            <S.PlanName style={{ marginBottom: 16 }}>Activity History</S.PlanName>
-            <S.PaymentHistoryTable>
-              <S.Table>
-                <thead>
-                  <tr>
-                    <th>Date</th>
-                    <th>Event</th>
-                    <th>Provider</th>
-                    <th>Amount</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {historyRows.map((row, index) => (
-                    <tr key={index}>
-                      <td>{formatDate(row.date)}</td>
-                      <td>
-                        <S.StatusBadge $status={row.statusKey}>{row.event}</S.StatusBadge>
-                      </td>
-                      <td>{row.provider}</td>
-                      <td>{row.amount}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </S.Table>
-            </S.PaymentHistoryTable>
+            <S.HistoryHeader>
+              <div>
+                <S.PlanName style={{ marginBottom: 0 }}>Activity History</S.PlanName>
+                <S.HistoryCount>Recent billing and subscription updates</S.HistoryCount>
+              </div>
+            </S.HistoryHeader>
+
+            <S.HistoryList>
+              {paginatedHistory.map((row) => (
+                <S.HistoryItem key={row.id}>
+                  <S.HistoryItemTop>
+                    <div>
+                      <S.StatusBadge $status={row.statusKey}>{row.event}</S.StatusBadge>
+                      {row.detail && <S.HistoryDetail>{row.detail}</S.HistoryDetail>}
+                    </div>
+                    {row.amount && <S.HistoryAmount>{row.amount}</S.HistoryAmount>}
+                  </S.HistoryItemTop>
+                  <S.HistoryMeta>
+                    <S.HistoryDate>{formatDate(row.date, true)}</S.HistoryDate>
+                    <span>·</span>
+                    <span>{row.provider}</span>
+                  </S.HistoryMeta>
+                </S.HistoryItem>
+              ))}
+            </S.HistoryList>
+
+            {historyRows.length > HISTORY_PAGE_SIZE && (
+              <S.PaginationBar>
+                <S.PaginationText>
+                  Showing {historyStart}–{historyEnd} of {historyRows.length}
+                </S.PaginationText>
+                <S.PaginationActions>
+                  <S.PaginationButton
+                    type="button"
+                    disabled={historyPage <= 1}
+                    onClick={() => setHistoryPage((page) => Math.max(1, page - 1))}
+                  >
+                    Previous
+                  </S.PaginationButton>
+                  <S.PaginationButton
+                    type="button"
+                    $primary
+                    disabled={historyPage >= totalHistoryPages}
+                    onClick={() => setHistoryPage((page) => Math.min(totalHistoryPages, page + 1))}
+                  >
+                    Next
+                  </S.PaginationButton>
+                </S.PaginationActions>
+              </S.PaginationBar>
+            )}
           </S.Card>
         )}
 
