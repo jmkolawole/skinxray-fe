@@ -19,13 +19,9 @@ export const Container = styled.div`
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background-color: ${colors.shades[0]};
+  background: ${({ theme }) => theme.colors.background.main};
+  color: ${({ theme }) => theme.colors.text.primary};
   overflow-x: hidden;
-  font-family: 'Outfit', sans-serif;
-  
-  * {
-    font-family: 'Outfit', sans-serif;
-  }
 `;
 
 // Navigation (reused from LandingNew)
@@ -59,33 +55,21 @@ export const NavLogo = styled(Link)`
 
 export const LogoIcon = styled.div`
   img {
-    width: 48px;
-    height: 48px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    height: 44px;
+    width: auto;
+    display: block;
+    object-fit: contain;
   }
-  
+
   @media (max-width: 980px) {
     img {
-      width: 40px;
-      height: 40px;
+      height: 38px;
     }
   }
 `;
 
 export const LogoText = styled.span`
-  font-size: 24px;
-  font-weight: 700;
-  color: ${colors.neutral[800]};
-  
-  span {
-    color: ${colors.primary[1000]};
-  }
-  
-  @media (max-width: 980px) {
-    font-size: 20px;
-  }
+  display: none;
 `;
 
 export const NavButtons = styled.div`

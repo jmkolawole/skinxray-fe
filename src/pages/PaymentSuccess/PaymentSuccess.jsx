@@ -1,6 +1,6 @@
 import { useEffect, useState, useContext } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { Button, Text } from '../../ds';
+import { Icon, PrimaryButton, Text } from '../../ds';
 import * as S from './PaymentSuccess.style';
 import { toast } from 'react-toastify';
 import { useVerifyCheckoutSession } from '../../api/mutations/subscription.mutation';
@@ -9,11 +9,9 @@ import { AccountContext } from '../../contexts';
 const PaymentSuccess = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const [verificationStatus, setVerificationStatus] = useState('loading'); // loading, success, error
+  const [verificationStatus, setVerificationStatus] = useState('loading');
   const { mutate: verifyCheckoutSession } = useVerifyCheckoutSession();
   const { setAccount } = useContext(AccountContext);
-  
-  // Get the session_id from URL
   const sessionId = searchParams.get('session_id');
 
   useEffect(() => {
@@ -26,22 +24,17 @@ const PaymentSuccess = () => {
       { session_id: sessionId },
       {
         onSuccess: () => {
-          // Update only the subscription plan in the account context
-          setAccount(prev => ({
+          setAccount((prev) => ({
             ...prev,
-            user: {
-              ...prev.user,
-              subscription_plan: 'expert-care'
-            }
+            user: { ...prev.user, subscription_plan: 'expert-care' },
           }));
           setVerificationStatus('success');
-          toast.success('Successfully upgraded to Expert Care plan!');
+          toast.success('Successfully upgraded to Expert Care!');
         },
         onError: (error) => {
-          console.error('Payment verification failed:', error);
           setVerificationStatus('error');
           toast.error(error.error);
-        }
+        },
       }
     );
   }, [sessionId, verifyCheckoutSession, setAccount]);
@@ -52,40 +45,26 @@ const PaymentSuccess = () => {
         return (
           <S.LoadingWrapper>
             <S.Spinner />
-            <Text size="lg" weight={500}>
-              Verifying your payment...
-            </Text>
-            <Text color="neutral.600">
-              Please wait while we confirm your subscription
-            </Text>
+            <Text size="lg" weight={500}>Verifying your payment...</Text>
+            <Text color="neutral.600">Please wait while we confirm your subscription</Text>
           </S.LoadingWrapper>
         );
 
       case 'success':
         return (
           <>
-            <S.IconWrapper success>
-              <i className="fas fa-check"></i>
+            <S.IconWrapper $success>
+              <Icon name="checkCircle" size={36} bg="inherit" color="primary.1000" weight={0} />
             </S.IconWrapper>
-            <Text type="h3" weight={600} style={{ marginBottom: '16px' }}>
-              Payment Successful!
-            </Text>
-            <Text color="neutral.600" style={{ marginBottom: '24px' }}>
+            <Text type="h3" weight={700} style={{ marginBottom: 12 }}>Payment Successful!</Text>
+            <Text color="neutral.600" style={{ marginBottom: 8 }}>
               Thank you for upgrading to Expert Care. Your subscription is now active.
             </Text>
             <S.ButtonGroup>
-              <Button
-                variant="primary"
-                onClick={() => navigate('/home')}
-              >
-                Go to Dashboard
-              </Button>
-              <Button
-                variant="secondary"
-                onClick={() => navigate('/subscription')}
-              >
+              <PrimaryButton onClick={() => navigate('/home')}>Start Scanning</PrimaryButton>
+              <PrimaryButton variant="outline" onClick={() => navigate('/subscription')}>
                 View Subscription
-              </Button>
+              </PrimaryButton>
             </S.ButtonGroup>
           </>
         );
@@ -94,28 +73,17 @@ const PaymentSuccess = () => {
         return (
           <>
             <S.IconWrapper>
-              <i className="fas fa-times"></i>
+              <Icon name="x" size={32} bg="inherit" color="destructive.600" weight={0} />
             </S.IconWrapper>
-            <Text type="h3" weight={600} style={{ marginBottom: '16px' }}>
-              Verification Failed
-            </Text>
-            <Text color="neutral.600" style={{ marginBottom: '24px' }}>
-              We couldn&apos;t verify your payment. If you believe this is an error,
-              please contact our support team.
+            <Text type="h3" weight={700} style={{ marginBottom: 12 }}>Verification Failed</Text>
+            <Text color="neutral.600" style={{ marginBottom: 8 }}>
+              We couldn&apos;t verify your payment. If you believe this is an error, contact support.
             </Text>
             <S.ButtonGroup>
-              <Button
-                variant="primary"
-                onClick={() => navigate('/pricing')}
-              >
-                Try Again
-              </Button>
-              <Button
-                variant="secondary"
-                onClick={() => navigate('/home')}
-              >
-                Go to Dashboard
-              </Button>
+              <PrimaryButton onClick={() => navigate('/plans')}>Try Again</PrimaryButton>
+              <PrimaryButton variant="outline" onClick={() => navigate('/home')}>
+                Go to Scan
+              </PrimaryButton>
             </S.ButtonGroup>
           </>
         );
@@ -127,11 +95,9 @@ const PaymentSuccess = () => {
 
   return (
     <S.Container>
-      <S.Card>
-        {renderContent()}
-      </S.Card>
+      <S.Card>{renderContent()}</S.Card>
     </S.Container>
   );
 };
 
-export default PaymentSuccess; 
+export default PaymentSuccess;

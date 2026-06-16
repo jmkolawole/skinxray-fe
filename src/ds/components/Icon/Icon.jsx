@@ -1,22 +1,23 @@
 import {icons as C} from './Icon.utils';
 import {upperFirst} from 'lodash';
-import {strToColor} from '../../utils/functions';
+import {resolveThemeColor} from '../../utils/theme';
+import {useTheme} from '../../../contexts/ThemeContext';
 import PropTypes from 'prop-types';
 
 const Icon = ({
   name,
   size = 20,
-  color = 'neutral.900',
+  color = 'text.primary',
   weight,
   bg = 'inherit',
   radius = 0,
   padding = 0,
   ...rest
 }) => {
+  const { colors: themeColors } = useTheme();
   const iconName = upperFirst(name);
   const IconComponent = C[iconName];
 
-  // Set icon weight and default weight (bool) if weight is not specified
   const iconWeight = weight ? weight : 2;
   const defaultWeight = weight ? false : true;
 
@@ -25,10 +26,10 @@ const Icon = ({
       <IconComponent
         $width={size}
         $height={size}
-        $color={color === 'transparent' ? 'transparent' : strToColor(color)}
+        $color={resolveThemeColor(color, { colors: themeColors })}
         $weight={iconWeight}
         $defaultWeight={defaultWeight}
-        $bg={bg === 'inherit' ? 'transparent' : strToColor(bg)}
+        $bg={bg === 'inherit' ? 'transparent' : resolveThemeColor(bg, { colors: themeColors })}
         $radius={radius}
         $padding={padding}
         {...rest}

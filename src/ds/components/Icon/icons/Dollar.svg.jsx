@@ -1,20 +1,20 @@
 import {IconWrapper} from '../Icon.style';
 
-export const Dollar = ({...rest}) => (
-  <IconWrapper {...rest}>
-    <svg
-      version="1.1"
-      id="Capa_1"
-      xmlns="http://www.w3.org/2000/svg"
-      xmlnsXlink="http://www.w3.org/1999/xlink"
-      x="0px"
-      y="0px"
-      width="511.613px"
-      height="511.613px"
-      viewBox="0 0 511.613 511.613" 
-      xmlSpace="preserve"
-    >
-      <g>
+export const Dollar = ({...rest}) => {
+  const iconWeight = {...rest}.$defaultWeight ? 0 : {...rest}.$weight;
+
+  return (
+    <IconWrapper $hasFill={true} {...rest} $weight={iconWeight}>
+      <svg
+        version="1.1"
+        xmlns="http://www.w3.org/2000/svg"
+        x="0px"
+        y="0px"
+        width="511.613px"
+        height="511.613px"
+        viewBox="0 0 511.613 511.613"
+        xmlSpace="preserve"
+      >
         <path
           d="M385.261,311.475c-2.471-8.367-5.469-15.649-8.99-21.833c-3.519-6.19-8.559-12.228-15.13-18.134
 		c-6.563-5.903-12.467-10.657-17.702-14.271c-5.232-3.617-12.419-7.661-21.557-12.137c-9.13-4.475-16.364-7.805-21.689-9.995
@@ -40,22 +40,7 @@ export const Dollar = ({...rest}) => (
 		c2.669,0,4.859-0.855,6.57-2.566s2.563-3.901,2.563-6.571v-49.963c30.269-4.948,54.87-17.939,73.806-38.972
 		c18.938-21.033,28.41-46.11,28.41-75.229C388.994,328.801,387.759,319.855,385.261,311.475z"
         />
-      </g>
-      <g></g>
-      <g></g>
-      <g></g>
-      <g></g>
-      <g></g>
-      <g></g>
-      <g></g>
-      <g></g>
-      <g></g>
-      <g></g>
-      <g></g>
-      <g></g>
-      <g></g>
-      <g></g>
-      <g></g>
-    </svg>
-  </IconWrapper>
-);
+      </svg>
+    </IconWrapper>
+  );
+};

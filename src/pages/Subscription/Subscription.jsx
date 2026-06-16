@@ -1,9 +1,16 @@
-import { Text, Icon, Button } from '../../ds';
+import { Badge, Icon, PrimaryButton, Text } from '../../ds';
 import * as S from './Subscription.style';
 import { format } from 'date-fns';
 import { useNavigate } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { toast } from 'react-toastify';
 import { useSubscriptionStatusQuery } from '../../api/queries/subscription.query';
+import {
+  formatHistoryRow,
+  formatSubscriptionPrice,
+  getProviderManageMessage,
+  getStatusBadgeVariant,
+} from '../../utils/subscription';
 import Loader from '../../components/Loader/Loader';
 
 const Subscription = () => {
@@ -18,14 +25,25 @@ const Subscription = () => {
     }
   };
 
-  const features = subscription?.data?.current_subscription?.features ? [
-    { icon: 'scan', weight: .8, label: `${subscription.data.current_subscription.features.scans_per_day} Scans per Day` },
-    { icon: 'chart', weight: 1, label: `${subscription.data.current_subscription.features.analysis_type} Analysis` },
-    { icon: 'messages', label: 'Live Consultancy' },
-    { icon: 'robot', label: 'AI Chat Support' },
-    { icon: 'fast', weight: 1, label: 'Priority Response' },
-    { icon: 'health', weight: 1, label: `${subscription.data.current_subscription.features.health_insights} Health Insights` }
-  ] : [];
+  const currentSub = subscription?.data?.current_subscription;
+  const noSubscription = !currentSub;
+  const paymentHistory = subscription?.data?.payment_history ?? [];
+  const historyRows = paymentHistory.map(formatHistoryRow);
+  const providerMessage = currentSub ? getProviderManageMessage(currentSub.payment_provider) : null;
+  const isStripeSubscription = currentSub?.payment_provider === 'stripe';
+  const showUpgradeCta =
+    noSubscription || currentSub?.status === 'expired' || currentSub?.plan_type === 'basic-scan';
+
+  const features = currentSub?.features
+    ? [
+        { icon: 'scan', weight: 0.8, label: `${currentSub.features.scans_per_day} scans per day` },
+        { icon: 'chart', weight: 1, label: `${currentSub.features.analysis_type} analysis` },
+        { icon: 'messages', label: 'Live expert consultancy' },
+        { icon: 'robot', label: 'AI chat support' },
+        { icon: 'fast', weight: 1, label: 'Priority response' },
+        { icon: 'health', weight: 1, label: `${currentSub.features.health_insights} insights` },
+      ]
+    : [];
 
   const formatDate = (dateString) => {
     if (!dateString) return 'Not available';
@@ -36,27 +54,20 @@ const Subscription = () => {
     }
   };
 
+  const planLabel = currentSub?.plan_type
+    ? currentSub.plan_type.split('-').map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')
+    : 'Basic Scan';
+
+  const subscriptionPrice = formatSubscriptionPrice(currentSub);
+
   if (isLoading) {
-    return <Loader size={95}  thickness={1} color="primary.1000" fullPage={true} />;
+    return <Loader size={95} thickness={1} color="primary.1000" fullPage />;
   }
 
   if (error) {
     return (
       <S.Container>
-        <S.Header>
-          <S.BackButton onClick={() => navigate(-1)}>
-            <Icon
-              bg="standalone.2"
-              color="shades.0"
-              name="chevronLeft"
-              padding={7}
-              radius={100}
-              size={25}
-              weight={0}
-            />
-          </S.BackButton>
-          <S.Title>Subscription</S.Title>
-        </S.Header>
+        <S.PageTitle>Subscription</S.PageTitle>
         <S.Card>
           <Text color="destructive.500" align="center">
             Failed to load subscription information. Please try again later.
@@ -66,141 +77,123 @@ const Subscription = () => {
     );
   }
 
-  // Handle case when user has no subscription
-  const noSubscription = !subscription?.data?.current_subscription;
-
   return (
-    <S.Container>
-      <S.Header>
-        <S.BackButton onClick={() => navigate(-1)}>
-          <Icon
-            bg="standalone.2"
-            color="shades.0"
-            name="chevronLeft"
-            padding={7}
-            radius={100}
-            size={25}
-            weight={0}
-          />
-        </S.BackButton>
-        <S.Title>Subscription</S.Title>
-      </S.Header>
+    <>
+      <Helmet>
+        <title>Subscription — SkinXray</title>
+      </Helmet>
 
-      <S.Grid>
-        <div>
-          <S.Card>
-            {noSubscription ? (
-              <S.BasicContainer>
-                <Text size="lg" weight={600}>
-                  Basic Plan
-                </Text>
-                <Text color="neutral.600" style={{ marginBottom: '1.5rem' }}>
-                  You currently don&apos;t have any active paid subscription.
-                </Text>
-                <Button 
-                  variant="primary" 
-                  fullWidth
-                  onClick={() => navigate('/pricing')}
-                >
-                  Upgrade Now
-                </Button>
-              </S.BasicContainer>
-            ) : (
-              <>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-                  <div>
-                    <Text size="lg" weight={600} style={{ marginBottom: '0.5rem' }}>
-                      {subscription?.data?.current_subscription?.plan_type?.split('-').map(word => 
-                        word.charAt(0).toUpperCase() + word.slice(1)
-                      ).join(' ') || 'Basic Plan'}
-                    </Text>
-                    <Text color="neutral.600">
-                      ${subscription?.data?.current_subscription?.amount || '0'}/month
-                    </Text>
-                  </div>
-                  <S.StatusBadge status={subscription?.data?.current_subscription?.status || 'active'}>
-                    {(subscription?.data?.current_subscription?.status || 'active').charAt(0).toUpperCase() + 
-                     (subscription?.data?.current_subscription?.status || 'active').slice(1)}
-                  </S.StatusBadge>
+      <S.Container>
+        <S.PageTitle>Subscription</S.PageTitle>
+        <S.SectionSubtitle>Your current plan and billing activity</S.SectionSubtitle>
+
+        <S.Card>
+          {noSubscription ? (
+            <S.BasicContainer>
+              <Badge $variant="free">FREE</Badge>
+              <S.PlanName>Basic Scan</S.PlanName>
+              <S.PlanPrice>You don&apos;t have an active paid subscription.</S.PlanPrice>
+              <PrimaryButton fullWidth onClick={() => navigate('/plans')}>
+                View Plans
+              </PrimaryButton>
+            </S.BasicContainer>
+          ) : (
+            <>
+              <S.PlanHeader>
+                <div>
+                  <S.PlanName>{planLabel}</S.PlanName>
+                  {subscriptionPrice && <S.PlanPrice>{subscriptionPrice}</S.PlanPrice>}
                 </div>
+                <Badge $variant={getStatusBadgeVariant(currentSub.status)}>
+                  {(currentSub.status || 'active').toUpperCase()}
+                </Badge>
+              </S.PlanHeader>
 
-                <Text color="neutral.600" style={{ marginBottom: '1rem' }}>
-                  Current period ends on {formatDate(subscription?.data?.current_subscription?.current_period_end)}
-                </Text>
-
-                <S.FeaturesList>
-                  {features.map((feature, index) => (
-                    <S.FeatureItem key={index}>
-                      <S.IconWrapper>
-                        <Icon name={feature.icon} size={16} weight={feature.weight} />
-                      </S.IconWrapper>
-                      <Text>{feature.label}</Text>
-                    </S.FeatureItem>
-                  ))}
-                </S.FeaturesList>
-              </>
-            )}
-          </S.Card>
-
-          {!noSubscription && subscription?.data?.payment_history?.length > 0 && (
-            <S.Card style={{ marginTop: '1.5rem' }}>
-              <Text size="lg" weight={600} style={{ marginBottom: '1rem' }}>
-                Payment History
+              <Text color="text.secondary" size="sm">
+                Current period ends {formatDate(currentSub.current_period_end)}
               </Text>
-              <S.PaymentHistoryTable>
-                <S.Table>
-                  <thead>
-                    <tr>
-                      <th>Date</th>
-                      <th>Amount</th>
-                      <th>Status</th>
-                      <th>Method</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {subscription?.data?.payment_history.map((payment, index) => (
-                      <tr key={index}>
-                        <td>{formatDate(payment.date)}</td>
-                        <td>${payment.amount}</td>
-                        <td>
-                          <S.StatusBadge status={payment.status}>
-                            {payment.status.charAt(0).toUpperCase() + payment.status.slice(1)}
-                          </S.StatusBadge>
-                        </td>
-                        <td style={{ textTransform: 'capitalize' }}>{payment.payment_method}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </S.Table>
-              </S.PaymentHistoryTable>
-            </S.Card>
-          )}
-        </div>
 
-        {!noSubscription && subscription?.data?.next_billing && (
-          <S.Card>
-            <Text size="lg" weight={600} style={{ marginBottom: '1rem' }}>
-              Next Billing
-            </Text>
-            <Text color="neutral.600" style={{ marginBottom: '0.5rem' }}>
-              Amount: ${subscription?.data?.next_billing?.amount || '0'}
-            </Text>
-            <Text color="neutral.600" style={{ marginBottom: '1.5rem' }}>
-              Date: {formatDate(subscription?.data?.next_billing?.date)}
-            </Text>
-            
-            <Button 
-              variant="primary" 
-              fullWidth
-              onClick={handleManageSubscription}
-            >
-              Manage Subscription
-            </Button>
+              {providerMessage && <S.ProviderNote>{providerMessage}</S.ProviderNote>}
+
+              <S.FeaturesList>
+                {features.map((feature) => (
+                  <S.FeatureItem key={feature.label}>
+                    <S.IconWrapper>
+                      <Icon name={feature.icon} size={14} weight={feature.weight || 0} bg="inherit" color="primary" />
+                    </S.IconWrapper>
+                    {feature.label}
+                  </S.FeatureItem>
+                ))}
+              </S.FeaturesList>
+
+              {showUpgradeCta && (
+                <div style={{ marginTop: 20 }}>
+                  <PrimaryButton fullWidth onClick={() => navigate('/plans')}>
+                    View Plans
+                  </PrimaryButton>
+                </div>
+              )}
+
+              {isStripeSubscription && subscription?.data?.customer_portal_url && currentSub.status === 'active' && (
+                <div style={{ marginTop: 12 }}>
+                  <PrimaryButton fullWidth variant="outline" onClick={handleManageSubscription}>
+                    Manage Billing
+                  </PrimaryButton>
+                </div>
+              )}
+            </>
+          )}
+        </S.Card>
+
+        {historyRows.length > 0 && (
+          <S.Card style={{ marginTop: 24 }}>
+            <S.PlanName style={{ marginBottom: 16 }}>Activity History</S.PlanName>
+            <S.PaymentHistoryTable>
+              <S.Table>
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Event</th>
+                    <th>Provider</th>
+                    <th>Amount</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {historyRows.map((row, index) => (
+                    <tr key={index}>
+                      <td>{formatDate(row.date)}</td>
+                      <td>
+                        <S.StatusBadge $status={row.statusKey}>{row.event}</S.StatusBadge>
+                      </td>
+                      <td>{row.provider}</td>
+                      <td>{row.amount}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </S.Table>
+            </S.PaymentHistoryTable>
           </S.Card>
         )}
-      </S.Grid>
-    </S.Container>
+
+        {!noSubscription && subscription?.data?.next_billing && (
+          <S.Card style={{ marginTop: 24 }}>
+            <S.PlanName style={{ marginBottom: 16 }}>Next Billing</S.PlanName>
+            <S.PlanPrice style={{ marginBottom: 8 }}>
+              Amount:{' '}
+              {subscription.data.next_billing.formatted_amount ||
+                `$${subscription.data.next_billing.amount || '0'}`}
+            </S.PlanPrice>
+            <S.PlanPrice style={{ marginBottom: 24 }}>
+              Date: {formatDate(subscription.data.next_billing.date)}
+            </S.PlanPrice>
+            <PrimaryButton fullWidth onClick={handleManageSubscription}>
+              Manage Subscription
+            </PrimaryButton>
+          </S.Card>
+        )}
+      </S.Container>
+    </>
   );
 };
 
-export default Subscription; 
+export default Subscription;

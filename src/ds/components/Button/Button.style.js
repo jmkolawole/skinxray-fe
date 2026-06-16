@@ -1,6 +1,5 @@
 import {styled} from 'styled-components';
 import {buttonSize} from './Button.utils';
-import {colors} from '../..';
 
 const Button = styled.button`
   display: inline-flex;
@@ -13,7 +12,7 @@ const Button = styled.button`
   cursor: pointer;
   width: ${(props) => props.$width};
   border-radius: ${(props) => props.$radius}px;
-  font-family: GeneralSans;
+  font-family: inherit;
   ${(props) => buttonSize(props.$size)};
 
   &:focus,
@@ -28,152 +27,123 @@ const Button = styled.button`
 `;
 
 export const Primary = styled(Button)`
-  background: ${colors.primary[1000]};
-  color: ${colors.shades[0]};
+  background: ${({ theme }) => theme.colors.primary};
+  color: ${({ theme }) => theme.colors.white};
 
   &:hover {
-    background: ${colors.primary[1100]};
+    background: ${({ theme }) => theme.colors.primaryDark};
   }
 
   &:focus,
   &:focus-visible {
-    background: ${colors.primary[1100]};
+    background: ${({ theme }) => theme.colors.primaryDark};
   }
 
   &:disabled {
-    background: ${colors.neutral[300]};
+    background: ${({ theme }) => theme.colors.background.tertiary};
+    color: ${({ theme }) => theme.colors.text.light};
   }
 `;
 
 export const Secondary = styled(Button)`
-  color: ${colors.primary[600]};
-  background: ${colors.primary[50]};
+  color: ${({ theme }) => theme.colors.primaryDark};
+  background: ${({ theme }) => theme.colors.primaryLight};
 
   & path {
     transition: all 0.3s;
   }
 
   &:hover {
-    background: ${colors.primary[1000]};
-    color: ${colors.shades[0]};
+    background: ${({ theme }) => theme.colors.primary};
+    color: ${({ theme }) => theme.colors.white};
 
     & path {
-      stroke: ${colors.shades[0]};
+      stroke: ${({ theme }) => theme.colors.white};
     }
   }
 
   &:focus,
   &:focus-visible {
-    background: ${colors.primary[400]};
-    color: ${colors.shades[0]};
+    background: ${({ theme }) => theme.colors.primary};
+    color: ${({ theme }) => theme.colors.white};
 
     & path {
-      stroke: ${colors.shades[0]};
+      stroke: ${({ theme }) => theme.colors.white};
     }
   }
 
   &:disabled {
-    background: ${colors.neutral[300]} !important;
-    color: ${colors.shades[0]} !important;
+    background: ${({ theme }) => theme.colors.background.tertiary} !important;
+    color: ${({ theme }) => theme.colors.text.light} !important;
 
     & path {
-      stroke: ${colors.shades[0]};
+      stroke: ${({ theme }) => theme.colors.text.light};
     }
   }
 `;
 
 export const Danger = styled(Button)`
-  color: ${colors.shades[0]};
-  background: ${colors.destructive[600]};
+  color: ${({ theme }) => theme.colors.white};
+  background: ${({ theme }) => theme.colors.error};
 
   &:hover {
-    background: ${colors.destructive[500]};
-  }
-
-  &:focus,
-  &:focus-visible {
-    background: ${colors.destructive[700]};
+    opacity: 0.9;
   }
 
   &:disabled {
-    background: ${colors.neutral[300]};
+    background: ${({ theme }) => theme.colors.background.tertiary};
   }
 `;
 
 export const Success = styled(Button)`
-  color: ${colors.shades[0]};
-  background: ${colors.success[600]};
+  color: ${({ theme }) => theme.colors.white};
+  background: ${({ theme }) => theme.colors.success};
 
   &:hover {
-    background: ${colors.success[500]};
-  }
-
-  &:focus,
-  &:focus-visible {
-    background: ${colors.success[700]};
+    opacity: 0.9;
   }
 
   &:disabled {
-    background: ${colors.neutral[300]};
+    background: ${({ theme }) => theme.colors.background.tertiary};
   }
 `;
 
 export const Warning = styled(Button)`
-  color: ${colors.neutral[900]};
-  background: ${colors.warning[500]};
+  color: ${({ theme }) => theme.colors.text.primary};
+  background: ${({ theme }) => theme.colors.warning};
 
   &:hover {
-    background: ${colors.warning[400]};
-  }
-
-  &:focus,
-  &:focus-visible {
-    background: ${colors.warning[600]};
+    opacity: 0.9;
   }
 
   &:disabled {
-    background: ${colors.neutral[300]};
+    background: ${({ theme }) => theme.colors.background.tertiary};
   }
 `;
 
 export const OutlinePrimary = styled(Button)`
-  color: ${colors.primary[600]};
-  background: ${colors.shades[0]};
-  border: solid 1px ${colors.primary[600]};
+  color: ${({ theme }) => theme.colors.primary};
+  background: transparent;
+  border: solid 1px ${({ theme }) => theme.colors.primary};
 
   &:hover {
-    background: ${colors.primary[400]};
-    color: ${colors.shades[0]};
-  }
-
-  &:focus,
-  &:focus-visible {
-    background: ${colors.primary[900]};
-    border: solid 1px ${colors.primary[900]};
-    color: ${colors.shades[0]};
+    background: ${({ theme }) => theme.colors.primaryLight};
+    color: ${({ theme }) => theme.colors.primaryDark};
   }
 
   &:disabled {
     opacity: 0.4 !important;
-    color: ${colors.primary[600]};
-    background: ${colors.shades[0]} !important;
   }
 `;
 
 export const OutlineGray = styled(Button)`
-  color: ${colors.neutral[700]};
-  background: ${colors.shades[0]};
-  border: solid 1px ${colors.neutral[300]};
+  color: ${({ theme }) => theme.colors.text.secondary};
+  background: transparent;
+  border: solid 1px ${({ theme }) => theme.colors.border};
 
   &:hover {
-    background: ${colors.neutral[100]};
-    border: solid 1px ${colors.neutral[300]};
-  }
-
-  &:focus,
-  &:focus-visible {
-    background: ${colors.neutral[200]};
-    border: solid 1px ${colors.neutral[300]};
+    background: ${({ theme }) => theme.colors.background.tertiary};
+    border-color: ${({ theme }) => theme.colors.border};
   }
 
   &:disabled {

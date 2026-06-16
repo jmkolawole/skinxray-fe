@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { PortableText } from '@portabletext/react';
 import * as S from './BlogPost.style';
-import logo from '../../assets/images/logo.png';
+import { LOGO } from '../../constants/brand';
 import { sanityClient, queries, urlFor } from '../../lib/sanity';
 
 // Icons
@@ -184,9 +184,8 @@ const BlogPost = () => {
         <S.Nav>
           <S.NavLogo to="/">
             <S.LogoIcon>
-              <img src={logo} alt="SkinXray AI" />
+              <img src={LOGO} alt="SkinXray" />
             </S.LogoIcon>
-            <S.LogoText>Skin<span>Xray</span></S.LogoText>
           </S.NavLogo>
           <S.NavButtons>
             <S.NavButton to="/login">Sign In</S.NavButton>
@@ -216,9 +215,8 @@ const BlogPost = () => {
         <S.Nav>
           <S.NavLogo to="/">
             <S.LogoIcon>
-              <img src={logo} alt="SkinXray AI" />
+              <img src={LOGO} alt="SkinXray" />
             </S.LogoIcon>
-            <S.LogoText>Skin<span>Xray</span></S.LogoText>
           </S.NavLogo>
           <S.NavButtons>
             <S.NavButton to="/login">Sign In</S.NavButton>
@@ -252,9 +250,8 @@ const BlogPost = () => {
         <S.Nav>
           <S.NavLogo to="/">
             <S.LogoIcon>
-              <img src={logo} alt="SkinXray AI" />
+              <img src={LOGO} alt="SkinXray" />
             </S.LogoIcon>
-            <S.LogoText>Skin<span>Xray</span></S.LogoText>
           </S.NavLogo>
 
           <S.NavButtons>

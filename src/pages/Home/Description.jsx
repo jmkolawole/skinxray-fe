@@ -14,26 +14,24 @@ const Description = ({onSubmit, isLoading}) => {
   return (
     <S.DescriptionWrapper>
       <TextArea
-        label=""
         placeholder="Describe your skin conditions or symptoms"
-        radius={8}
+        radius={12}
         required
         size="md"
         width="full"
-        style={{height: '200px !important'}}
         value={description}
         onChange={(e) => setDescription(e.currentTarget.value)}
       />
 
       <Button
-        radius={8}
+        radius={18}
         size="md"
         variant="primary"
-        width="622px"
+        width="100%"
         disabled={isLoading || description.length === 0}
         onClick={handleSubmit}
       >
-        {!isLoading ? 'Send Description' : <Loader />}
+        {!isLoading ? 'Analyze Symptoms' : <Loader />}
       </Button>
     </S.DescriptionWrapper>
   );

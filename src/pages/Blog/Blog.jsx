@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import * as S from './Blog.style';
-import logo from '../../assets/images/logo.png';
+import { LOGO } from '../../constants/brand';
 import { sanityClient, queries, urlFor } from '../../lib/sanity';
 
 // Placeholder icons
@@ -158,9 +158,8 @@ const Blog = () => {
         <S.Nav>
           <S.NavLogo to="/">
             <S.LogoIcon>
-              <img src={logo} alt="SkinXray AI" />
+              <img src={LOGO} alt="SkinXray" />
             </S.LogoIcon>
-            <S.LogoText>Skin<span>Xray</span></S.LogoText>
           </S.NavLogo>
 
           <S.NavButtons>

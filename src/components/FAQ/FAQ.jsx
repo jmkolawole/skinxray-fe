@@ -5,50 +5,50 @@ import * as S from './FAQ.style';
 
 const FAQ_DATA = [
   {
-    question: "How accurate is Skinxray AI's analysis?",
-    answer: "Our AI model has been trained on a vast dataset of dermatological cases and achieves high accuracy rates. However, as stated in our medical disclaimer, it should be used as an informational tool and not a replacement for professional medical diagnosis.",
-    icon: "chart",
-    weight: 1.2
+    question: 'How accurate are SkinXray insights?',
+    answer: 'Our AI provides educational insights trained on dermatological patterns. Results may be incomplete or inaccurate — use your own judgment and do not rely on them as definitive answers.',
+    icon: 'chart',
+    weight: 1.2,
   },
   {
-    question: "Is my data secure and private?",
-    answer: "Yes, we take your privacy seriously. All images and personal information are encrypted, stored securely, and never shared with third parties. We comply with HIPAA and other relevant healthcare data protection regulations.",
-    icon: "lock",
-    weight: 1.8
+    question: 'Is my data secure and private?',
+    answer: 'Yes. We encrypt data in transit and at rest, follow industry security practices, and never sell your personal information. See our Privacy Policy for retention details.',
+    icon: 'lock',
+    weight: 1.8,
   },
   {
-    question: "How quickly can I get results?",
-    answer: "Our AI provides instant analysis of your uploaded images or symptom descriptions. Detailed reports are generated within seconds, allowing you to get quick insights about your skin condition.",
-    icon: "clock",
-    weight: 1
+    question: 'How quickly can I get results?',
+    answer: 'Most analyses complete in under 30 seconds after you upload a photo or describe symptoms.',
+    icon: 'clock',
+    weight: 1,
   },
   {
-    question: "Can I use Skinxray AI on any device?",
-    answer: "Yes, Skinxray AI is accessible through any modern web browser on desktop or mobile devices. Simply ensure you have a good quality camera for taking clear photos of skin conditions.",
-    icon: "device",
-    weight: 1
+    question: 'Can I use SkinXray on any device?',
+    answer: 'Yes — use our web app in any modern browser, or download the iOS and Android apps for scanning on the go.',
+    icon: 'device',
+    weight: 1,
   },
   {
-    question: "What types of skin conditions can be analyzed?",
-    answer: "Our AI can analyze a wide range of common skin conditions including acne, rashes, moles, and other dermatological concerns. However, for serious or persistent conditions, always consult with a healthcare professional.",
-    icon: "medical",
-    weight: 1.8
-  }
+    question: 'What can SkinXray analyze?',
+    answer: 'SkinXray can help you explore common skin concerns from photos and symptom descriptions. It is for educational purposes only, not professional advice.',
+    icon: 'medical',
+    weight: 1.8,
+  },
 ];
 
 const FAQAccordion = ({ question, answer, icon, isOpen, onClick, weight }) => (
   <S.Item>
     <S.Question onClick={onClick}>
       <S.QuestionContent>
-        <Icon name={icon} size={20} weight={weight} color={isOpen ? "primary.1000" : "neutral.600"} />
-        <Text weight={600} color={isOpen ? "primary.1000" : "neutral.800"}>
+        <Icon name={icon} size={20} weight={weight} color={isOpen ? 'primary' : 'text.secondary'} />
+        <Text weight={600} color={isOpen ? 'primary' : 'text.primary'}>
           {question}
         </Text>
       </S.QuestionContent>
       <Icon 
         name="chevronDown" 
         size={20} 
-        color={isOpen ? "primary.1000" : "neutral.600"}
+        color={isOpen ? 'primary' : 'text.secondary'}
         style={{ 
           transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)',
           transition: 'transform 0.3s ease'
@@ -56,7 +56,7 @@ const FAQAccordion = ({ question, answer, icon, isOpen, onClick, weight }) => (
       />
     </S.Question>
     <S.Answer $isOpen={isOpen}>
-      <Text color="neutral.600">
+      <Text color="text.secondary">
         {answer}
       </Text>
     </S.Answer>
@@ -81,7 +81,7 @@ const FAQ = () => {
 
   return (
     <S.Section>
-      <Text weight={700} type="h3" align="center" color='shades.0'>
+      <Text weight={700} type="h3" align="center">
         Frequently Asked Questions
       </Text>
       <S.Container>

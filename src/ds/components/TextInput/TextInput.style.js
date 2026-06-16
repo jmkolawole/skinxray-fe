@@ -42,16 +42,23 @@ export const InputContainer = styled.div`
 `;
 export const Input = styled.input`
   border-radius: ${(props) => props.$radius}px;
-  font-family: GeneralSans;
+  font-family: inherit;
+  background: ${({ theme }) => theme.colors.inputBackground};
+  color: ${({ theme }) => theme.colors.text.primary};
   border: solid 1px
-    ${(props) => (props.$error ? colors.destructive[700] : colors.neutral[400])};
-  color: ${(props) => (props.$error ? colors.destructive[700] : 'inherit')};
+    ${(props) =>
+      props.$error ? colors.destructive[700] : props.theme.colors.inputBorder};
   ${(props) => inputSize(props.$size, props.$search)}
+
+  &::placeholder {
+    color: ${({ theme }) => theme.colors.text.light};
+  }
+
   &:focus,
   &:focus-visible {
     border: solid 1px
       ${(props) =>
-        props.$error ? colors.destructive[700] : colors.primary[600]};
+        props.$error ? colors.destructive[700] : props.theme.colors.primary};
     outline: unset;
   }
 

@@ -17,15 +17,20 @@ export const TextareaContainer = styled.div`
 
 export const Textarea = styled.textarea`
   border-radius: ${(props) => props.$radius}px;
-  font-family: GeneralSans;
+  font-family: inherit;
   resize: none;
+  background: ${({ theme }) => theme.colors.inputBackground};
+  color: ${({ theme }) => theme.colors.text.primary};
   border: solid 1px
     ${(props) =>
       props.$error || props.$borderError
         ? colors.destructive[700]
-        : colors.neutral[400]};
-  color: ${(props) => (props.$error ? colors.destructive[700] : 'inherit')};
+        : props.theme.colors.inputBorder};
   ${(props) => inputSize(props.$size)}
+
+  &::placeholder {
+    color: ${({ theme }) => theme.colors.text.light};
+  }
 
   &:focus,
   &:focus-visible {
@@ -33,7 +38,7 @@ export const Textarea = styled.textarea`
       ${(props) =>
         props.$error || props.$borderError
           ? colors.destructive[700]
-          : colors.primary[600]};
+          : props.theme.colors.primary};
     outline: unset;
   }
   

@@ -2,55 +2,63 @@ import { useState } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Helmet } from 'react-helmet-async';
-import { Text, Button, Icon } from '../../ds';
+import { Text, PrimaryButton, Icon } from '../../ds';
 import { useNavigate } from 'react-router-dom';
 
 const Container = styled.div`
-  max-width: 1200px;
+  max-width: 800px;
   margin: 0 auto;
-  padding: 40px 20px;
+  padding: 48px 24px 80px;
 `;
 
 const Header = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  margin-bottom: 32px;
-`;
-
-const BackButton = styled(Button)`
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-`;
-
-const PolicyDate = styled.div`
   margin-bottom: 32px;
 `;
 
 const AccordionSection = styled.div`
-  border-bottom: 1px solid #eee;
-  margin-bottom: 16px;
+  border-bottom: 1px solid ${({ theme }) => theme.colors.border};
+  margin-bottom: 8px;
 `;
 
-const AccordionHeader = styled.div`
+const AccordionHeader = styled.button`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  width: 100%;
   padding: 16px 0;
+  background: none;
+  border: none;
   cursor: pointer;
+  font-family: inherit;
+  text-align: left;
+  color: ${({ theme }) => theme.colors.text.primary};
 
   &:hover {
-    opacity: 0.8;
+    opacity: 0.85;
   }
 `;
 
 const AccordionContent = styled.div`
-  max-height: ${(props) => (props.$isOpen ? '1000px' : '0')};
+  max-height: ${(props) => (props.$isOpen ? '2000px' : '0')};
   overflow: hidden;
   padding-bottom: ${(props) => (props.$isOpen ? '16px' : '0')};
   opacity: ${(props) => (props.$isOpen ? '1' : '0')};
   transition: all 0.3s ease-in-out;
+`;
+
+const AccordionBody = styled.p`
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.65;
+  color: ${({ theme }) => theme.colors.text.secondary};
+  white-space: pre-line;
+`;
+
+const PageTitle = styled.h1`
+  font-size: 32px;
+  font-weight: 700;
+  margin: 0 0 12px;
+  color: ${({ theme }) => theme.colors.text.primary};
 `;
 
 const Accordion = ({ title, children, defaultOpen = false }) => {
@@ -58,16 +66,12 @@ const Accordion = ({ title, children, defaultOpen = false }) => {
 
   return (
     <AccordionSection>
-      <AccordionHeader onClick={() => setIsOpen(!isOpen)}>
-        <Text weight={600} size="lg">
-          {title}
-        </Text>
-        <Text size="lg">{isOpen ? '−' : '+'}</Text>
+      <AccordionHeader type="button" onClick={() => setIsOpen(!isOpen)}>
+        <Text weight={600} size="lg">{title}</Text>
+        <Icon name={isOpen ? 'chevronUp' : 'chevronDown'} size={20} bg="inherit" color="neutral.600" weight={0} />
       </AccordionHeader>
       <AccordionContent $isOpen={isOpen}>
-        <Text color="neutral.700" style={{ whiteSpace: 'pre-line' }}>
-          {children}
-        </Text>
+        <AccordionBody>{children}</AccordionBody>
       </AccordionContent>
     </AccordionSection>
   );
@@ -85,32 +89,24 @@ const StaticPage = ({ title, metaDescription, lastUpdated, sections }) => {
   return (
     <>
       <Helmet>
-        <title>
-          {title} - Skinxray AI
-        </title>
+        <title>{title} — SkinXray</title>
         <meta name="description" content={metaDescription} />
       </Helmet>
       <Container>
         <Header>
-          <BackButton variant="secondary" onClick={() => navigate('/')}>
-            <Icon name="arrowLeft" size={16} />
+          <PrimaryButton variant="outline" size="sm" onClick={() => navigate('/')}>
+            <Icon name="chevronLeft" size={16} bg="inherit" color="primary.1000" weight={0} />
             Back to Home
-          </BackButton>
+          </PrimaryButton>
         </Header>
-        <Text weight={700} type="h2" style={{ marginBottom: '16px' }}>
-          {title}
-        </Text>
+        <PageTitle>{title}</PageTitle>
         {lastUpdated && (
-          <PolicyDate>
-            <Text color="neutral.600">Last Updated: {lastUpdated}</Text>
-          </PolicyDate>
+          <Text color="neutral.600" style={{ marginBottom: 32 }}>
+            Last updated: {lastUpdated}
+          </Text>
         )}
         {sections.map((section, index) => (
-          <Accordion
-            key={section.title}
-            title={section.title}
-            defaultOpen={index === 0}
-          >
+          <Accordion key={section.title} title={section.title} defaultOpen={index === 0}>
             {section.content}
           </Accordion>
         ))}

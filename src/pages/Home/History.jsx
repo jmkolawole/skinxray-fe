@@ -1,110 +1,82 @@
-import {useEffect, useState} from 'react';
-import {useHistoryQuery} from '../../api/queries/diagnosis.query';
-import {Avatar, Text} from '../../ds';
-import * as S from './Home.style';
-import {parseApiResponse, truncateText} from '../../utils/functions';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Avatar, Text } from '../../ds';
+import { useHistoryQuery } from '../../api/queries/diagnosis.query';
+import { parseApiResponse, truncateText } from '../../utils/functions';
+import { getRiskStyle } from '../../utils/riskLevel';
 import placeholderImage from '../../assets/images/placeholder.jpg';
+import * as S from './Home.style';
+
+const formatRelativeDate = (dateStr) => {
+  if (!dateStr) return '';
+  const date = new Date(dateStr);
+  const now = new Date();
+  const diffDays = Math.floor((now - date) / (1000 * 60 * 60 * 24));
+  if (diffDays === 0) return 'Today';
+  if (diffDays === 1) return 'Yesterday';
+  if (diffDays < 7) return `${diffDays} days ago`;
+  return date.toLocaleDateString();
+};
 
 const History = () => {
-  const {data} = useHistoryQuery();
+  const { data } = useHistoryQuery();
   const [histories, setHistories] = useState([]);
-
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (data) {
-      // Convert object to array if data.data is an object
-      const historiesData = data.data;
-      console.log('🔍 Raw API data:', historiesData);
-      console.log('🔍 Is array?', Array.isArray(historiesData));
-      console.log('🔍 Type:', typeof historiesData);
-      
-      if (Array.isArray(historiesData)) {
-        console.log('✅ Using data as array');
-        setHistories(historiesData);
-      } else if (typeof historiesData === 'object' && historiesData !== null) {
-        // Convert object to array
-        const convertedArray = Object.values(historiesData);
-        console.log('🔄 Converted object to array:', convertedArray);
-        setHistories(convertedArray);
-      } else {
-        console.log('❌ Setting empty array as fallback');
-        setHistories([]);
-      }
+    if (!data?.data) {
+      setHistories([]);
+      return;
+    }
+    const historiesData = data.data;
+    if (Array.isArray(historiesData)) {
+      setHistories(historiesData);
+    } else if (typeof historiesData === 'object') {
+      setHistories(Object.values(historiesData));
     }
   }, [data]);
 
-  const getDetails = (hist) => {
-    let result = parseApiResponse(hist.chatgpt_response);
-    result = truncateText(result.symptomsDescription, 25);
-    return result;
-  };
+  const isImageDiagnosis = (history) => history.image_path != null;
 
-  // Determine if the diagnosis is image-based or text-based
-  const isImageDiagnosis = (history) => {
-    return history.image_path && history.image_path !== null;
-  };
-
-  // Get the appropriate image source for the history item
-  const getImageSource = (history) => {
-    if (isImageDiagnosis(history)) {
-      return history.image_path;
-    }
-    // Return local placeholder for text-based diagnoses
-    return placeholderImage;
-  };
+  const getImageSource = (history) =>
+    isImageDiagnosis(history) ? history.image_path : placeholderImage;
 
   const onNavigate = (item) => {
     navigate('/analysis', {
       state: {
         response: item.chatgpt_response,
-        imagePath: isImageDiagnosis(item) ? item.image_path : null
-      }
+        imagePath: isImageDiagnosis(item) ? item.image_path : null,
+      },
     });
   };
+
+  if (!histories.length) return null;
 
   return (
     <S.HistorySection>
       <Text weight={600} type="h6">
-        History
+        Recent scans
       </Text>
-
-      <S.HistoryContent>
-        <S.HistoryHeader>
-          <Text weight={600} size="md">
-            Search History
-          </Text>
-        </S.HistoryHeader>
-
-        <S.HistoryScrollArea>
-          <S.HistoryContentInner>
-            {histories.map((history) => {
-              return (
-                <S.HistoryItem
-                  key={history.id}
-                  onClick={() => onNavigate(history)}
-                >
-                  <S.HistoryItemImg>
-                    <Avatar
-                      radius={9}
-                      size={40}
-                      type="image"
-                      value={getImageSource(history)}
-                    />
-                  </S.HistoryItemImg>
-
-                  <S.HistoryItemContent>
-                    <Text weight={400} size="sm">
-                      {getDetails(history)}
-                    </Text>
-                  </S.HistoryItemContent>
-                </S.HistoryItem>
-              );
-            })}
-          </S.HistoryContentInner>
-        </S.HistoryScrollArea>
-      </S.HistoryContent>
+      <S.HistoryList>
+        {histories.map((history) => {
+          const parsed = parseApiResponse(history.chatgpt_response);
+          const risk = getRiskStyle(parsed?.severity);
+          return (
+            <S.HistoryCard key={history.id} type="button" onClick={() => onNavigate(history)}>
+              <Avatar radius={10} size={44} type="image" value={getImageSource(history)} />
+              <S.HistoryMeta>
+                <S.HistoryTitle>{truncateText(parsed?.symptomsDescription || parsed?.assessment || 'Scan result', 40)}</S.HistoryTitle>
+                <S.HistoryDate>{formatRelativeDate(history.created_at)}</S.HistoryDate>
+              </S.HistoryMeta>
+              {risk && (
+                <S.RiskBadge $bg={risk.bg} $color={risk.color}>
+                  {risk.label}
+                </S.RiskBadge>
+              )}
+            </S.HistoryCard>
+          );
+        })}
+      </S.HistoryList>
     </S.HistorySection>
   );
 };

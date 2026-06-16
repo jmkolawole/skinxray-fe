@@ -1,9 +1,10 @@
-import {Outlet, useNavigate, useLocation} from 'react-router-dom';
-import {useState} from 'react';
-import {useContext} from 'react';
-import {AccountContext} from '../../contexts';
-import {has} from 'lodash';
-import {useEffect} from 'react';
+import { Outlet, useNavigate, useLocation } from 'react-router-dom';
+import { useState } from 'react';
+import { useContext } from 'react';
+import { AccountContext } from '../../contexts';
+import { ThemeToggle } from '../../ds';
+import { has } from 'lodash';
+import { useEffect } from 'react';
 import * as S from './AuthLayout.style';
 
 const pageTitleMap = {
@@ -17,7 +18,7 @@ const pageTitleMap = {
 const AuthLayout = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const {isAuthenticated} = useContext(AccountContext);
+  const { isAuthenticated } = useContext(AccountContext);
   // eslint-disable-next-line no-unused-vars
   const [renderOutlet, setRenderOutlet] = useState(false);
 
@@ -39,8 +40,13 @@ const AuthLayout = () => {
 
   return (
     <S.Container>
+      <S.AuthTopBar>
+        <ThemeToggle />
+      </S.AuthTopBar>
       <S.InnerContainer>
-        <Outlet />
+        <S.AuthCard>
+          <Outlet />
+        </S.AuthCard>
       </S.InnerContainer>
     </S.Container>
   );

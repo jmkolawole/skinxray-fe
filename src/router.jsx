@@ -1,4 +1,4 @@
-import {createBrowserRouter} from 'react-router-dom';
+import { Navigate, createBrowserRouter, useLocation } from 'react-router-dom';
 import {lazy} from 'react';
 import AuthLayout from './layouts/AuthLayout/AuthLayout';
 import { Layout } from './layouts/Layout/Layout';
@@ -23,6 +23,11 @@ import Blog from './pages/Blog/Blog';
 import BlogPost from './pages/BlogPost/BlogPost';
 
 const Subscription = lazy(() => import('./pages/Subscription/Subscription'));
+
+const PricingRedirect = () => {
+  const location = useLocation();
+  return <Navigate to={`/plans${location.search}`} replace />;
+};
 
 export const router = createBrowserRouter([
   // UNPROTECTED PAGES
@@ -105,8 +110,12 @@ export const router = createBrowserRouter([
         element: <Settings />,
       },
       {
-        path: '/pricing',
+        path: '/plans',
         element: <PricingPage />,
+      },
+      {
+        path: '/pricing',
+        element: <PricingRedirect />,
       },
       {
         path: '/payment/success',

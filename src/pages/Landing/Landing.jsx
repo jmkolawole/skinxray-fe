@@ -7,7 +7,7 @@ import Pricing from '../../components/Pricing/Pricing';
 import FAQ from '../../components/FAQ/FAQ';
 import * as S from './Landing.style';
 import heroImage from '../../assets/images/hero.jpg';
-import logo from '../../assets/images/logo.png';
+import { LOGO } from '../../constants/brand';
 import googlePlayBadge from '../../assets/images/google-play-badge.svg';
 import appStoreBadge from '../../assets/images/app-store-badge.svg';
 
@@ -46,7 +46,7 @@ const Landing = () => {
           <S.HeroContent>
             <S.LogoContainer>
               <S.Logo>
-                <img src={logo} alt="Skinxray AI" />
+                <img src={LOGO} alt="SkinXray" />
               </S.Logo>
               <Text weight={700} type="h1" color="primary.1000">
                 Skinxray AI

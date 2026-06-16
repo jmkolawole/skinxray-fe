@@ -1,82 +1,100 @@
-import {useContext, useEffect, useMemo} from 'react';
-import {useLocation, useNavigate} from 'react-router-dom';
-import {AccountContext} from '../../contexts';
+import { useContext, useMemo } from 'react';
+import { Helmet } from 'react-helmet-async';
+import { useLocation } from 'react-router-dom';
+import { AccountContext } from '../../contexts';
 import PricingComponent from '../../components/Pricing/Pricing';
 import * as S from './Pricing.style';
-import {toast} from 'react-toastify';
-import { Icon } from '../../ds';
+import { toast } from 'react-toastify';
 import { useCreateCheckoutSession } from '../../api/mutations/subscription.mutation';
+import { useSubscriptionStatusQuery } from '../../api/queries/subscription.query';
+import { getEffectiveCurrentPlan } from '../../utils/subscription';
+import Loader from '../../components/Loader/Loader';
 
-const PricingPage = () => {
-  const {account} = useContext(AccountContext);
-  const navigate = useNavigate();
+const PlansPage = () => {
+  const { account } = useContext(AccountContext);
   const location = useLocation();
-  const { mutate: createCheckoutSession, isLoading } = useCreateCheckoutSession();
+  const { mutate: createCheckoutSession, isPending: isCheckoutLoading } = useCreateCheckoutSession();
+  const { data: subscription, isLoading: isSubscriptionLoading } = useSubscriptionStatusQuery();
 
-  // Get the selected plan from URL if it exists
   const searchParams = useMemo(() => new URLSearchParams(location.search), [location.search]);
   const selectedPlan = searchParams.get('plan');
+  const currentSub = subscription?.data?.current_subscription;
+  const currentPlan = currentSub
+    ? getEffectiveCurrentPlan(currentSub)
+    : account?.user?.subscription_plan || 'basic-scan';
 
-  // If user is not logged in and didn't come from signup, redirect to landing
-  useEffect(() => {
-    const fromSignup = searchParams.get('from') === 'signup';
-    if (!account?.token && !fromSignup) {
-      navigate('/');
-    }
-  }, [account, navigate, searchParams]);
+  const handlePlanSelect = (plan) => {
+    if (plan === currentPlan) return;
 
-  const handlePlanSelect = async (plan) => {
-    if (plan === account?.user?.subscription_plan) {
-      return; // Don't do anything if selecting current plan
+    if (plan === 'basic-scan') {
+      createCheckoutSession(
+        {
+          plan_type: 'basic-scan',
+          success_url: `${window.location.origin}/subscription`,
+          cancel_url: `${window.location.origin}/plans`,
+        },
+        {
+          onSuccess: (response) => {
+            if (response.data?.url) {
+              window.location.href = response.data.url;
+              return;
+            }
+            toast.success('Basic plan activated');
+          },
+          onError: (error) => {
+            toast.error(error.error || 'Unable to switch plans');
+          },
+        }
+      );
+      return;
     }
 
     createCheckoutSession(
-      { 
+      {
         plan_type: 'expert-care',
         success_url: `${window.location.origin}/payment/success`,
-        cancel_url: `${window.location.origin}/pricing`
+        cancel_url: `${window.location.origin}/plans`,
       },
       {
         onSuccess: (response) => {
-          const url = response.data.url;
-          
-          window.location.href = url;
+          if (response.data?.url) {
+            window.location.href = response.data.url;
+            return;
+          }
+          toast.error('Unable to start checkout');
         },
         onError: (error) => {
-          console.error('Failed to initiate checkout:', error);
-          toast.error(error.error);
-        }
+          toast.error(error.error || 'Unable to start checkout');
+        },
       }
     );
   };
 
-  return (
-    <S.Container>
-      <S.Header>
-        <S.BackButton onClick={() => navigate(-1)}>
-          <Icon
-            bg="standalone.2"
-            color="shades.0"
-            name="chevronLeft"
-            padding={7}
-            radius={100}
-            size={25}
-            weight={0}
-          />
-        </S.BackButton>
-        <S.Title>Subscription Plans</S.Title>
-      </S.Header>
+  if (isSubscriptionLoading) {
+    return <Loader size={95} thickness={1} color="primary.1000" fullPage />;
+  }
 
-      <PricingComponent
-        isLoggedIn={!!account?.token}
-        currentPlan={account?.user?.subscription_plan || 'basic-scan'}
-        selectedPlan={selectedPlan}
-        onPlanSelect={handlePlanSelect}
-        onSignUp={() => {}} // Not needed here as we're already in pricing page
-        isLoading={isLoading}
-      />
-    </S.Container>
+  return (
+    <>
+      <Helmet>
+        <title>Plans — SkinXray</title>
+      </Helmet>
+
+      <S.Container>
+        <S.PageTitle>Choose Your Plan</S.PageTitle>
+        <S.PageSubtitle>Upgrade for unlimited scans and detailed AI insights</S.PageSubtitle>
+
+        <PricingComponent
+          isLoggedIn={!!account?.token}
+          currentPlan={currentPlan}
+          selectedPlan={selectedPlan === 'premium' ? 'expert-care' : selectedPlan}
+          onPlanSelect={handlePlanSelect}
+          onSignUp={() => {}}
+          isLoading={isCheckoutLoading}
+        />
+      </S.Container>
+    </>
   );
 };
 
-export default PricingPage;
+export default PlansPage;

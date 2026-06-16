@@ -36,22 +36,21 @@ const ForgotPassword = () => {
   return (
     <div>
       <S.BackToHomeContainer>
-        <Button
-          variant="primary"
+        <S.BackToHomeButton
+          type="button"
           onClick={() => navigate('/login')}
-          size="sm"
           title="Return to Login"
           aria-label="Return to Login"
         >
-          <Icon name="chevronLeft" color="shades.0" />
-        </Button>
+          <Icon name="chevronLeft" color="primary" bg="inherit" size={18} weight={0} />
+        </S.BackToHomeButton>
       </S.BackToHomeContainer>
 
       <S.Header>
-        <Text type="h2" weight={500}>
+        <Text type="h2" weight={600}>
           Forgot Password
         </Text>
-        <Text color="neutral.600">
+        <Text color="text.secondary">
           Enter your email address and we&apos;ll send you a link to reset your password.
         </Text>
       </S.Header>
@@ -76,7 +75,7 @@ const ForgotPassword = () => {
         </Button>
 
         <S.SwitchAuthMode>
-          <Text size="sm" color="neutral.600">
+          <Text size="sm" color="text.secondary">
             Remember your password?
           </Text>
           <S.AuthLink onClick={() => navigate('/login')}>

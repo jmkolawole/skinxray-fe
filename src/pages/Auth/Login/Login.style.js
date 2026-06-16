@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { colors } from '../../../ds';
 
 export const BackToHomeContainer = styled.div`
   display: flex;
@@ -9,15 +8,27 @@ export const BackToHomeContainer = styled.div`
   position: absolute;
   top: 20px;
   left: 20px;
+  z-index: 2;
+`;
 
-  button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    padding: 0;
+export const BackToHomeButton = styled.button`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  padding: 0;
+  border: 1px solid ${({ theme }) => theme.colors.border};
+  background: ${({ theme }) => theme.colors.card};
+  color: ${({ theme }) => theme.colors.primary};
+  cursor: pointer;
+  box-shadow: 0 4px 16px ${({ theme }) => theme.colors.shadow};
+  transition: background 0.2s ease, border-color 0.2s ease;
+
+  &:hover {
+    background: ${({ theme }) => theme.colors.primaryLight};
+    border-color: ${({ theme }) => theme.colors.primary};
   }
 `;
 
@@ -38,6 +49,11 @@ export const LoginForm = styled.form`
 export const SwitchAuthMode = styled.div`
   margin-top: 1rem;
   text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  flex-wrap: wrap;
 `;
 
 export const SocialLoginSection = styled.div`
@@ -56,7 +72,7 @@ export const SocialDivider = styled.div`
 export const DividerLine = styled.div`
   flex: 1;
   height: 1px;
-  background-color: ${colors.neutral[200]};
+  background-color: ${({ theme }) => theme.colors.border};
 `;
 
 export const SocialButtonsContainer = styled.div`
@@ -73,29 +89,31 @@ export const SocialButton = styled.button`
   gap: 0.75rem;
   width: 100%;
   padding: 0.75rem;
-  border: 1px solid ${colors.neutral[200]};
-  border-radius: 8px;
-  background-color: white;
+  border: 1px solid ${({ theme }) => theme.colors.border};
+  border-radius: 12px;
+  background-color: ${({ theme }) => theme.colors.background.tertiary};
+  color: ${({ theme }) => theme.colors.text.primary};
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: background 0.2s ease, border-color 0.2s ease;
 
   &:hover {
-    background-color: ${colors.neutral[50]};
+    background-color: ${({ theme }) => theme.colors.primaryLight};
+    border-color: ${({ theme }) => theme.colors.primary};
   }
 
   &:active {
-    background-color: ${colors.neutral[100]};
+    opacity: 0.92;
   }
 `;
 
 export const AuthLink = styled.span`
-  color: ${colors.primary[500]};
+  color: ${({ theme }) => theme.colors.primary};
   font-weight: 600;
   cursor: pointer;
   transition: color 0.2s;
-  
+
   &:hover {
-    color: ${colors.primary[600]};
+    color: ${({ theme }) => theme.colors.primaryDark};
     text-decoration: underline;
   }
 `;

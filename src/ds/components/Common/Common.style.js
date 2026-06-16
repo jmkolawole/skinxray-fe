@@ -13,7 +13,8 @@ export const InputError = styled.p`
 `;
 
 export const InputLabel = styled.p`
-  color: ${(props) => (props.$disabled ? colors.neutral[600] : 'inherit')};
+  color: ${(props) =>
+    props.$disabled ? props.theme.colors.text.light : props.theme.colors.text.primary};
   ${(props) => inputSize(props.$size)};
 
   ${(props) =>

@@ -1,42 +1,44 @@
 import styled from 'styled-components';
 
 export const Container = styled.div`
-  min-height: calc(100vh - 72px);
-  background-color: #f8f9fa;
-  padding: 24px;
+  min-height: 60vh;
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 24px;
 `;
 
 export const Card = styled.div`
-  background: #ffffff;
-  border-radius: 16px;
-  padding: 40px;
+  background: ${({ theme }) => theme.colors.card};
+  border: 1px solid ${({ theme }) => theme.colors.border};
+  border-radius: 24px;
+  padding: 48px 40px;
   width: 100%;
   max-width: 480px;
   text-align: center;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 12px 40px ${({ theme }) => theme.colors.shadow};
 `;
 
 export const IconWrapper = styled.div`
   width: 72px;
   height: 72px;
   border-radius: 50%;
-  background-color: ${props => props.success ? '#e6f7f5' : '#fff3f3'};
-  color: ${props => props.success ? '#00bfa5' : '#dc3545'};
+  background: ${({ $success, theme }) =>
+    $success ? theme.colors.primaryLight : theme.colors.errorLight};
+  color: ${({ $success, theme }) =>
+    $success ? theme.colors.primary : theme.colors.error};
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 32px;
   margin: 0 auto 24px;
 `;
 
 export const ButtonGroup = styled.div`
   display: flex;
-  gap: 16px;
-  margin-top: 32px;
+  gap: 12px;
+  margin-top: 28px;
   justify-content: center;
+  flex-wrap: wrap;
 
   @media (max-width: 480px) {
     flex-direction: column;
@@ -53,13 +55,12 @@ export const LoadingWrapper = styled.div`
 export const Spinner = styled.div`
   width: 40px;
   height: 40px;
-  border: 4px solid #e9ecef;
-  border-top: 4px solid #00bfa5;
+  border: 4px solid ${({ theme }) => theme.colors.border};
+  border-top-color: ${({ theme }) => theme.colors.primary};
   border-radius: 50%;
   animation: spin 1s linear infinite;
 
   @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    to { transform: rotate(360deg); }
   }
-`; 
+`;

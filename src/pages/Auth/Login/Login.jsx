@@ -23,6 +23,7 @@ const Login = ({isSignUp = false}) => {
   const userData = searchParams.get('user');
   const error = searchParams.get('error');
   const selectedPlan = searchParams.get('plan');
+  const selectedBilling = searchParams.get('billing') || 'monthly';
 
   // Form states
   const [fieldErrors, setFieldErrors] = useState({
@@ -130,8 +131,8 @@ const Login = ({isSignUp = false}) => {
         });
 
         // If coming from premium plan selection, redirect to pricing
-        if (selectedPlan === 'premium') {
-          navigate('/pricing?from=signup&plan=premium');
+        if (selectedPlan === 'premium' || selectedPlan === 'expert-care') {
+          navigate(`/plans?from=signup&plan=expert-care&billing=${selectedBilling}`);
         } else {
           navigate('/home');
         }
@@ -180,8 +181,8 @@ const Login = ({isSignUp = false}) => {
             token: res.data.token,
           });
           // If signing up with premium plan selected, redirect to pricing
-          if (selectedPlan === 'premium') {
-            navigate('/pricing?from=signup&plan=premium');
+          if (selectedPlan === 'premium' || selectedPlan === 'expert-care') {
+            navigate(`/plans?from=signup&plan=expert-care&billing=${selectedBilling}`);
           } else {
             navigate('/home');
           }
@@ -220,23 +221,22 @@ const Login = ({isSignUp = false}) => {
     <div>
       <>
         <S.BackToHomeContainer>
-          <Button
-            variant="primary"
+          <S.BackToHomeButton
+            type="button"
             onClick={() => navigate('/')}
-            size="sm"
             title="Return to Home"
             aria-label="Return to Home"
           >
-            <Icon name={'home'} color="shades.0" />
-          </Button>
+            <Icon name="home" color="primary" bg="inherit" size={18} weight={0} />
+          </S.BackToHomeButton>
         </S.BackToHomeContainer>
 
         <S.Header>
-          <Text type="h2" weight={500}>
-            {isSignUp ? 'Create an Account' : 'Log in to Skinxray AI'}
+          <Text type="h2" weight={600}>
+            {isSignUp ? 'Create an Account' : 'Log in to SkinXray'}
           </Text>
 
-          <Text color="neutral.600">
+          <Text color="text.secondary">
             {isSignUp
               ? 'Sign up to get started with skin health analysis'
               : 'Welcome! Proceed with your credentials'}
@@ -300,7 +300,7 @@ const Login = ({isSignUp = false}) => {
           <S.SocialLoginSection>
             <S.SocialDivider>
               <S.DividerLine />
-              <Text size="sm" color="neutral.600">
+              <Text size="sm" color="text.secondary">
                 or continue with
               </Text>
               <S.DividerLine />
@@ -313,7 +313,7 @@ const Login = ({isSignUp = false}) => {
                 aria-label="Sign in with Google"
               >
                 <img src={GoogleLogo} alt="Google" />
-                <Text>Google</Text>
+                <Text color="text.primary">Google</Text>
               </S.SocialButton>
 
               {/* <S.SocialButton type="button" aria-label="Sign in with Apple">
@@ -324,7 +324,7 @@ const Login = ({isSignUp = false}) => {
           </S.SocialLoginSection>
 
           <S.SwitchAuthMode>
-            <Text size="sm" color="neutral.600">
+            <Text size="sm" color="text.secondary">
               {isSignUp ? 'Already have an account?' : "Don't have an account?"}
             </Text>
             <S.AuthLink

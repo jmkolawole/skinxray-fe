@@ -4,6 +4,7 @@ import {ReactQueryDevtools} from '@tanstack/react-query-devtools';
 import {RouterProvider} from 'react-router-dom';
 import {HelmetProvider} from 'react-helmet-async';
 import AccountProvider from './contexts/Account/AccountProvider.jsx';
+import { ThemeProvider } from './contexts/ThemeContext.jsx';
 import {Bounce, ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import GlobalStyle from './ds/global.style.js';
@@ -14,11 +15,13 @@ const queryClient = new QueryClient();
 createRoot(document.getElementById('root')).render(
   <HelmetProvider>
     <QueryClientProvider client={queryClient}>
-      <GlobalStyle />
+      <ThemeProvider>
+        <GlobalStyle />
 
-      <AccountProvider>
-        <RouterProvider router={router} />
-      </AccountProvider>
+        <AccountProvider>
+          <RouterProvider router={router} />
+        </AccountProvider>
+      </ThemeProvider>
 
       <ToastContainer
         position="bottom-left"
