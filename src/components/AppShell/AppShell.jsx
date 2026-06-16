@@ -1,6 +1,6 @@
-import { useContext, useRef, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Avatar, Badge, Icon, Menu, ThemeToggle } from '../../ds';
+import { Avatar, Badge, Icon, ThemeToggle } from '../../ds';
 import { AccountContext } from '../../contexts';
 import { LOGO } from '../../constants/brand';
 import * as S from './AppShell.style';
@@ -12,6 +12,13 @@ const NAV_ITEMS = [
   { path: '/settings', label: 'Settings', icon: 'cog', match: ['/settings'] },
 ];
 
+const USER_MENU_ITEMS = [
+  { text: 'Settings', icon: 'cog', path: '/settings' },
+  { text: 'Plans', icon: 'star', path: '/plans' },
+  { text: 'Subscription', icon: 'dollar', path: '/subscription' },
+  { text: 'Logout', icon: 'logout', path: '/logout', separator: true, danger: true },
+];
+
 const isNavActive = (pathname, matchPaths) =>
   matchPaths.some((path) => pathname === path || pathname.startsWith(`${path}/`));
 
@@ -20,10 +27,28 @@ const AppShell = ({ children }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const [openMenu, setOpenMenu] = useState(false);
-  const menuRef = useRef(null);
 
   const user = account?.user;
   const isPremium = user?.subscription_status === 'paid';
+
+  const closeMenu = () => setOpenMenu(false);
+
+  useEffect(() => {
+    setOpenMenu(false);
+  }, [location.pathname]);
+
+  useEffect(() => {
+    if (!openMenu) return undefined;
+
+    const handleEscape = (event) => {
+      if (event.key === 'Escape') {
+        closeMenu();
+      }
+    };
+
+    document.addEventListener('keydown', handleEscape);
+    return () => document.removeEventListener('keydown', handleEscape);
+  }, [openMenu]);
 
   const getAvatarProps = () => {
     if (user?.avatar) return { type: 'image', value: user.avatar };
@@ -34,17 +59,38 @@ const AppShell = ({ children }) => {
   const avatarProps = getAvatarProps();
   const displayName = user?.name || user?.email?.split('@')[0] || 'Account';
 
-  const menuItems = [
-    { text: 'Settings', icon: 'cog', color: 'neutral.700', action: () => navigate('/settings') },
-    { text: 'Plans', icon: 'star', color: 'neutral.700', action: () => navigate('/plans') },
-    { text: 'Subscription', icon: 'dollar', color: 'neutral.700', action: () => navigate('/subscription') },
-    { text: 'Logout', icon: 'logout', color: 'neutral.700', action: () => navigate('/logout') },
-  ];
+  const handleMenuSelect = (path) => {
+    closeMenu();
+    navigate(path);
+  };
+
+  const renderUserMenu = (mobile = false) => (
+    <S.UserMenu $mobile={mobile} onClick={(e) => e.stopPropagation()}>
+      {USER_MENU_ITEMS.map((item) => (
+        <S.UserMenuItem
+          key={item.path}
+          type="button"
+          $danger={item.danger}
+          $separator={item.separator}
+          onClick={() => handleMenuSelect(item.path)}
+        >
+          <Icon
+            name={item.icon}
+            size={18}
+            color={item.danger ? 'destructive.500' : 'text.secondary'}
+            bg="inherit"
+            weight={0}
+          />
+          {item.text}
+        </S.UserMenuItem>
+      ))}
+    </S.UserMenu>
+  );
 
   const renderNavLink = (item, Component) => {
     const active = isNavActive(location.pathname, item.match);
     return (
-      <Component key={item.path} to={item.path} $active={active}>
+      <Component key={item.path} to={item.path} $active={active} onClick={closeMenu}>
         <Icon
           name={item.icon}
           size={Component === S.MobileNavLink ? 20 : 18}
@@ -59,16 +105,24 @@ const AppShell = ({ children }) => {
 
   return (
     <S.Shell>
+      {openMenu && (
+        <S.MenuBackdrop
+          type="button"
+          aria-label="Close menu"
+          onClick={closeMenu}
+        />
+      )}
+
       <S.Layout>
-        <S.Sidebar>
+        <S.Sidebar $menuOpen={openMenu}>
           <S.SidebarHeader>
-            <S.BrandLink to="/home">
+            <S.BrandLink to="/home" onClick={closeMenu}>
               <img src={LOGO} alt="SkinXray" />
               <S.BrandText>SkinXray</S.BrandText>
             </S.BrandLink>
           </S.SidebarHeader>
 
-          <S.SidebarNav>
+          <S.SidebarNav onClick={closeMenu}>
             {NAV_ITEMS.map((item) => renderNavLink(item, S.SidebarLink))}
           </S.SidebarNav>
 
@@ -77,34 +131,44 @@ const AppShell = ({ children }) => {
               <Badge $variant={isPremium ? 'premium' : 'free'}>
                 {isPremium ? 'ACTIVE' : 'FREE'}
               </Badge>
-              <ThemeToggle />
+              <div onClick={openMenu ? closeMenu : undefined}>
+                <ThemeToggle />
+              </div>
             </S.FooterRow>
 
-            <S.UserRow ref={menuRef} onClick={() => setOpenMenu(!openMenu)}>
+            <S.UserRow onClick={() => setOpenMenu((prev) => !prev)}>
               <Avatar size={36} type={avatarProps.type} value={avatarProps.value} />
               <S.UserMeta>
                 <S.UserName>{displayName}</S.UserName>
                 <S.UserPlan>{isPremium ? 'Expert Care' : 'Free plan'}</S.UserPlan>
               </S.UserMeta>
-              {openMenu && (
-                <div style={{ position: 'absolute', bottom: '48px', left: 0, right: 0, zIndex: 10 }}>
-                  <Menu menuItems={menuItems} setShowMenu={setOpenMenu} toggleRef={menuRef} />
-                </div>
-              )}
+
+              {openMenu && renderUserMenu()}
             </S.UserRow>
           </S.SidebarFooter>
         </S.Sidebar>
 
         <S.MainWrapper>
-          <S.MobileHeader>
-            <S.BrandLink to="/home">
+          <S.MobileHeader $menuOpen={openMenu}>
+            <S.BrandLink to="/home" onClick={closeMenu}>
               <img src={LOGO} alt="SkinXray" />
             </S.BrandLink>
             <S.MobileHeaderRight>
               <Badge $variant={isPremium ? 'premium' : 'free'}>
                 {isPremium ? 'ACTIVE' : 'FREE'}
               </Badge>
-              <ThemeToggle />
+              <div onClick={openMenu ? closeMenu : undefined}>
+                <ThemeToggle />
+              </div>
+              <S.MobileUserTrigger
+                type="button"
+                aria-label="Account menu"
+                aria-expanded={openMenu}
+                onClick={() => setOpenMenu((prev) => !prev)}
+              >
+                <Avatar size={32} type={avatarProps.type} value={avatarProps.value} />
+                {openMenu && renderUserMenu(true)}
+              </S.MobileUserTrigger>
             </S.MobileHeaderRight>
           </S.MobileHeader>
 

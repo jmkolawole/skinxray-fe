@@ -9,6 +9,7 @@ const NAV_ITEMS = [
   { id: 'how-it-works', label: 'How it Works' },
   { id: 'features', label: 'Features' },
   { id: 'sample-report', label: 'Sample Report', compact: true },
+  { id: 'reviews', label: 'Reviews' },
   { id: 'pricing', label: 'Pricing' },
   { id: 'faq', label: 'FAQ' },
   { id: 'download', label: 'Download', compact: true },

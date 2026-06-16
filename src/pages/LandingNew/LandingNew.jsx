@@ -11,6 +11,7 @@ import EarlyDisclaimer from './sections/EarlyDisclaimer';
 import HowItWorks from './sections/HowItWorks';
 import FeaturesSection from './sections/FeaturesSection';
 import SampleReportSection from './sections/SampleReportSection';
+import TestimonialsSection from './sections/TestimonialsSection';
 import PricingSection from './sections/PricingSection';
 import FAQSection from './sections/FAQSection';
 import CTASection from './sections/CTASection';
@@ -70,6 +71,7 @@ const LandingNew = () => {
         <HowItWorks />
         <FeaturesSection />
         <SampleReportSection />
+        <TestimonialsSection />
         <PricingSection onSignUp={handleSignUp} />
         <FAQSection />
         <CTASection onSignUp={() => handleSignUp()} />

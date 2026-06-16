@@ -18,7 +18,7 @@ export const Sidebar = styled.aside`
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 40;
+  z-index: ${({ $menuOpen }) => ($menuOpen ? 50 : 40)};
   display: none;
   flex-direction: column;
   width: ${SIDEBAR_WIDTH};
@@ -26,6 +26,7 @@ export const Sidebar = styled.aside`
   background: ${({ theme }) => theme.colors.surface};
   border-right: 1px solid ${({ theme }) => theme.colors.border};
   box-sizing: border-box;
+  overflow: visible;
 
   @media (min-width: 900px) {
     display: flex;
@@ -88,11 +89,13 @@ export const SidebarLink = styled(Link)`
 `;
 
 export const SidebarFooter = styled.div`
+  position: relative;
   padding: 16px;
   border-top: 1px solid ${({ theme }) => theme.colors.border};
   display: flex;
   flex-direction: column;
   gap: 12px;
+  overflow: visible;
 `;
 
 export const FooterRow = styled.div`
@@ -109,6 +112,81 @@ export const UserRow = styled.div`
   min-width: 0;
   cursor: pointer;
   position: relative;
+  padding: 6px 8px;
+  margin: -6px -8px;
+  border-radius: 12px;
+  transition: background 0.2s;
+
+  &:hover {
+    background: ${({ theme }) => theme.colors.primaryLight};
+  }
+`;
+
+export const UserMenu = styled.div`
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  z-index: 2;
+  background: ${({ theme }) => theme.colors.card};
+  border: 1px solid ${({ theme }) => theme.colors.border};
+  border-radius: 12px;
+  box-shadow: 0 8px 24px ${({ theme }) => theme.colors.shadow};
+  overflow: hidden;
+
+  ${({ $mobile }) =>
+    $mobile &&
+    `
+    top: calc(100% + 8px);
+    bottom: auto;
+    right: 0;
+    left: auto;
+    width: 220px;
+    z-index: 52;
+  `}
+`;
+
+export const MenuBackdrop = styled.button`
+  position: fixed;
+  inset: 0;
+  z-index: 45;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: default;
+`;
+
+export const UserMenuItem = styled.button`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 11px 14px;
+  border: none;
+  background: transparent;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  color: ${({ theme, $danger }) => ($danger ? theme.colors.error : theme.colors.text.primary)};
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.2s;
+
+  &:hover {
+    background: ${({ theme, $danger }) =>
+      $danger ? theme.colors.errorLight : theme.colors.primaryLight};
+  }
+
+  & + & {
+    border-top: 1px solid ${({ theme }) => theme.colors.border};
+  }
+
+  ${({ $separator, theme }) =>
+    $separator &&
+    `
+    border-top: 1px solid ${theme.colors.border};
+  `}
 `;
 
 export const UserMeta = styled.div`
@@ -165,7 +243,7 @@ export const MobileHeader = styled.header`
   border-bottom: 1px solid ${({ theme }) => theme.colors.border};
   position: sticky;
   top: 0;
-  z-index: 30;
+  z-index: ${({ $menuOpen }) => ($menuOpen ? 50 : 30)};
 
   @media (min-width: 900px) {
     display: none;
@@ -176,6 +254,19 @@ export const MobileHeaderRight = styled.div`
   display: flex;
   align-items: center;
   gap: 10px;
+`;
+
+export const MobileUserTrigger = styled.button`
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  margin: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  border-radius: 50%;
 `;
 
 export const MobileBottomNav = styled.nav`

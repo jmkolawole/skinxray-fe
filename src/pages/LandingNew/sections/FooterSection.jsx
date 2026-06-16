@@ -137,6 +137,7 @@ const FooterSection = ({ onScrollTo }) => (
           <FooterLinks>
             <li><FooterButton type="button" onClick={() => onScrollTo('features')}>Features</FooterButton></li>
             <li><FooterButton type="button" onClick={() => onScrollTo('how-it-works')}>How It Works</FooterButton></li>
+            <li><FooterButton type="button" onClick={() => onScrollTo('reviews')}>Reviews</FooterButton></li>
             <li><FooterButton type="button" onClick={() => onScrollTo('pricing')}>Pricing</FooterButton></li>
             <li><FooterButton type="button" onClick={() => onScrollTo('faq')}>FAQ</FooterButton></li>
           </FooterLinks>

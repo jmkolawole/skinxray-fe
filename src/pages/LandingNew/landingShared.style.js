@@ -109,6 +109,79 @@ export const CardText = styled.p`
   margin: 0;
 `;
 
+export const ReviewsGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+  }
+`;
+
+export const ReviewCard = styled.div`
+  background: ${({ theme }) => theme.colors.card};
+  border: 1px solid ${({ theme }) => theme.colors.border};
+  border-radius: 20px;
+  padding: 32px 28px;
+  box-shadow: 0 4px 20px ${({ theme }) => theme.colors.shadow};
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+`;
+
+export const ReviewStars = styled.div`
+  display: flex;
+  gap: 4px;
+  margin-bottom: 20px;
+  color: ${({ theme }) => theme.colors.warning};
+`;
+
+export const ReviewText = styled.p`
+  font-size: 16px;
+  line-height: 1.7;
+  color: ${({ theme }) => theme.colors.text.primary};
+  margin: 0 0 24px;
+  font-style: italic;
+  flex: 1;
+`;
+
+export const ReviewAuthor = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 12px;
+`;
+
+export const ReviewAvatar = styled.div`
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: linear-gradient(
+    135deg,
+    ${({ theme }) => theme.colors.primary} 0%,
+    ${({ theme }) => theme.colors.premiumGradientEnd} 100%
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: ${({ theme }) => theme.colors.white};
+  font-weight: 600;
+  font-size: 16px;
+  flex-shrink: 0;
+`;
+
+export const ReviewName = styled.div`
+  font-size: 15px;
+  font-weight: 600;
+  color: ${({ theme }) => theme.colors.text.primary};
+`;
+
+export const ReviewRole = styled.div`
+  font-size: 13px;
+  color: ${({ theme }) => theme.colors.text.light};
+  margin-top: 2px;
+`;
+
 export const HeroSection = styled.section`
   display: flex;
   align-items: center;

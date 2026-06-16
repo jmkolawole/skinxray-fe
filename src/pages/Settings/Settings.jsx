@@ -182,6 +182,20 @@ const Settings = () => {
               View
             </PrimaryButton>
           </SettingsRow>
+          <SettingsRow>
+            <RowLeft>
+              <RowIcon>
+                <Icon name="logout" size={18} bg="inherit" color="destructive.500" weight={0} />
+              </RowIcon>
+              <RowContent>
+                <RowTitle>Log out</RowTitle>
+                <RowSubtitle>Sign out of your account on this device</RowSubtitle>
+              </RowContent>
+            </RowLeft>
+            <PrimaryButton size="sm" variant="outline" onClick={() => navigate('/logout')}>
+              Log out
+            </PrimaryButton>
+          </SettingsRow>
         </SettingsGroup>
 
         <SettingsGroup>
